@@ -30,6 +30,13 @@ public abstract class ReversibleFunction extends Node implements Reversible
   }
   
   @Override
+  public void reset()
+  {
+    m_targetOutput = null;
+    m_suggestedInputs.clear();
+  }
+  
+  @Override
 	public List<Suggestion> getSuggestions(int in_index)
 	{
   	if (!m_suggestedInputs.containsKey(in_index))

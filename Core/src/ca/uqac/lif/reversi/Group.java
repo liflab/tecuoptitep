@@ -32,6 +32,20 @@ public class Group extends NestedNode implements Reversible
 	{
 		this(in_arity, out_arity, new Constant<Boolean>(true));
 	}
+	
+	@Override
+	public void reset()
+	{
+	  m_targetInputs.clear();
+	  m_targetOutputs.clear();
+	  for (Node n : m_internalNodes)
+	  {
+	    if (n instanceof Reversible)
+	    {
+	      ((Reversible) n).reset();
+	    }
+	  }
+	}
 
 	@Override
 	public void setTargetOutputs(int out_arity, List<Suggestion> suggestions)

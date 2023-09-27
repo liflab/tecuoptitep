@@ -6,6 +6,7 @@ import java.util.List;
 import ca.uqac.lif.reversi.util.MathList;
 import ca.uqac.lif.synthia.Bounded;
 import ca.uqac.lif.synthia.Picker;
+import ca.uqac.lif.synthia.enumerative.AllElements;
 import ca.uqac.lif.synthia.enumerative.AllPickers;
 import ca.uqac.lif.synthia.sequence.Playback;
 import ca.uqac.lif.synthia.util.Constant;
@@ -39,20 +40,15 @@ public class CountDecimate extends AlphabetFunction
     		Bounded<?>[] pickers = new Bounded<?>[trace_len];
         for (int i = 0; i < pickers.length; i++)
         {
-          pickers[i] = i % m_numDecimate == 0 ? new Playback<Object>(sequence.get(i / m_numDecimate)) : new Playback<Object>(m_alphabet.toArray()).setLoop(false);
+          pickers[i] = i % m_numDecimate == 0 ? new Playback<Object>(sequence.get(i / m_numDecimate)) : new AllElements<Object>(getAlphabet(), true, false);
         }
         for (int i = 0; i < m_targetOutput.size(); i++)
         {
           Suggestion out_sug = m_targetOutput.get(i);
           AllPickers all = new AllPickers(pickers);
-          while (!all.isDone())
+          while (m_coin.pick() && !all.isDone())
           {
           	Object[] to_append = all.pick();
-          	if (!m_coin.pick())
-            {
-            	// Coin toss to select if suggestion is included
-            	continue;
-            }
             MathList<Object> out_list = new MathList<Object>();
             for (Object o : to_append)
             {

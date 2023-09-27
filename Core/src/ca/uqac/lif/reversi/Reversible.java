@@ -9,4 +9,6 @@ public interface Reversible
   /*@ null @*/ public List<Suggestion> getTargetOutputs(int out_index);
   
   /*@ non_null @*/ public List<Suggestion> getSuggestions(int in_arity);
+  
+  public void reset();
 }

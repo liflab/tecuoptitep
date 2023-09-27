@@ -20,6 +20,13 @@ public class Fork extends Node implements Reversible
 		m_targetInputs = null;
 		m_targetOutputs = new HashMap<Integer,List<Suggestion>>(2);
 	}
+	
+	@Override
+  public void reset()
+  {
+	  m_targetInputs = null;
+	  m_targetOutputs.clear();
+  }
 
 	@Override
 	public void setTargetOutputs(int out_index, List<Suggestion> suggestions)

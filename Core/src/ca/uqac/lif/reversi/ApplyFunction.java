@@ -3,10 +3,11 @@ package ca.uqac.lif.reversi;
 import java.util.ArrayList;
 import java.util.List;
 
-import ca.uqac.lif.reversi.util.AllPickersList;
 import ca.uqac.lif.reversi.util.MathList;
 import ca.uqac.lif.synthia.Bounded;
 import ca.uqac.lif.synthia.Picker;
+import ca.uqac.lif.synthia.enumerative.AllElements;
+import ca.uqac.lif.synthia.enumerative.AllPickers;
 import ca.uqac.lif.synthia.sequence.Playback;
 
 public abstract class ApplyFunction extends ReversibleFunction
@@ -37,18 +38,18 @@ public abstract class ApplyFunction extends ReversibleFunction
 			for (int i = 0; i < pickers.length; i++)
 			{
 				List<MathList<Object>> values = getInputValuesFor(sequence.get(i));
-				Playback<Object> pb = new Playback<Object>(values.toArray()).setLoop(false);
+				Playback<MathList<Object>> pb = new AllElements<MathList<Object>>(values, true, false);
 				pickers[i] = pb;
 			}
-			AllPickersList all = new AllPickersList(pickers);
-			while (!all.isDone())
+			AllPickers all = new AllPickers(pickers);
+			while (!all.isDone() & m_coin.pick())
 			{
-				MathList<Object> list = (MathList<Object>) all.pick();
-				if (!m_coin.pick())
-        {
-        	// Coin toss to select if suggestion is included
-        	continue;
-        }
+				MathList<Object> list = new MathList<Object>();
+				Object[] elems = all.pick();
+				for (Object e : elems)
+				{
+				  list.add(e);
+				}
 				MathList<Object>[] in_sequences = new MathList[getInputArity()]; 
 				for (int i = 0; i < in_sequences.length; i++)
 				{

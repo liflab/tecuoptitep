@@ -1,5 +1,6 @@
 package ca.uqac.lif.reversi;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ca.uqac.lif.synthia.Picker;
@@ -10,7 +11,7 @@ import ca.uqac.lif.synthia.util.Constant;
  */
 public abstract class AlphabetFunction extends ReversibleFunction
 {
-  protected final List<Object> m_alphabet;
+  private final List<Object> m_alphabet;
 
   public AlphabetFunction(int in_arity, List<Object> alphabet, Picker<Boolean> coin)
   {
@@ -21,6 +22,22 @@ public abstract class AlphabetFunction extends ReversibleFunction
   public AlphabetFunction(int in_arity, List<Object> alphabet)
   {
     this(in_arity, alphabet, new Constant<Boolean>(true));
+  }
+  
+  protected List<Object> getAlphabet()
+  {
+    return m_alphabet;
+    /*
+    List<Object> alph = new ArrayList<Object>();
+    for (Object o : m_alphabet)
+    {
+      if (m_coin.pick())
+      {
+        alph.add(o);
+      }
+    }
+    return alph;
+    */
   }
 
 }

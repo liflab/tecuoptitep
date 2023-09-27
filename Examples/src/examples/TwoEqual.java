@@ -13,12 +13,13 @@ import ca.uqac.lif.reversi.Suggestion;
 import ca.uqac.lif.reversi.Trim;
 import ca.uqac.lif.reversi.util.MathList;
 import ca.uqac.lif.synthia.random.RandomBoolean;
+import ca.uqac.lif.synthia.util.Constant;
 
 public class TwoEqual
 {
 	public static void main(String[] args)
 	{
-		RandomBoolean coin = new RandomBoolean(0.06);
+		RandomBoolean coin = new RandomBoolean(0.95);
 		//Constant<Boolean> coin = new Constant<Boolean>(true);
 		List<Object> alphabet = Arrays.asList("a", "b", "c", "d", "e", "f");
 		Group g = new Group(1, 1) {{
@@ -32,7 +33,7 @@ public class TwoEqual
 			associateOutput(0, eq.getOutputPin(0));
 			addNodes(f, t, eq);
 		}};
-		g.setTargetOutputs(0, Arrays.asList(new Suggestion(MathList.toList(false, false, true))));
+		g.setTargetOutputs(0, Arrays.asList(new Suggestion(MathList.toList(false, true))));
 		Set<AritalSuggestion> sols = AritalSuggestion.getSuggestions(g);
 		System.out.println(sols);
 	}
