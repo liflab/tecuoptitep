@@ -1,5 +1,8 @@
 package inversionlab;
 
+import static inversionlab.PreconditionFactory.ALPHABET_SIZE;
+import static inversionlab.PreconditionFactory.CONDITION;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +42,7 @@ public abstract class PreconditionFactory
 	public boolean set(Point pt, StreamGenerationExperiment e)
 	{
 		String name = pt.getString(CONDITION);
+		e.describe(CONDITION, "The precondition to generate input sequences for");
 		e.writeInput(CONDITION, name);
 		int alphabet_size = -1;
 		{
@@ -48,6 +52,7 @@ public abstract class PreconditionFactory
 				alphabet_size = ((Number) o).intValue();
 			}
 		}
+		e.describe(ALPHABET_SIZE, "The number of possible distinct events found in a stream");
 		e.writeInput(ALPHABET_SIZE, alphabet_size);
 		switch (name)
 		{

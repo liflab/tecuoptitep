@@ -7,10 +7,12 @@ import java.util.List;
 import java.util.Set;
 
 import ca.uqac.lif.json.JsonList;
+import ca.uqac.lif.json.JsonNumber;
 import ca.uqac.lif.labpal.experiment.Experiment;
 import ca.uqac.lif.labpal.experiment.ExperimentException;
 import ca.uqac.lif.labpal.util.Stopwatch;
 import ca.uqac.lif.reversi.AritalSuggestion;
+import ca.uqac.lif.reversi.util.MathList;
 
 import static inversionlab.PreconditionFactory.ALPHABET_SIZE;
 import static inversionlab.PreconditionFactory.CONDITION;
@@ -22,6 +24,12 @@ public class StreamGenerationExperiment extends Experiment
 	public static final String ELEMENTS = "Elements";
 	
 	public static final String METHOD = "Method";
+	
+	public static final String SIZE_LIMIT = "Size limit";
+	
+	public static final String LENGTH = "Length";
+	
+	public static final String CARDINALITY = "Cardinality";
 	
 	/**
 	 * The maximum number of streams to generate before interrupting the experiment.
@@ -43,10 +51,13 @@ public class StreamGenerationExperiment extends Experiment
 		describe(TIME, "The time (in ms) since the start of the generation");
 		describe(ELEMENTS, "The number of distinct valid input streams generated so far");
 		describe(METHOD, "The method or tool used to generate input sequences");
-		describe(CONDITION, "The precondition to generate input sequences for");
-		describe(ALPHABET_SIZE, "The number of possible distinct events found in a stream");
+		describe(SIZE_LIMIT, "The number of streams to generate in each experiment");
+		describe(LENGTH, "A bucket representing all streams of a given length");
+		describe(CARDINALITY, "The number of streams generated for a given length");
 		writeOutput(TIME, new JsonList());
 		writeOutput(ELEMENTS, new JsonList());
+		writeOutput(LENGTH, new JsonList());
+		writeOutput(CARDINALITY, new JsonList());
 	}
 	
 	/**
@@ -68,20 +79,31 @@ public class StreamGenerationExperiment extends Experiment
 	public void setSizeLimit(int limit)
 	{
 		m_sizeLimit = limit;
+		writeInput(SIZE_LIMIT, limit);
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public void execute() throws ExperimentException
 	{
 		JsonList l_time = (JsonList) read(TIME);
 		JsonList l_elements = (JsonList) read(ELEMENTS);
+		JsonList l_length = (JsonList) read(LENGTH);
+		JsonList l_card = (JsonList) read(CARDINALITY);
+		int min_len = 1, max_len = 20;
+		for (int i = min_len; i <= max_len; i++)
+		{
+			l_length.add(i);
+			l_card.add(0);
+		}
 		l_time.add(0l);
 		l_elements.add(0);
 		Stopwatch.start(this);
 		int elems = 0;
 		while (m_generator.hasNext() && (m_sizeLimit < 0 || elems < m_sizeLimit))
 		{
-			m_suggestions.add(m_generator.next());
+			AritalSuggestion sug = m_generator.next();
+			m_suggestions.add(sug);
 			elems++;
 			l_time.add(Stopwatch.lap(this));
 			l_elements.add(elems);
@@ -89,8 +111,11 @@ public class StreamGenerationExperiment extends Experiment
 			{
 				setProgression((float) elems / (float) m_sizeLimit);
 			}
+			MathList<Object> len0 = (MathList<Object>) sug.get(0);
+			int size = len0.size();
+			JsonNumber num = (JsonNumber) l_card.get(size - min_len);
+			l_card.set(size - min_len, new JsonNumber(num.numberValue().intValue() + 1));
 		}
-		System.out.println("Done");
 	}
 	
 	@Override
