@@ -29,7 +29,11 @@ public class EndsInPicker implements Picker<MathList<Object>>
   {
     MathList<Object> list = new MathList<Object>();
     int len = m_length.pick();
-    for (int i = 0; i < len; i++)
+    if (len == 0)
+    {
+      return list;
+    }
+    for (int i = 0; i < len - 1; i++)
     {
       list.add(false);
     }
