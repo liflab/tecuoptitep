@@ -35,7 +35,7 @@ public class CountDecimate extends AlphabetFunction
     for (Suggestion sug : m_targetOutput)
     {
     	MathList<Object> sequence = (MathList<Object>) sug.getValue();
-    	for (int trace_len = sequence.size() * m_numDecimate; trace_len < sequence.size() * (m_numDecimate + 1); trace_len++)
+    	for (int trace_len = sequence.size() * m_numDecimate - (m_numDecimate - 1); trace_len <= sequence.size() * m_numDecimate; trace_len++)
     	{
     		Bounded<?>[] pickers = new Bounded<?>[trace_len];
         for (int i = 0; i < pickers.length; i++)
