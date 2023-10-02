@@ -30,12 +30,18 @@ public class RandomGenerator implements Iterator<AritalSuggestion>
 	
 	protected boolean m_allTrue = false;
 	
-	public RandomGenerator(Processor p, Picker<MathList<Object>> list_picker)
+	protected final int m_minLength;
+	
+	protected final int m_maxLength;
+	
+	public RandomGenerator(Processor p, int min_length, int max_length, Picker<MathList<Object>> list_picker)
 	{
 		super();
 		m_processor = p;
 		m_pastSuggestions = new HashSet<AritalSuggestion>();
 		m_listPicker = list_picker;
+		m_minLength = min_length;
+		m_maxLength = max_length;
 	}
 	
 	public RandomGenerator setAllTrue(boolean b)
@@ -109,29 +115,31 @@ public class RandomGenerator implements Iterator<AritalSuggestion>
 			Connector.connect(s, 0, proc, i);
 		}
 		Pullable p = proc.getPullableOutput();
+		int len = 0;
+		boolean all_true = true;
+		boolean some_true = false;
 		while (p.hasNext())
 		{
 			Object o = p.next();
+			len++;
 			if (Boolean.TRUE.equals(o))
 			{
-				if (!m_allTrue)
-				{
-					return true;
-				}
+				some_true = true;
 			}
 			else
 			{
-				if (m_allTrue)
-				{
-					return false;
-				}
+				all_true = false;
 			}
+		}
+		if (len < m_minLength || len > m_maxLength)
+		{
+		  return false; // Invalid because output outside of length range
 		}
 		if (m_allTrue)
 		{
-			return true;
+			return all_true;
 		}
-		return false;
+		return some_true;
 	}
 	
 }

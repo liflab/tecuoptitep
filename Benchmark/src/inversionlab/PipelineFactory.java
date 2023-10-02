@@ -45,7 +45,7 @@ public class PipelineFactory extends PreconditionFactory
       associateOutput(0, tr, 0);
       addProcessors(f, t, eq, tr);
     }};
-    RandomGenerator gen = new RandomGenerator(g, getListPicker(alphabet_size)).setAllTrue(true);
+    RandomGenerator gen = new RandomGenerator(g, m_minLength, m_maxLength, getListPicker(alphabet_size)).setAllTrue(true);
     e.setGenerator(gen);
     return true;
 	}
@@ -65,7 +65,7 @@ public class PipelineFactory extends PreconditionFactory
       associateOutput(0, eq, 0);
       addProcessors(f, t, eq);
     }};
-    RandomGenerator gen = new RandomGenerator(g, getListPicker(alphabet_size));
+    RandomGenerator gen = new RandomGenerator(g, m_minLength, m_maxLength, getListPicker(alphabet_size));
     e.setGenerator(gen);
     return true;
 	}
