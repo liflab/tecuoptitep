@@ -1,6 +1,8 @@
 package inversionlab;
 
 import java.lang.reflect.Constructor;
+import java.util.HashMap;
+import java.util.Map;
 
 import ca.uqac.lif.labpal.Laboratory;
 import ca.uqac.lif.labpal.experiment.ExperimentFactory;
@@ -10,39 +12,43 @@ import static inversionlab.StreamGenerationExperiment.METHOD;
 
 public class StreamGenerationExperimentFactory extends ExperimentFactory<StreamGenerationExperiment>
 {
-	protected PreconditionFactory m_pipelineFactory;
+	protected Map<String,PreconditionFactory> m_factories;
 	
-	protected PreconditionFactory m_inversionFactory;
+	protected int m_sizeLimit = -1;
 
-	public StreamGenerationExperimentFactory(Laboratory lab, PreconditionFactory pipeline_factory, PreconditionFactory inversion_factory)
+	public StreamGenerationExperimentFactory(Laboratory lab)
 	{
 		super(lab);
-		m_pipelineFactory = pipeline_factory;
+		m_factories = new HashMap<String,PreconditionFactory>();
+	}
+	
+	public StreamGenerationExperimentFactory setSizeLimit(int limit)
+	{
+		m_sizeLimit = limit;
+		return this;
+	}
+	
+	public StreamGenerationExperimentFactory add(String name, PreconditionFactory f)
+	{
+		m_factories.put(name, f);
+		return this;
 	}
 	
 	@Override
 	/*@ pure null @*/ protected StreamGenerationExperiment createExperiment(Point p)
 	{
 		String method = p.getString(METHOD);
-		PreconditionFactory factory = null;
-		switch (method)
-		{
-		case InversionGenerator.NAME:
-			factory = m_inversionFactory;
-			break;
-		case RandomGenerator.NAME:
-			factory = m_pipelineFactory;
-			break;
-		default:
-				factory = null;
-				break;
-		}
-		if (method == null)
+		if (!m_factories.containsKey(method))
 		{
 			return null;
 		}
+		PreconditionFactory factory = m_factories.get(method);
 		StreamGenerationExperiment e = new StreamGenerationExperiment();
-		if 
+		if (!factory.set(p, e))
+		{
+			return null;
+		}
+		e.setSizeLimit(m_sizeLimit);
 		return e;
 	}
 

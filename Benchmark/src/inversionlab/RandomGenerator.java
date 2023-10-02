@@ -28,12 +28,20 @@ public class RandomGenerator implements Iterator<AritalSuggestion>
 	
 	protected Processor m_processor;
 	
+	protected boolean m_allTrue = false;
+	
 	public RandomGenerator(Processor p, Picker<MathList<Object>> list_picker)
 	{
 		super();
 		m_processor = p;
 		m_pastSuggestions = new HashSet<AritalSuggestion>();
 		m_listPicker = list_picker;
+	}
+	
+	public RandomGenerator setAllTrue(boolean b)
+	{
+		m_allTrue = b;
+		return this;
 	}
 
 	@Override
@@ -69,12 +77,15 @@ public class RandomGenerator implements Iterator<AritalSuggestion>
 		AritalSuggestion sugg = null;
 		do
 		{
+			sugg = null;
 			for (int i = 0; i < candidate.length; i++)
 			{
 				candidate[i] = m_listPicker.pick();
+				//System.out.println("Candidate: " + candidate[i]);
 			}
 			if (!isValidSuggestion(candidate))
 			{
+				//System.out.println("Invalid");
 				continue;
 			}
 			sugg = new AritalSuggestion(candidate.length);
@@ -82,7 +93,7 @@ public class RandomGenerator implements Iterator<AritalSuggestion>
 			{
 				sugg.set(i, candidate[i]);
 			}
-		} while (m_pastSuggestions.contains(sugg));
+		} while (sugg == null || m_pastSuggestions.contains(sugg));
 		m_pastSuggestions.add(sugg);
 		m_nextElement = sugg;
 	}
@@ -94,6 +105,7 @@ public class RandomGenerator implements Iterator<AritalSuggestion>
 		{
 			QueueSource s = new QueueSource();
 			s.setEvents(inputs[i]);
+			s.loop(false);
 			Connector.connect(s, 0, proc, i);
 		}
 		Pullable p = proc.getPullableOutput();
@@ -102,8 +114,22 @@ public class RandomGenerator implements Iterator<AritalSuggestion>
 			Object o = p.next();
 			if (Boolean.TRUE.equals(o))
 			{
-				return true;
+				if (!m_allTrue)
+				{
+					return true;
+				}
 			}
+			else
+			{
+				if (m_allTrue)
+				{
+					return false;
+				}
+			}
+		}
+		if (m_allTrue)
+		{
+			return true;
 		}
 		return false;
 	}
