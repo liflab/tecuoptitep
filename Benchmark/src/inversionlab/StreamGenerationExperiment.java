@@ -1,12 +1,11 @@
 package inversionlab;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
 import ca.uqac.lif.json.JsonList;
+import ca.uqac.lif.json.JsonMap;
 import ca.uqac.lif.json.JsonNumber;
 import ca.uqac.lif.labpal.experiment.Experiment;
 import ca.uqac.lif.labpal.experiment.ExperimentException;
@@ -14,8 +13,8 @@ import ca.uqac.lif.labpal.util.Stopwatch;
 import ca.uqac.lif.reversi.AritalSuggestion;
 import ca.uqac.lif.reversi.util.MathList;
 
-import static inversionlab.PreconditionFactory.ALPHABET_SIZE;
-import static inversionlab.PreconditionFactory.CONDITION;
+import static inversionlab.PreconditionFactory.MIN_LENGTH;
+import static inversionlab.PreconditionFactory.MAX_LENGTH;
 
 public class StreamGenerationExperiment extends Experiment
 {
@@ -27,9 +26,7 @@ public class StreamGenerationExperiment extends Experiment
 	
 	public static final String SIZE_LIMIT = "Size limit";
 	
-	public static final String LENGTH = "Length";
-	
-	public static final String CARDINALITY = "Cardinality";
+	public static final String LENGTH_DISTRIBUTION = "Length distribution";
 	
 	/**
 	 * The maximum number of streams to generate before interrupting the experiment.
@@ -52,12 +49,10 @@ public class StreamGenerationExperiment extends Experiment
 		describe(ELEMENTS, "The number of distinct valid input streams generated so far");
 		describe(METHOD, "The method or tool used to generate input sequences");
 		describe(SIZE_LIMIT, "The number of streams to generate in each experiment");
-		describe(LENGTH, "A bucket representing all streams of a given length");
-		describe(CARDINALITY, "The number of streams generated for a given length");
+		describe(LENGTH_DISTRIBUTION, "The number of input suggestions of a given length");
 		writeOutput(TIME, new JsonList());
 		writeOutput(ELEMENTS, new JsonList());
-		writeOutput(LENGTH, new JsonList());
-		writeOutput(CARDINALITY, new JsonList());
+		writeOutput(LENGTH_DISTRIBUTION, new JsonMap());
 	}
 	
 	/**
@@ -88,16 +83,9 @@ public class StreamGenerationExperiment extends Experiment
 	{
 		JsonList l_time = (JsonList) read(TIME);
 		JsonList l_elements = (JsonList) read(ELEMENTS);
-		JsonList l_length = (JsonList) read(LENGTH);
-		JsonList l_card = (JsonList) read(CARDINALITY);
-		int min_len = 1, max_len = 20;
-		for (int i = min_len; i <= max_len; i++)
-		{
-			l_length.add(i);
-			l_card.add(0);
-		}
 		l_time.add(0l);
 		l_elements.add(0);
+		JsonMap distribution = (JsonMap) read(LENGTH_DISTRIBUTION);
 		Stopwatch.start(this);
 		int elems = 0;
 		while (m_generator.hasNext() && (m_sizeLimit < 0 || elems < m_sizeLimit))
@@ -113,8 +101,13 @@ public class StreamGenerationExperiment extends Experiment
 			}
 			MathList<Object> len0 = (MathList<Object>) sug.get(0);
 			int size = len0.size();
-			JsonNumber num = (JsonNumber) l_card.get(size - min_len);
-			l_card.set(size - min_len, new JsonNumber(num.numberValue().intValue() + 1));
+			int cnt = 1;
+			String s_size = Integer.toString(size);
+			if (distribution.containsKey(s_size))
+			{
+			  cnt = ((JsonNumber) distribution.get(s_size)).numberValue().intValue() + 1;
+			}
+			distribution.put(s_size, new JsonNumber(cnt));
 		}
 	}
 	

@@ -12,7 +12,6 @@ import ca.uqac.lif.reversi.Trim;
 import ca.uqac.lif.reversi.functions.DistinctStreamSolver;
 import ca.uqac.lif.reversi.util.AllTruePicker;
 import ca.uqac.lif.reversi.util.EndsInPicker;
-import ca.uqac.lif.synthia.Picker;
 import ca.uqac.lif.synthia.random.RandomBoolean;
 import ca.uqac.lif.synthia.random.RandomInteger;
 
@@ -28,10 +27,16 @@ public class CircuitFactory extends PreconditionFactory
 	 * Name of parameter &alpha;.
 	 */
 	public static final String ALPHA = "\u03b1";
+	
+	/**
+	 * Maximum number of attempts to invert an output given to the solver before
+	 * moving to a new output.
+	 */
+	protected int m_maxTries = 10;
 
-	public CircuitFactory(Picker<Integer> length)
+	public CircuitFactory(int min_length, int max_length)
 	{
-		super(length);
+		super(min_length, max_length);
 	}
 
 	@Override
@@ -65,7 +70,8 @@ public class CircuitFactory extends PreconditionFactory
 			associateOutput(0, tr.getOutputPin(0));
 			addNodes(f, t, eq, tr);
 		}};
-		DistinctStreamSolver solver = new DistinctStreamSolver(g, new AllTruePicker(new RandomInteger(4, 20).setSeed(getSeed())));
+		RandomInteger rint = new RandomInteger(m_minLength, m_maxLength).setSeed(getSeed() + 10);
+		DistinctStreamSolver solver = new DistinctStreamSolver(g, new AllTruePicker(rint), m_maxTries);
 		InversionGenerator gen = new InversionGenerator(solver);
 		e.setGenerator(gen);
 		return true;
@@ -100,13 +106,10 @@ public class CircuitFactory extends PreconditionFactory
 			associateOutput(0, eq.getOutputPin(0));
 			addNodes(f, t, eq);
 		}};
-		DistinctStreamSolver solver = new DistinctStreamSolver(g, new EndsInPicker(m_length.duplicate(false)));
+		RandomInteger rint = new RandomInteger(m_minLength, m_maxLength).setSeed(getSeed() + 10);
+		DistinctStreamSolver solver = new DistinctStreamSolver(g, new EndsInPicker(rint), m_maxTries);
 		InversionGenerator gen = new InversionGenerator(solver);
 		e.setGenerator(gen);
 		return true;
 	}
-
-
-
-
 }

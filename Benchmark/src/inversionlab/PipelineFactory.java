@@ -12,8 +12,8 @@ import ca.uqac.lif.cep.tmf.Trim;
 import ca.uqac.lif.cep.util.Booleans;
 import ca.uqac.lif.cep.util.Equals;
 import ca.uqac.lif.labpal.region.Point;
-import ca.uqac.lif.synthia.Picker;
 import ca.uqac.lif.synthia.random.RandomFloat;
+import ca.uqac.lif.synthia.random.RandomInteger;
 import ca.uqac.lif.synthia.util.Choice;
 
 
@@ -23,9 +23,9 @@ import ca.uqac.lif.synthia.util.Choice;
  */
 public class PipelineFactory extends PreconditionFactory
 {
-	public PipelineFactory(Picker<Integer> length)
+	public PipelineFactory(int min_length, int max_length)
 	{
-		super(length);
+		super(min_length, max_length);
 	}
 
 	@Override
@@ -78,7 +78,8 @@ public class PipelineFactory extends PreconditionFactory
     {
     	symbol.add(o, prob);
     }
-    RandomListPicker rpl = new RandomListPicker(m_length.duplicate(false), symbol);
+    RandomInteger rint = new RandomInteger(m_minLength, m_maxLength).setSeed(getSeed() + 10);
+    RandomListPicker rpl = new RandomListPicker(rint, symbol);
     return rpl;
 	}
 }

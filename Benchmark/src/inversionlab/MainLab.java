@@ -22,7 +22,6 @@ import ca.uqac.lif.labpal.util.CliParser.Argument;
 import ca.uqac.lif.labpal.util.CliParser.ArgumentMap;
 import ca.uqac.lif.spreadsheet.chart.gnuplot.GnuplotScatterplot;
 import ca.uqac.lif.spreadsheet.functions.ExpandAsColumns;
-import ca.uqac.lif.synthia.random.RandomInteger;
 
 public class MainLab extends Laboratory
 {
@@ -35,7 +34,6 @@ public class MainLab extends Laboratory
 		/* The range of trace lengths to generate */
 		int min_len = intArgOrDefault(args, "minlen", 4);
 		int max_len = intArgOrDefault(args, "maxlen", 20);
-		RandomInteger length = new RandomInteger(min_len, max_len).setSeed(getSeed());
 		System.out.println("Trace length:\t[" + min_len + "," + max_len + "]");
 		
 		/* The size of the alphabet */
@@ -47,8 +45,8 @@ public class MainLab extends Laboratory
 		System.out.println("Trace limit:\t" + trace_limit);
 		
 		StreamGenerationExperimentFactory factory = new StreamGenerationExperimentFactory(this).setSizeLimit(trace_limit);
-		factory.add(InversionGenerator.NAME, new CircuitFactory(length.duplicate(false)).setSeed(getSeed()));
-		factory.add(RandomGenerator.NAME, new PipelineFactory(length.duplicate(false)).setSeed(getSeed()));
+		factory.add(InversionGenerator.NAME, new CircuitFactory(min_len, max_len).setSeed(getSeed()));
+		factory.add(RandomGenerator.NAME, new PipelineFactory(min_len, max_len).setSeed(getSeed()));
 		
 		Region big_r = product(
 				extension(METHOD, InversionGenerator.NAME, RandomGenerator.NAME),
@@ -61,7 +59,7 @@ public class MainLab extends Laboratory
 			et.add(factory.get(r));
 			TransformedTable tt = transform(new ExpandAsColumns(METHOD, TIME), et);
 			add(tt);
-			add(new Plot(tt, new GnuplotScatterplot()));
+			add(new Plot(tt, new GnuplotScatterplot().setCustomHeader("set datafile missing \"\"")));
 		}
 		
 	}
