@@ -5,6 +5,7 @@ import static ca.uqac.lif.labpal.region.ProductRegion.product;
 import static ca.uqac.lif.labpal.table.ExperimentTable.table;
 import static ca.uqac.lif.labpal.table.TransformedTable.transform;
 import static inversionlab.CircuitFactory.ALPHA;
+import static inversionlab.CircuitFactory.NUM_OUTPUTS;
 import static inversionlab.PreconditionFactory.ALPHABET_SIZE;
 import static inversionlab.PreconditionFactory.CONDITION;
 import static inversionlab.CandidateGenerationExperiment.ELEMENTS;
@@ -52,7 +53,8 @@ public class MainLab extends Laboratory
 				extension(METHOD, InversionGenerator.NAME, GenerateAndTest.NAME),
 				extension(CONDITION, PreconditionFactory.TWO_EQUAL_TRIM, PreconditionFactory.TWO_EQUAL_DECIMATE),
 				extension(ALPHABET_SIZE, alphabet_size),
-				extension(ALPHA, 0.1f));
+				extension(ALPHA, 0.1f),
+				extension(NUM_OUTPUTS, 20));
 		for (Region r : big_r.all(CONDITION, ALPHA, ALPHABET_SIZE))
 		{
 			ExperimentTable et = table(METHOD, ELEMENTS, TIME);

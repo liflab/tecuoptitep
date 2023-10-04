@@ -1,6 +1,8 @@
 package ca.uqac.lif.reversi.functions;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 
 import ca.uqac.lif.dag.Node;
@@ -22,8 +24,14 @@ public class StreamSolver implements Bounded<AritalSuggestion>
   protected final Bucket<AritalSuggestion> m_bucket;
   
   protected final long m_maxTries;
+  
+  /**
+   * The number of outputs that are considered simultaneously when inverting
+   * a pipeline.
+   */
+  protected int m_numOutputs = 1;
 
-  public StreamSolver(Reversible pipeline, Picker<MathList<Object>> output, long max_tries)
+  public StreamSolver(Reversible pipeline, Picker<MathList<Object>> output, long max_tries, int num_outputs)
   {
     super();
     m_pipeline = pipeline;
@@ -34,7 +42,7 @@ public class StreamSolver implements Bounded<AritalSuggestion>
   
   public StreamSolver(Reversible pipeline, Picker<MathList<Object>> output)
   {
-    this(pipeline, output, -1);
+    this(pipeline, output, -1, 1);
   }
 
   @Override
@@ -81,8 +89,13 @@ public class StreamSolver implements Bounded<AritalSuggestion>
     for (i = 0; (i < m_maxTries || m_maxTries < 0) && !m_bucket.hasNext(); i++)
     {
       m_pipeline.reset();
-      MathList<Object> output = m_output.pick();
-      m_pipeline.setTargetOutputs(0, Arrays.asList(new Suggestion(output)));
+      List<Suggestion> out_sugs = new ArrayList<Suggestion>(m_numOutputs);
+      for (int j = 0; j < m_numOutputs; j++)
+      {
+      	List<Object> output = m_output.pick();
+      	out_sugs.add(new Suggestion(output));
+      }
+      m_pipeline.setTargetOutputs(0, out_sugs);
       //System.out.println(output + "?");
       Set<AritalSuggestion> sugs = AritalSuggestion.getSuggestions((Node) m_pipeline);
       m_bucket.fill(sugs);

@@ -15,15 +15,15 @@ public class DistinctStreamSolver extends StreamSolver
 
   protected AritalSuggestion m_next = null;
 
-  public DistinctStreamSolver(Reversible pipeline, Picker<MathList<Object>> output, long max_tries)
+  public DistinctStreamSolver(Reversible pipeline, Picker<MathList<Object>> output, long max_tries, int num_outputs)
   {
-    super(pipeline, output, max_tries);
+    super(pipeline, output, max_tries, num_outputs);
     m_suggestions = new HashSet<AritalSuggestion>();
   }
 
   public DistinctStreamSolver(Reversible pipeline, Picker<MathList<Object>> output)
   {
-    this(pipeline, output, -1);
+    this(pipeline, output, -1, 1);
   }
 
   @Override

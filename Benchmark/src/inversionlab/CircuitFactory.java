@@ -24,15 +24,20 @@ import static inversionlab.CandidateGenerationExperiment.METHOD;
 public class CircuitFactory extends PreconditionFactory
 {
 	/**
-	 * Name of parameter &alpha;.
+	 * Name of parameter "&alpha;".
 	 */
 	public static final String ALPHA = "\u03b1";
+	
+	/**
+	 * Name of parameter "simultaneous outputs".
+	 */
+	public static final String NUM_OUTPUTS = "Simultaneous outputs";
 	
 	/**
 	 * Maximum number of attempts to invert an output given to the solver before
 	 * moving to a new output.
 	 */
-	protected int m_maxTries = 10;
+	protected int m_maxTries = 1;
 
 	public CircuitFactory(int min_length, int max_length)
 	{
@@ -54,6 +59,17 @@ public class CircuitFactory extends PreconditionFactory
 		}
 		e.describe(ALPHA, "The probability given to the biased coin toss");
 		e.writeInput(ALPHA, alpha);
+		int num_outputs = 1;
+		{
+			Object o = pt.get(NUM_OUTPUTS);
+			if (o == null)
+			{
+				return false;
+			}
+			num_outputs = ((Number) o).intValue();
+		}
+		e.describe(NUM_OUTPUTS, "The number of simultaneous outputs to invert");
+		e.writeInput(NUM_OUTPUTS, num_outputs);
 		e.writeInput(METHOD, InversionGenerator.NAME);
 		RandomBoolean coin = new RandomBoolean(alpha);
 		coin.setSeed(getSeed());
@@ -71,7 +87,7 @@ public class CircuitFactory extends PreconditionFactory
 			addNodes(f, t, eq, tr);
 		}};
 		RandomInteger rint = new RandomInteger(m_minLength, m_maxLength).setSeed(getSeed() + 10);
-		DistinctStreamSolver solver = new DistinctStreamSolver(g, new AllTruePicker(rint), m_maxTries);
+		DistinctStreamSolver solver = new DistinctStreamSolver(g, new AllTruePicker(rint), m_maxTries, num_outputs);
 		InversionGenerator gen = new InversionGenerator(solver);
 		e.setGenerator(gen);
 		return true;
@@ -92,6 +108,17 @@ public class CircuitFactory extends PreconditionFactory
 		}
 		e.describe(ALPHA, "The probability given to the biased coin toss");
 		e.writeInput(ALPHA, alpha);
+		int num_outputs = 1;
+		{
+			Object o = pt.get(NUM_OUTPUTS);
+			if (o == null)
+			{
+				return false;
+			}
+			num_outputs = ((Number) o).intValue();
+		}
+		e.describe(NUM_OUTPUTS, "The number of simultaneous outputs to invert");
+		e.writeInput(NUM_OUTPUTS, num_outputs);
 		e.writeInput(METHOD, InversionGenerator.NAME);
 		RandomBoolean coin = new RandomBoolean(alpha);
 		coin.setSeed(getSeed());
@@ -107,7 +134,7 @@ public class CircuitFactory extends PreconditionFactory
 			addNodes(f, t, eq);
 		}};
 		RandomInteger rint = new RandomInteger(m_minLength, m_maxLength).setSeed(getSeed() + 10);
-		DistinctStreamSolver solver = new DistinctStreamSolver(g, new EndsInPicker(rint), m_maxTries);
+		DistinctStreamSolver solver = new DistinctStreamSolver(g, new EndsInPicker(rint), m_maxTries, num_outputs);
 		InversionGenerator gen = new InversionGenerator(solver);
 		e.setGenerator(gen);
 		return true;
