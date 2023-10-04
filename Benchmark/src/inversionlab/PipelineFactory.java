@@ -78,7 +78,7 @@ public class PipelineFactory extends PreconditionFactory
     {
     	symbol.add(o, prob);
     }
-    RandomInteger rint = new RandomInteger(m_minLength, m_maxLength).setSeed(getSeed() + 10);
+    RandomInteger rint = new RandomInteger(0, 1000).setSeed(getSeed() + 10);
     RandomListPicker rpl = new RandomListPicker(rint, symbol);
     return rpl;
 	}
