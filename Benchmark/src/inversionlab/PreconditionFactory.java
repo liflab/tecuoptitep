@@ -46,7 +46,7 @@ public abstract class PreconditionFactory
     return this;
   }
 
-  public boolean set(Point pt, StreamGenerationExperiment e)
+  public boolean set(Point pt, GenerationExperiment e)
   {
     String name = pt.getString(CONDITION);
     e.describe(CONDITION, "The precondition to generate input sequences for");
@@ -80,9 +80,9 @@ public abstract class PreconditionFactory
     return m_seed;
   }
 
-  protected abstract boolean setTwoEqualDecimate(Point pt, int alphabet_size, StreamGenerationExperiment e);
+  protected abstract boolean setTwoEqualDecimate(Point pt, int alphabet_size, GenerationExperiment e);
 
-  protected abstract boolean setTwoEqualTrim(Point pt, int alphabet_size, StreamGenerationExperiment e);
+  protected abstract boolean setTwoEqualTrim(Point pt, int alphabet_size, GenerationExperiment e);
 
   /**
    * Gets an instance of an alphabet of input events made of single characters.

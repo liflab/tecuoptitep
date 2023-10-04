@@ -5,36 +5,31 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
-import ca.uqac.lif.cep.Connector;
 import ca.uqac.lif.cep.Processor;
-import ca.uqac.lif.cep.Pullable;
-import ca.uqac.lif.cep.tmf.QueueSource;
 import ca.uqac.lif.reversi.AritalSuggestion;
 import ca.uqac.lif.reversi.util.MathList;
 import ca.uqac.lif.synthia.Picker;
 
-public class RandomGenerator implements Iterator<AritalSuggestion>
+public abstract class GenerateAndTest implements Iterator<AritalSuggestion>
 {
 	/**
 	 * The name of this generation strategy.
 	 */
 	public static final String NAME = "Random";
-	
+
 	protected Set<AritalSuggestion> m_pastSuggestions;
-	
+
 	protected AritalSuggestion m_nextElement;
-	
+
 	protected Picker<MathList<Object>> m_listPicker;
-	
+
 	protected Processor m_processor;
-	
-	protected boolean m_allTrue = false;
-	
+
 	protected final int m_minLength;
-	
+
 	protected final int m_maxLength;
-	
-	public RandomGenerator(Processor p, int min_length, int max_length, Picker<MathList<Object>> list_picker)
+
+	public GenerateAndTest(Processor p, int min_length, int max_length, Picker<MathList<Object>> list_picker)
 	{
 		super();
 		m_processor = p;
@@ -42,12 +37,6 @@ public class RandomGenerator implements Iterator<AritalSuggestion>
 		m_listPicker = list_picker;
 		m_minLength = min_length;
 		m_maxLength = max_length;
-	}
-	
-	public RandomGenerator setAllTrue(boolean b)
-	{
-		m_allTrue = b;
-		return this;
 	}
 
 	@Override
@@ -75,7 +64,7 @@ public class RandomGenerator implements Iterator<AritalSuggestion>
 		m_nextElement = null;
 		return a;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	protected void getNextSuggestion()
 	{
@@ -103,43 +92,7 @@ public class RandomGenerator implements Iterator<AritalSuggestion>
 		m_pastSuggestions.add(sugg);
 		m_nextElement = sugg;
 	}
-	
-	public boolean isValidSuggestion(MathList<Object>[] inputs)
-	{
-		Processor proc = m_processor.duplicate();
-		for (int i = 0; i < proc.getInputArity(); i++)
-		{
-			QueueSource s = new QueueSource();
-			s.setEvents(inputs[i]);
-			s.loop(false);
-			Connector.connect(s, 0, proc, i);
-		}
-		Pullable p = proc.getPullableOutput();
-		int len = 0;
-		boolean all_true = true;
-		boolean some_true = false;
-		while (p.hasNext())
-		{
-			Object o = p.next();
-			len++;
-			if (Boolean.TRUE.equals(o))
-			{
-				some_true = true;
-			}
-			else
-			{
-				all_true = false;
-			}
-		}
-		if (len < m_minLength || len > m_maxLength)
-		{
-		  return false; // Invalid because output outside of length range
-		}
-		if (m_allTrue)
-		{
-			return all_true;
-		}
-		return some_true;
-	}
-	
+
+	protected abstract boolean isValidSuggestion(MathList<Object>[] candidate);
+
 }

@@ -1,6 +1,6 @@
 package inversionlab;
 
-import static inversionlab.StreamGenerationExperiment.METHOD;
+import static inversionlab.CandidateGenerationExperiment.METHOD;
 
 import ca.uqac.lif.cep.Connector;
 import ca.uqac.lif.cep.GroupProcessor;
@@ -29,9 +29,9 @@ public class PipelineFactory extends PreconditionFactory
 	}
 
 	@Override
-	protected boolean setTwoEqualDecimate(Point pt, int alphabet_size, StreamGenerationExperiment e)
+	protected boolean setTwoEqualDecimate(Point pt, int alphabet_size, GenerationExperiment e)
 	{
-		e.writeInput(METHOD, RandomGenerator.NAME);
+		e.writeInput(METHOD, GenerateAndTest.NAME);
 		GroupProcessor g = new GroupProcessor(1, 1) {{
       Fork f = new Fork();
       associateInput(0, f, 0);
@@ -45,15 +45,15 @@ public class PipelineFactory extends PreconditionFactory
       associateOutput(0, tr, 0);
       addProcessors(f, t, eq, tr);
     }};
-    RandomGenerator gen = new RandomGenerator(g, m_minLength, m_maxLength, getListPicker(alphabet_size)).setAllTrue(true);
+    GenerateAndTest gen = new GenerateAndTestSat(g, m_minLength, m_maxLength, getListPicker(alphabet_size)).setAllTrue(true);
     e.setGenerator(gen);
     return true;
 	}
 
 	@Override
-	protected boolean setTwoEqualTrim(Point pt, int alphabet_size, StreamGenerationExperiment e)
+	protected boolean setTwoEqualTrim(Point pt, int alphabet_size, GenerationExperiment e)
 	{
-		e.writeInput(METHOD, RandomGenerator.NAME);
+		e.writeInput(METHOD, GenerateAndTest.NAME);
 		GroupProcessor g = new GroupProcessor(1, 1) {{
       Fork f = new Fork();
       associateInput(0, f, 0);
@@ -65,7 +65,7 @@ public class PipelineFactory extends PreconditionFactory
       associateOutput(0, eq, 0);
       addProcessors(f, t, eq);
     }};
-    RandomGenerator gen = new RandomGenerator(g, m_minLength, m_maxLength, getListPicker(alphabet_size));
+    GenerateAndTest gen = new GenerateAndTestSat(g, m_minLength, m_maxLength, getListPicker(alphabet_size));
     e.setGenerator(gen);
     return true;
 	}

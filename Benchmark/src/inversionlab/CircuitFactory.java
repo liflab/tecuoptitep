@@ -15,7 +15,7 @@ import ca.uqac.lif.reversi.util.EndsInPicker;
 import ca.uqac.lif.synthia.random.RandomBoolean;
 import ca.uqac.lif.synthia.random.RandomInteger;
 
-import static inversionlab.StreamGenerationExperiment.METHOD;
+import static inversionlab.CandidateGenerationExperiment.METHOD;
 
 /**
  * A {@link PreconditionFactory} that provides conditions expressed as
@@ -40,7 +40,7 @@ public class CircuitFactory extends PreconditionFactory
 	}
 
 	@Override
-	protected boolean setTwoEqualDecimate(Point pt, int alphabet_size, StreamGenerationExperiment e)
+	protected boolean setTwoEqualDecimate(Point pt, int alphabet_size, GenerationExperiment e)
 	{
 		List<Object> alphabet = getStringAlphabet(alphabet_size);
 		float alpha = -1;
@@ -78,7 +78,7 @@ public class CircuitFactory extends PreconditionFactory
 	}
 
 	@Override
-	protected boolean setTwoEqualTrim(Point pt, int alphabet_size, StreamGenerationExperiment e)
+	protected boolean setTwoEqualTrim(Point pt, int alphabet_size, GenerationExperiment e)
 	{
 		List<Object> alphabet = getStringAlphabet(alphabet_size);
 		float alpha = -1;

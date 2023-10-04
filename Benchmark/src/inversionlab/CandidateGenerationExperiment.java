@@ -7,7 +7,6 @@ import java.util.Set;
 import ca.uqac.lif.json.JsonList;
 import ca.uqac.lif.json.JsonMap;
 import ca.uqac.lif.json.JsonNumber;
-import ca.uqac.lif.labpal.experiment.Experiment;
 import ca.uqac.lif.labpal.experiment.ExperimentException;
 import ca.uqac.lif.labpal.util.Stopwatch;
 import ca.uqac.lif.reversi.AritalSuggestion;
@@ -16,14 +15,10 @@ import ca.uqac.lif.reversi.util.MathList;
 import static inversionlab.PreconditionFactory.MIN_LENGTH;
 import static inversionlab.PreconditionFactory.MAX_LENGTH;
 
-public class StreamGenerationExperiment extends Experiment
+public class CandidateGenerationExperiment extends GenerationExperiment
 {
-	public static final String TIME = "Time";
-	
 	public static final String ELEMENTS = "Elements";
-	
-	public static final String METHOD = "Method";
-	
+
 	public static final String SIZE_LIMIT = "Size limit";
 	
 	public static final String LENGTH_DISTRIBUTION = "Length distribution";
@@ -34,36 +29,16 @@ public class StreamGenerationExperiment extends Experiment
 	 */
 	protected int m_sizeLimit = -1;
 	
-	/**
-	 * An iterator over arrays of streams.
-	 */
-	protected Iterator<AritalSuggestion> m_generator;
-	
-	protected Set<AritalSuggestion> m_suggestions;
-	
-	public StreamGenerationExperiment()
+	public CandidateGenerationExperiment()
 	{
 		super();
-		m_suggestions = new HashSet<AritalSuggestion>();
 		describe(TIME, "The time (in ms) since the start of the generation");
 		describe(ELEMENTS, "The number of distinct valid input streams generated so far");
-		describe(METHOD, "The method or tool used to generate input sequences");
 		describe(SIZE_LIMIT, "The number of streams to generate in each experiment");
 		describe(LENGTH_DISTRIBUTION, "The number of input suggestions of a given length");
 		writeOutput(TIME, new JsonList());
 		writeOutput(ELEMENTS, new JsonList());
 		writeOutput(LENGTH_DISTRIBUTION, new JsonMap());
-	}
-	
-	/**
-	 * Sets the stream generator.
-	 * @param g An iterator over suggestions. Each new value produced by
-	 * the iterator must be distinct from all the others produced so far. The
-	 * experiment assumes this without checking it.  
-	 */
-	public void setGenerator(Iterator<AritalSuggestion> g)
-	{
-		m_generator = g;
 	}
 	
 	/**

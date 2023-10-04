@@ -7,9 +7,9 @@ import static ca.uqac.lif.labpal.table.TransformedTable.transform;
 import static inversionlab.CircuitFactory.ALPHA;
 import static inversionlab.PreconditionFactory.ALPHABET_SIZE;
 import static inversionlab.PreconditionFactory.CONDITION;
-import static inversionlab.StreamGenerationExperiment.ELEMENTS;
-import static inversionlab.StreamGenerationExperiment.METHOD;
-import static inversionlab.StreamGenerationExperiment.TIME;
+import static inversionlab.CandidateGenerationExperiment.ELEMENTS;
+import static inversionlab.CandidateGenerationExperiment.METHOD;
+import static inversionlab.CandidateGenerationExperiment.TIME;
 
 
 import ca.uqac.lif.labpal.Laboratory;
@@ -44,12 +44,12 @@ public class MainLab extends Laboratory
 		int trace_limit = intArgOrDefault(args, "traces", 10);
 		System.out.println("Trace limit:\t" + trace_limit);
 		
-		StreamGenerationExperimentFactory factory = new StreamGenerationExperimentFactory(this).setSizeLimit(trace_limit);
+		CandidateGenerationExperimentFactory factory = new CandidateGenerationExperimentFactory(this).setSizeLimit(trace_limit);
 		factory.add(InversionGenerator.NAME, new CircuitFactory(min_len, max_len).setSeed(getSeed()));
-		factory.add(RandomGenerator.NAME, new PipelineFactory(min_len, max_len).setSeed(getSeed()));
+		factory.add(GenerateAndTest.NAME, new PipelineFactory(min_len, max_len).setSeed(getSeed()));
 		
 		Region big_r = product(
-				extension(METHOD, InversionGenerator.NAME, RandomGenerator.NAME),
+				extension(METHOD, InversionGenerator.NAME, GenerateAndTest.NAME),
 				extension(CONDITION, PreconditionFactory.TWO_EQUAL_TRIM, PreconditionFactory.TWO_EQUAL_DECIMATE),
 				extension(ALPHABET_SIZE, alphabet_size),
 				extension(ALPHA, 0.1f));
