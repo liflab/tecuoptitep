@@ -13,7 +13,7 @@ public class CandidateGenerationExperimentFactory extends GenerationExperimentFa
 	public CandidateGenerationExperimentFactory(Laboratory lab)
 	{
 		super(lab);
-		m_factories = new HashMap<String,PreconditionFactory>();
+		m_factories = new HashMap<String,GeneratorFactory>();
 	}
 	
 	public CandidateGenerationExperimentFactory setSizeLimit(int limit)

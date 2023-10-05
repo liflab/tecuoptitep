@@ -18,10 +18,10 @@ import ca.uqac.lif.synthia.util.Choice;
 
 
 /**
- * A {@link PreconditionFactory} that provides conditions expressed as BeepBeep
+ * A {@link GeneratorFactory} that provides conditions expressed as BeepBeep
  * processor pipelines.
  */
-public class PipelineFactory extends PreconditionFactory
+public class PipelineFactory extends GeneratorFactory
 {
 	public PipelineFactory(int min_length, int max_length)
 	{

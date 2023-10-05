@@ -1,7 +1,6 @@
 package inversionlab;
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
@@ -10,7 +9,7 @@ import ca.uqac.lif.reversi.AritalSuggestion;
 import ca.uqac.lif.reversi.util.MathList;
 import ca.uqac.lif.synthia.Picker;
 
-public abstract class GenerateAndTest implements Iterator<AritalSuggestion>
+public abstract class GenerateAndTest implements Generator
 {
 	/**
 	 * The name of this generation strategy.

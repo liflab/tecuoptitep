@@ -7,6 +7,10 @@ import java.util.Set;
 import ca.uqac.lif.labpal.experiment.Experiment;
 import ca.uqac.lif.reversi.AritalSuggestion;
 
+/**
+ * Base class for experiments that attempt to generate inputs streams based on
+ * a precondition.
+ */
 public abstract class GenerationExperiment extends Experiment
 {
 	/**
@@ -25,28 +29,18 @@ public abstract class GenerationExperiment extends Experiment
 	public static final String TIME = "Time";
 	
 	/**
-	 * An iterator over arrays of streams.
+	 * The name of parameter "size limit".
 	 */
-	protected Iterator<AritalSuggestion> m_generator = null;
+	public static final String SIZE_LIMIT = "Size limit";
 	
-	protected Set<AritalSuggestion> m_suggestions;
-	
+	/**
+	 * Creates a new experiment instance and populates the description of some of
+	 * its parameters.
+	 */
 	public GenerationExperiment()
 	{
 		super();
-		m_suggestions = new HashSet<AritalSuggestion>();
 		describe(PROBLEM, "The input generation problem this experiment considers");
 		describe(METHOD, "The method or tool used to generate input sequences");
-	}
-	
-	/**
-	 * Sets the stream generator.
-	 * @param g An iterator over suggestions. Each new value produced by
-	 * the iterator must be distinct from all the others produced so far. The
-	 * experiment assumes this without checking it.  
-	 */
-	public void setGenerator(Iterator<AritalSuggestion> g)
-	{
-		m_generator = g;
 	}
 }

@@ -11,15 +11,15 @@ import ca.uqac.lif.labpal.region.Point;
 
 public abstract class GenerationExperimentFactory<T extends GenerationExperiment> extends ExperimentFactory<T>
 {
-	protected Map<String,PreconditionFactory> m_factories;
+	protected Map<String,GeneratorFactory> m_factories;
 	
 	public GenerationExperimentFactory(Laboratory lab)
 	{
 		super(lab);
-		m_factories = new HashMap<String,PreconditionFactory>();
+		m_factories = new HashMap<String,GeneratorFactory>();
 	}
 	
-	public GenerationExperimentFactory<T> add(String name, PreconditionFactory f)
+	public GenerationExperimentFactory<T> add(String name, GeneratorFactory f)
 	{
 		m_factories.put(name, f);
 		return this;
@@ -33,7 +33,7 @@ public abstract class GenerationExperimentFactory<T extends GenerationExperiment
 		{
 			return null;
 		}
-		PreconditionFactory factory = m_factories.get(method);
+		GeneratorFactory factory = m_factories.get(method);
 		T e = getExperimentInstance();
 		if (!factory.set(p, e))
 		{

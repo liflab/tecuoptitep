@@ -18,10 +18,10 @@ import ca.uqac.lif.synthia.random.RandomInteger;
 import static inversionlab.CandidateGenerationExperiment.METHOD;
 
 /**
- * A {@link PreconditionFactory} that provides conditions expressed as
+ * A {@link GeneratorFactory} that provides conditions expressed as
  * invertible function circuits from tecuoP titeP.
  */
-public class CircuitFactory extends PreconditionFactory
+public class CircuitFactory extends GeneratorFactory
 {
 	/**
 	 * Name of parameter "&alpha;".
@@ -45,7 +45,7 @@ public class CircuitFactory extends PreconditionFactory
 	}
 
 	@Override
-	protected boolean setTwoEqualDecimate(Point pt, int alphabet_size, GenerationExperiment e)
+	protected boolean setTwoEqualDecimate(Point pt, int alphabet_size, CandidateGenerationExperiment e)
 	{
 		List<Object> alphabet = getStringAlphabet(alphabet_size);
 		float alpha = -1;
@@ -94,7 +94,7 @@ public class CircuitFactory extends PreconditionFactory
 	}
 
 	@Override
-	protected boolean setTwoEqualTrim(Point pt, int alphabet_size, GenerationExperiment e)
+	protected boolean setTwoEqualTrim(Point pt, int alphabet_size, CandidateGenerationExperiment e)
 	{
 		List<Object> alphabet = getStringAlphabet(alphabet_size);
 		float alpha = -1;
