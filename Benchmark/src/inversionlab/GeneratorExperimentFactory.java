@@ -37,6 +37,17 @@ public class GeneratorExperimentFactory extends ExperimentFactory<GeneratorExper
     m_sizeLimit = size;
     return this;
   }
+  
+  @Override
+  public GeneratorExperiment createExperiment(Point pt)
+  {
+    GeneratorExperiment e = new GeneratorExperiment();
+    if (!set(pt, e))
+    {
+      return null;
+    }
+    return e;
+  }
 
   public boolean set(Point pt, GeneratorExperiment e)
   {
