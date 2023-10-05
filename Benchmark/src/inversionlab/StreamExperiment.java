@@ -1,17 +1,12 @@
 package inversionlab;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-
 import ca.uqac.lif.labpal.experiment.Experiment;
-import ca.uqac.lif.reversi.AritalSuggestion;
 
 /**
  * Base class for experiments that attempt to generate inputs streams based on
  * a precondition.
  */
-public abstract class GenerationExperiment extends Experiment
+public abstract class StreamExperiment extends Experiment
 {
 	/**
 	 * The name of parameter "problem".
@@ -37,7 +32,7 @@ public abstract class GenerationExperiment extends Experiment
 	 * Creates a new experiment instance and populates the description of some of
 	 * its parameters.
 	 */
-	public GenerationExperiment()
+	public StreamExperiment()
 	{
 		super();
 		describe(PROBLEM, "The input generation problem this experiment considers");

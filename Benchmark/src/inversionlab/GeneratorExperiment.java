@@ -1,7 +1,6 @@
 package inversionlab;
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import ca.uqac.lif.json.JsonList;
@@ -12,15 +11,12 @@ import ca.uqac.lif.labpal.util.Stopwatch;
 import ca.uqac.lif.reversi.AritalSuggestion;
 import ca.uqac.lif.reversi.util.MathList;
 
-import static inversionlab.GeneratorFactory.MIN_LENGTH;
-import static inversionlab.GeneratorFactory.MAX_LENGTH;
-
 /**
  * An experiment whose task is to generate a fixed number <i>n</i> of input
  * streams satisfying a precondition, and to count the time it takes to
  * reach this number.
  */
-public class CandidateGenerationExperiment extends GenerationExperiment
+public class GeneratorExperiment extends StreamExperiment
 {
 	/**
 	 * The name of parameter "elements".
@@ -52,7 +48,7 @@ public class CandidateGenerationExperiment extends GenerationExperiment
 	 * Creates a new experiment instance and populates the description of some of
 	 * its parameters.
 	 */
-	public CandidateGenerationExperiment()
+	public GeneratorExperiment()
 	{
 		super();
 		m_suggestions = new HashSet<AritalSuggestion>();

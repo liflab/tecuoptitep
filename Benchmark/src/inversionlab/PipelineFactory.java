@@ -1,7 +1,5 @@
 package inversionlab;
 
-import static inversionlab.CandidateGenerationExperiment.METHOD;
-
 import ca.uqac.lif.cep.Connector;
 import ca.uqac.lif.cep.GroupProcessor;
 import ca.uqac.lif.cep.functions.ApplyFunction;
@@ -11,27 +9,23 @@ import ca.uqac.lif.cep.tmf.Fork;
 import ca.uqac.lif.cep.tmf.Trim;
 import ca.uqac.lif.cep.util.Booleans;
 import ca.uqac.lif.cep.util.Equals;
+import ca.uqac.lif.labpal.experiment.Experiment;
 import ca.uqac.lif.labpal.region.Point;
-import ca.uqac.lif.synthia.random.RandomFloat;
-import ca.uqac.lif.synthia.random.RandomInteger;
-import ca.uqac.lif.synthia.util.Choice;
-
 
 /**
- * A {@link GeneratorFactory} that provides conditions expressed as BeepBeep
+ * A {@link GeneratorExperimentFactory} that provides conditions expressed as BeepBeep
  * processor pipelines.
  */
-public class PipelineFactory extends GeneratorFactory
+public class PipelineFactory extends PreconditionFactory<GroupProcessor>
 {
-	public PipelineFactory(int min_length, int max_length)
+	public PipelineFactory()
 	{
-		super(min_length, max_length);
+		super();
 	}
 
 	@Override
-	protected boolean setTwoEqualDecimate(Point pt, int alphabet_size, GenerationExperiment e)
+	protected GroupProcessor getTwoEqualDecimate(Point pt, int alphabet_size, Experiment e)
 	{
-		e.writeInput(METHOD, GenerateAndTest.NAME);
 		GroupProcessor g = new GroupProcessor(1, 1) {{
       Fork f = new Fork();
       associateInput(0, f, 0);
@@ -45,15 +39,12 @@ public class PipelineFactory extends GeneratorFactory
       associateOutput(0, tr, 0);
       addProcessors(f, t, eq, tr);
     }};
-    GenerateAndTest gen = new GenerateAndTestSat(g, m_minLength, m_maxLength, getListPicker(alphabet_size)).setAllTrue(true);
-    e.setGenerator(gen);
-    return true;
+    return g;
 	}
 
 	@Override
-	protected boolean setTwoEqualTrim(Point pt, int alphabet_size, GenerationExperiment e)
+	protected GroupProcessor getTwoEqualTrim(Point pt, int alphabet_size, Experiment e)
 	{
-		e.writeInput(METHOD, GenerateAndTest.NAME);
 		GroupProcessor g = new GroupProcessor(1, 1) {{
       Fork f = new Fork();
       associateInput(0, f, 0);
@@ -65,21 +56,6 @@ public class PipelineFactory extends GeneratorFactory
       associateOutput(0, eq, 0);
       addProcessors(f, t, eq);
     }};
-    GenerateAndTest gen = new GenerateAndTestSat(g, m_minLength, m_maxLength, getListPicker(alphabet_size));
-    e.setGenerator(gen);
-    return true;
-	}
-	
-	protected RandomListPicker getListPicker(int alphabet_size)
-	{
-		Choice<Object> symbol = new Choice<>(new RandomFloat().setSeed(getSeed()));
-    float prob = 1f / alphabet_size;
-    for (Object o : getStringAlphabet(alphabet_size))
-    {
-    	symbol.add(o, prob);
-    }
-    RandomInteger rint = new RandomInteger(0, 1000).setSeed(getSeed() + 10);
-    RandomListPicker rpl = new RandomListPicker(rint, symbol);
-    return rpl;
+    return g;
 	}
 }

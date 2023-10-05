@@ -1,11 +1,9 @@
 package inversionlab;
 
-import java.util.Iterator;
-
 import ca.uqac.lif.reversi.AritalSuggestion;
 import ca.uqac.lif.reversi.functions.DistinctStreamSolver;
 
-public class InversionGenerator implements Iterator<AritalSuggestion>
+public class ReversibleGenerator implements Generator
 {
 	/**
 	 * The name of this generation strategy.
@@ -14,7 +12,7 @@ public class InversionGenerator implements Iterator<AritalSuggestion>
 	
 	protected DistinctStreamSolver m_solver;
 	
-	public InversionGenerator(DistinctStreamSolver solver)
+	public ReversibleGenerator(DistinctStreamSolver solver)
 	{
 		super();
 		m_solver = solver;

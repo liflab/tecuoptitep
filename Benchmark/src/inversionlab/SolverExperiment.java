@@ -12,7 +12,7 @@ import ca.uqac.lif.labpal.experiment.ExperimentException;
  * a case the experiment also keeps track the total number of solutions found.
  * In some cases, this number may exceed the number of outputs.
  */
-public class SolutionGenerationExperiment extends GenerationExperiment
+public class SolverExperiment extends StreamExperiment
 {
 	/**
 	 * The name of parameter "found".
@@ -33,7 +33,7 @@ public class SolutionGenerationExperiment extends GenerationExperiment
 	 * Creates a new experiment instance and populates the description of some of
 	 * its parameters.
 	 */
-	public SolutionGenerationExperiment()
+	public SolverExperiment()
 	{
 		super();
 		describe(SIZE_LIMIT, "The number of outputs for which the experiment is asked to find a solution");
