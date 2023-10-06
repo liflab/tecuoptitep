@@ -8,16 +8,16 @@ import ca.uqac.lif.synthia.random.RandomFloat;
 import ca.uqac.lif.synthia.random.RandomInteger;
 import ca.uqac.lif.synthia.util.Choice;
 
-public class GenerateAndTestFactory extends GeneratorFactory<GroupProcessor>
+public class GenerateAndTestSolverFactory extends SolverFactory<GroupProcessor>
 {
 
-  public GenerateAndTestFactory(PreconditionFactory<GroupProcessor> factory, int min_length, int max_length)
+  public GenerateAndTestSolverFactory(PreconditionFactory<GroupProcessor> factory, int min_length, int max_length)
   {
     super(factory, min_length, max_length);
   }
 
   @Override
-  protected boolean instantiateGenerator(Point pt, GroupProcessor precondition, GeneratorExperiment e)
+  protected boolean instantiateSolver(Point pt, GroupProcessor precondition, SolverExperiment e)
   {
     int alphabet_size = -1;
     {
@@ -29,8 +29,8 @@ public class GenerateAndTestFactory extends GeneratorFactory<GroupProcessor>
       alphabet_size = ((Number) o).intValue();
     }
     GroupProcessor g = m_factory.setCondition(pt, e);
-    GenerateAndTest gen = new GenerateAndTestSat(g, m_minLength, m_maxLength, getListPicker(alphabet_size));
-    e.setGenerator(gen);
+    GenerateAndTestSolver gen = new GenerateAndTestSolver(g, m_minLength, m_maxLength, getListPicker(alphabet_size));
+    e.setSolver(gen);
     return true;
   }
   

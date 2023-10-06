@@ -1,24 +1,21 @@
 package inversionlab;
 
-import java.util.HashSet;
-import java.util.NoSuchElementException;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
+import ca.uqac.lif.cep.Connector;
 import ca.uqac.lif.cep.Processor;
-import ca.uqac.lif.reversi.AritalSuggestion;
+import ca.uqac.lif.cep.Pullable;
+import ca.uqac.lif.cep.tmf.QueueSource;
 import ca.uqac.lif.reversi.util.MathList;
 import ca.uqac.lif.synthia.Picker;
 
-public abstract class GenerateAndTest implements Generator
+public abstract class GenerateAndTest
 {
 	/**
 	 * The name of this generation strategy.
 	 */
-	public static final String NAME = "Random";
-
-	protected Set<AritalSuggestion> m_pastSuggestions;
-
-	protected AritalSuggestion m_nextElement;
+	public static final String NAME = "Generate and test";
 
 	protected Picker<MathList<Object>> m_listPicker;
 
@@ -32,66 +29,34 @@ public abstract class GenerateAndTest implements Generator
 	{
 		super();
 		m_processor = p;
-		m_pastSuggestions = new HashSet<AritalSuggestion>();
 		m_listPicker = list_picker;
 		m_minLength = min_length;
 		m_maxLength = max_length;
 	}
-
-	@Override
-	public boolean hasNext()
+	
+	/**
+	 * Runs a candidate input through the processor pipeline and collects its
+	 * output.
+	 * @param candidate The candidate input
+	 * @return The output from the pipeline
+	 */
+	protected List<Object> runThrough(MathList<Object>[] candidate)
 	{
-		if (m_nextElement == null)
+		List<Object> out = new ArrayList<Object>();
+		Processor proc = m_processor.duplicate();
+		for (int i = 0; i < proc.getInputArity(); i++)
 		{
-			getNextSuggestion();
+			QueueSource s = new QueueSource();
+			s.setEvents(candidate[i]);
+			s.loop(false);
+			Connector.connect(s, 0, proc, i);
 		}
-		return m_nextElement != null;
-	}
-
-	@Override
-	public AritalSuggestion next()
-	{
-		if (m_nextElement == null)
+		Pullable p = proc.getPullableOutput();
+		while (p.hasNext())
 		{
-			getNextSuggestion();
+			Object o = p.next();
+			out.add(o);
 		}
-		if (m_nextElement == null)
-		{
-			throw new NoSuchElementException("No more element to enumerate");
-		}
-		AritalSuggestion a = m_nextElement;
-		m_nextElement = null;
-		return a;
+		return out;
 	}
-
-	@SuppressWarnings("unchecked")
-	protected void getNextSuggestion()
-	{
-		MathList<Object>[] candidate = new MathList[m_processor.getInputArity()];
-		AritalSuggestion sugg = null;
-		do
-		{
-			sugg = null;
-			for (int i = 0; i < candidate.length; i++)
-			{
-				candidate[i] = m_listPicker.pick();
-				//System.out.println("Candidate: " + candidate[i]);
-			}
-			if (!isValidSuggestion(candidate))
-			{
-				//System.out.println("Invalid");
-				continue;
-			}
-			sugg = new AritalSuggestion(candidate.length);
-			for (int i = 0; i < candidate.length; i++)
-			{
-				sugg.set(i, candidate[i]);
-			}
-		} while (sugg == null || m_pastSuggestions.contains(sugg));
-		m_pastSuggestions.add(sugg);
-		m_nextElement = sugg;
-	}
-
-	protected abstract boolean isValidSuggestion(MathList<Object>[] candidate);
-
 }

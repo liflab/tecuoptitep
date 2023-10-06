@@ -29,6 +29,11 @@ public abstract class StreamExperiment extends Experiment
 	public static final String SIZE_LIMIT = "Size limit";
 	
 	/**
+	 * The name of parameter "length distribution".
+	 */
+	public static final String LENGTH_DISTRIBUTION = "Length distribution";
+	
+	/**
 	 * Creates a new experiment instance and populates the description of some of
 	 * its parameters.
 	 */
