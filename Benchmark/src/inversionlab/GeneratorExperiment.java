@@ -23,6 +23,11 @@ public class GeneratorExperiment extends StreamExperiment
 	 */
 	public static final String ELEMENTS = "Elements";
 	
+	 /**
+   * The name of parameter "length distribution".
+   */
+  public static final String LENGTH_DISTRIBUTION = "Length distribution";
+	
 	/**
 	 * The maximum number of streams to generate before interrupting the experiment.
 	 * A negative value indicates no limit.

@@ -38,6 +38,11 @@ public class SolverExperiment extends StreamExperiment
 	public static final String RATIO = "Success ratio";
 	
 	/**
+   * The name of parameter "success distribution".
+   */
+  public static final String LENGTH_DISTRIBUTION = "Length distribution";
+	
+	/**
 	 * The name of parameter "success distribution".
 	 */
 	public static final String SUCCESS_DISTRIBUTION = "Success distribution";
