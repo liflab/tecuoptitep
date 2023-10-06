@@ -1,6 +1,7 @@
 package inversionlab;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
 
 import ca.uqac.lif.dag.Node;
@@ -18,17 +19,47 @@ public class ReversibleSolver implements Solver
 	
 	protected final Reversible m_condition;
 	
-	public ReversibleSolver(Reversible condition)
+	protected final int m_maxTries;
+	
+	protected long m_totalTries;
+	
+	protected long m_successes;
+	
+	public ReversibleSolver(Reversible condition, int max_tries)
 	{
 		super();
 		m_condition = condition;
+		m_maxTries = max_tries;
+		m_totalTries = 0;
+		m_successes = 0;
 	}
 	
 	@Override
 	public Set<AritalSuggestion> solve(AritalSuggestion outputs)
 	{
-		m_condition.reset();
-		m_condition.setTargetOutputs(0, Arrays.asList(new Suggestion(outputs.get(0))));
-		return AritalSuggestion.getSuggestions((Node) m_condition);
+		Set<AritalSuggestion> solutions = new HashSet<AritalSuggestion>();
+		for (int i = 0; i < m_maxTries; i++)
+		{
+		  m_condition.reset();
+		  m_condition.setTargetOutputs(0, Arrays.asList(new Suggestion(outputs.get(0))));
+		  Set<AritalSuggestion> sols = AritalSuggestion.getSuggestions((Node) m_condition);
+		  solutions.addAll(sols);
+		  if (!sols.isEmpty())
+		  {
+		    m_successes++;
+		  }
+		}
+		m_totalTries += m_maxTries;
+		return solutions;
 	}
+
+  @Override
+  public double getHitRate()
+  {
+    if (m_totalTries == 0)
+    {
+      return 0f;
+    }
+    return (double) m_successes / (double) m_totalTries;
+  }
 }

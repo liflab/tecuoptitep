@@ -6,6 +6,7 @@ import java.util.Set;
 import ca.uqac.lif.json.JsonMap;
 import ca.uqac.lif.json.JsonNumber;
 import ca.uqac.lif.labpal.experiment.ExperimentException;
+import ca.uqac.lif.labpal.util.Stopwatch;
 import ca.uqac.lif.reversi.AritalSuggestion;
 import ca.uqac.lif.synthia.Picker;
 
@@ -93,8 +94,11 @@ public class SolverExperiment extends StreamExperiment
 		writeOutput(LENGTH_DISTRIBUTION, len_dist);
 		JsonMap suc_dist = new JsonMap();
 		writeOutput(SUCCESS_DISTRIBUTION, suc_dist);
-		for (int i = 0; i < readInt(SIZE_LIMIT); i++)
+		int total_tries = readInt(SIZE_LIMIT);
+		Stopwatch.start(this);
+		for (int i = 0; i < total_tries; i++)
 		{
+		  setProgression((float) i / (float) total_tries);
 			AritalSuggestion out = m_outputPicker.pick();
 			String s_out_len = Integer.toString(((List<?>) out.get(0)).size());
 			Set<AritalSuggestion> ins = m_solver.solve(out);
@@ -107,14 +111,16 @@ public class SolverExperiment extends StreamExperiment
 			{
 				suc_entry = ((JsonNumber) suc_dist.get(s_out_len)).numberValue().intValue();
 			}
-			len_dist.put(s_out_len, len_entry + num_sols);
+			len_dist.put(s_out_len, len_entry + 1);
 			suc_dist.put(s_out_len, suc_entry + num_sols);
 			if (num_sols > 0)
 			{
 				writeOutput(SUCCESSES, readInt(SUCCESSES) + 1);
 			}
 			writeOutput(FOUND, readInt(FOUND) + num_sols);
-			writeOutput(RATIO, (float) readInt(SUCCESSES) / (float) i);
+			writeOutput(RATIO, (float) readInt(SUCCESSES) / (float) (i + 1));
 		}
+		writeOutput(HIT_RATE, m_solver.getHitRate());
+		writeOutput(TIME, Stopwatch.stop(this));
 	}
 }

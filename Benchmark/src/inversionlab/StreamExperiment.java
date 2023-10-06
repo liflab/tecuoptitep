@@ -34,6 +34,11 @@ public abstract class StreamExperiment extends Experiment
 	public static final String LENGTH_DISTRIBUTION = "Length distribution";
 	
 	/**
+   * The name of parameter "hit rate".
+   */
+  public static final String HIT_RATE = "Hit rate";
+	
+	/**
 	 * Creates a new experiment instance and populates the description of some of
 	 * its parameters.
 	 */
@@ -42,5 +47,6 @@ public abstract class StreamExperiment extends Experiment
 		super();
 		describe(PROBLEM, "The input generation problem this experiment considers");
 		describe(METHOD, "The method or tool used to generate input sequences");
+		describe(HIT_RATE, "The fraction of times where calling the method on an output results in a suitable input");
 	}
 }

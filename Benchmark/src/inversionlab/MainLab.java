@@ -10,9 +10,10 @@ import static inversionlab.PreconditionFactory.ALPHABET_SIZE;
 import static inversionlab.PreconditionFactory.CONDITION;
 import static inversionlab.GeneratorExperiment.ELEMENTS;
 import static inversionlab.GeneratorExperiment.METHOD;
-import static inversionlab.GeneratorExperiment.TIME;
 import static inversionlab.SolverExperiment.RATIO;
 import static inversionlab.SolverExperiment.SUCCESSES;
+import static inversionlab.StreamExperiment.HIT_RATE;
+import static inversionlab.StreamExperiment.TIME;
 
 import ca.uqac.lif.labpal.Laboratory;
 import ca.uqac.lif.labpal.experiment.ExperimentGroup;
@@ -26,6 +27,7 @@ import ca.uqac.lif.labpal.util.CliParser.ArgumentMap;
 import ca.uqac.lif.spreadsheet.chart.gnuplot.GnuplotScatterplot;
 import ca.uqac.lif.spreadsheet.functions.ExpandAsColumns;
 
+@SuppressWarnings("unused")
 public class MainLab extends Laboratory
 {
 	@Override
@@ -44,8 +46,11 @@ public class MainLab extends Laboratory
 		System.out.println("Alphabet size:\t" + alphabet_size);
 
 		/* The maximum number of traces to generate */
-		int trace_limit = intArgOrDefault(args, "traces", 10);
+		int trace_limit = intArgOrDefault(args, "traces", 20);
 		System.out.println("Trace limit:\t" + trace_limit);
+		
+		/* The maximum number of tries for the reversible solver on each output */
+		int max_tries = 10000;
 
 		// Generator experiments
 		{
@@ -77,22 +82,21 @@ public class MainLab extends Laboratory
 			ExperimentGroup g = new ExperimentGroup("Solver experiments", "Experiments where each input generation method is asked to produce an input producing a precise output.");
 			add(g);
 			SolverExperimentFactory factory = new SolverExperimentFactory(this);
-			factory.add(ReversibleSolver.NAME, new ReversibleSolverFactory(new CircuitFactory(), min_len, max_len).setSeed(getSeed()));
-			factory.add(GenerateAndTestSolver.NAME, new GenerateAndTestSolverFactory(new PipelineFactory(), min_len, max_len).setSeed(getSeed()));
+			factory.add(ReversibleSolver.NAME, new ReversibleSolverFactory(new CircuitFactory(), min_len, max_len, max_tries).setSeed(getSeed()));
+			factory.add(GenerateAndTestSolver.NAME, new GenerateAndTestSolverFactory(new PipelineFactory(), min_len, max_len, max_tries).setSeed(getSeed()));
 			
 			Region big_r = product(
 					extension(METHOD, ReversibleSolver.NAME, GenerateAndTestSolver.NAME),
 					extension(CONDITION, PreconditionFactory.TWO_EQUAL_TRIM, PreconditionFactory.TWO_EQUAL_DECIMATE),
 					extension(ALPHABET_SIZE, alphabet_size),
-					extension(ALPHA, 0.1f));
+					extension(ALPHA, 0.5f));
 			for (Region r : big_r.all(ALPHA, ALPHABET_SIZE))
 			{
-				ExperimentTable et = table(METHOD, CONDITION, SUCCESSES, RATIO);
+				ExperimentTable et = table(METHOD, CONDITION, RATIO, HIT_RATE, TIME);
+				et.setTitle("Success ratio for the solving problem, |\u03a3|=" + getInt(r, ALPHABET_SIZE) + ", \u03b1=" + getFloat(r, ALPHA));
 				et.add(factory.get(r));
-				TransformedTable tt = transform(new ExpandAsColumns(METHOD, TIME), et);
-				add(tt);
 				g.add(factory.get(r));
-				add(new Plot(tt, new GnuplotScatterplot().setCustomHeader("set datafile missing \"\"")));
+				add(et);
 			}
 		}
 
@@ -111,8 +115,18 @@ public class MainLab extends Laboratory
 		parser.addArgument(new Argument().withLongName("traces").withArgument("x").withDescription("Stop after generating x traces"));
 		parser.addArgument(new Argument().withLongName("alphabet").withArgument("x").withDescription("Set alphabet size to x"));
 	}
+	
+	protected static float getFloat(Region r, String name)
+	{
+	  return ((Number) r.asPoint().get(name)).floatValue();
+	}
+	
+	protected static int getInt(Region r, String name)
+  {
+    return ((Number) r.asPoint().get(name)).intValue();
+  }
 
-	public static int intArgOrDefault(ArgumentMap args, String name, int int_default)
+	protected static int intArgOrDefault(ArgumentMap args, String name, int int_default)
 	{
 		if (args.hasOption(name))
 		{

@@ -10,10 +10,12 @@ import ca.uqac.lif.synthia.util.Choice;
 
 public class GenerateAndTestSolverFactory extends SolverFactory<GroupProcessor>
 {
-
-  public GenerateAndTestSolverFactory(PreconditionFactory<GroupProcessor> factory, int min_length, int max_length)
+  protected final int m_maxTries;
+  
+  public GenerateAndTestSolverFactory(PreconditionFactory<GroupProcessor> factory, int min_length, int max_length, int max_tries)
   {
     super(factory, min_length, max_length);
+    m_maxTries = max_tries;
   }
 
   @Override
@@ -29,7 +31,7 @@ public class GenerateAndTestSolverFactory extends SolverFactory<GroupProcessor>
       alphabet_size = ((Number) o).intValue();
     }
     GroupProcessor g = m_factory.setCondition(pt, e);
-    GenerateAndTestSolver gen = new GenerateAndTestSolver(g, m_minLength, m_maxLength, getListPicker(alphabet_size));
+    GenerateAndTestSolver gen = new GenerateAndTestSolver(g, m_minLength, m_maxLength, getListPicker(alphabet_size), m_maxTries);
     e.setSolver(gen);
     return true;
   }

@@ -11,6 +11,7 @@ import ca.uqac.lif.labpal.Laboratory;
 import ca.uqac.lif.labpal.experiment.ExperimentFactory;
 import ca.uqac.lif.labpal.region.Point;
 import ca.uqac.lif.reversi.util.EndsInPicker;
+import ca.uqac.lif.synthia.random.RandomInteger;
 
 public class SolverExperimentFactory extends ExperimentFactory<SolverExperiment>
 {
@@ -49,8 +50,9 @@ public class SolverExperimentFactory extends ExperimentFactory<SolverExperiment>
     {
       return false;
     }
-    EndsInPicker out_picker = new EndsInPicker();
-    // Set picker
+    RandomInteger rint = new RandomInteger(factory.m_minLength, factory.m_maxLength).setSeed(factory.getSeed());
+    EndsInPicker out_picker = new EndsInPicker(rint);
+    e.setOutputPicker(new OutputPicker(1, out_picker));
     e.writeInput(SIZE_LIMIT, 10);
     return true;
   }

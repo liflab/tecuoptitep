@@ -1,7 +1,6 @@
 package ca.uqac.lif.reversi.functions;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 

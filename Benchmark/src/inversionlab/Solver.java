@@ -10,5 +10,7 @@ import ca.uqac.lif.reversi.AritalSuggestion;
  */
 public interface Solver
 {
-	public Set<AritalSuggestion> solve(AritalSuggestion outputs); 
+	public Set<AritalSuggestion> solve(AritalSuggestion outputs);
+	
+	public double getHitRate();
 }
