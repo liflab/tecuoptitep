@@ -37,9 +37,9 @@ public abstract class StreamExperiment extends Experiment
 	public static final String METHOD = "Method";
 	
 	/**
-	 * The name of parameter "time".
+	 * The name of parameter "duration".
 	 */
-	public static final String TIME = "Time";
+	public static final String DURATION = "Duration";
 	
 	/**
 	 * The name of parameter "size limit".
@@ -61,5 +61,6 @@ public abstract class StreamExperiment extends Experiment
 		describe(PROBLEM, "The input generation problem this experiment considers");
 		describe(METHOD, "The method or tool used to generate input sequences");
 		describe(HIT_RATE, "The fraction of times where calling the method on an output results in a suitable input");
+		describe(DURATION, "The total duration of the experiment");
 	}
 }

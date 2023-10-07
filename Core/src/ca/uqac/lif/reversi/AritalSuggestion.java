@@ -127,7 +127,6 @@ public class AritalSuggestion
   			for (int i = 0; i < sol.length; i++)
   			{
   				candidate.set(i, ((Suggestion) sol[i]).getValue());
-  				//candidate.set(i, ((Suggestion) sol[i]));
   			}
   			grouped_sugs.add(candidate);
   		}

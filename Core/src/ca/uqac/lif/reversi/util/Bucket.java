@@ -54,5 +54,19 @@ public class Bucket<T> implements Iterator<T>
   {
     m_queue.addAll(elements);
   }
+  
+  public void fill(Collection<T> elements, int max)
+  {
+  	int i = 0;
+  	for (T e : elements)
+  	{
+  		m_queue.add(e);
+  		i++;
+  		if (i == max)
+  		{
+  			break;
+  		}
+  	}
+  }
 
 }

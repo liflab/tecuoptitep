@@ -36,11 +36,12 @@ public class ReversibleGeneratorFactory extends GeneratorFactory<Reversible>
    */
   public static final String NUM_OUTPUTS = "Simultaneous outputs";
   
-  protected int m_maxTries = 1;
+  protected final int m_maxTries;
   
-  public ReversibleGeneratorFactory(PreconditionFactory<Reversible> factory, int min_length, int max_length)
+  public ReversibleGeneratorFactory(PreconditionFactory<Reversible> factory, int min_length, int max_length, int max_tries)
   {
     super(factory, min_length, max_length);
+    m_maxTries = max_tries;
   }
 
   @Override

@@ -37,6 +37,11 @@ import ca.uqac.lif.reversi.util.MathList;
 public class GeneratorExperiment extends StreamExperiment
 {
 	/**
+	 * The name of parameter "time".
+	 */
+	public static final String TIME = "Time";
+	
+	/**
 	 * The name of parameter "elements".
 	 */
 	public static final String ELEMENTS = "Elements";
@@ -118,6 +123,7 @@ public class GeneratorExperiment extends StreamExperiment
 			m_suggestions.add(sug);
 			elems++;
 			l_time.add(Stopwatch.lap(this));
+			System.out.println(Stopwatch.lap(this));
 			l_elements.add(elems);
 			if (m_sizeLimit > 0)
 			{
@@ -133,6 +139,7 @@ public class GeneratorExperiment extends StreamExperiment
 			}
 			distribution.put(s_size, new JsonNumber(cnt));
 		}
+		writeOutput(DURATION, Stopwatch.stop(this));
 	}
 	
 	@Override

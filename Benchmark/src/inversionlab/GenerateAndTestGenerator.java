@@ -34,7 +34,7 @@ public class GenerateAndTestGenerator extends GenerateAndTest implements Generat
 
 	protected AritalSuggestion m_nextElement;
 	
-	protected boolean m_allTrue = false;
+	protected boolean m_allTrue = true;
 	
 	public GenerateAndTestGenerator(Processor p, int min_length, int max_length,
 			Picker<MathList<Object>> list_picker)

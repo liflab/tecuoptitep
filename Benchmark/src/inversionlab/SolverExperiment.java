@@ -144,6 +144,6 @@ public class SolverExperiment extends StreamExperiment
 			writeOutput(RATIO, (float) readInt(SUCCESSES) / (float) (i + 1));
 		}
 		writeOutput(HIT_RATE, m_solver.getHitRate());
-		writeOutput(TIME, Stopwatch.stop(this));
+		writeOutput(DURATION, Stopwatch.stop(this));
 	}
 }

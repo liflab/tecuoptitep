@@ -21,12 +21,28 @@ package inversionlab;
 import ca.uqac.lif.reversi.util.MathList;
 import ca.uqac.lif.synthia.Picker;
 
+/**
+ * A picker that generates lists of randomly selected length with randomly
+ * selected symbols. These two parameters are provided by respective
+ * picker instances. 
+ */
 public class RandomListPicker implements Picker<MathList<Object>>
 {
+	/**
+	 * A picker that defines the length of the generated sequences.
+	 */
 	protected final Picker<Integer> m_length;
 
+	/**
+	 * A picker that provides the symbols of the sequence.
+	 */
 	protected final Picker<Object> m_symbol;
 
+	/**
+	 * Creates a new random list picker.
+	 * @param len A picker that defines the length of the generated sequences
+	 * @param symbol A picker that provides the symbols of the sequence
+	 */
 	public RandomListPicker(Picker<Integer> len, Picker<Object> symbol)
 	{
 		super();
