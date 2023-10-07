@@ -33,7 +33,7 @@ public abstract class GenerateAndTest
 	/**
 	 * The name of this generation strategy.
 	 */
-	public static final String NAME = "Generate and test";
+	public static final String NAME = "Random";
 
 	protected Picker<MathList<Object>> m_listPicker;
 

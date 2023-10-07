@@ -19,6 +19,7 @@
 package ca.uqac.lif.reversi.functions;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -119,11 +120,18 @@ public class StreamSolver implements Bounded<AritalSuggestion>
 				m_pipeline.setTargetOutputs(0, out_sugs);
 				//System.out.println(output + "?");
 				Set<AritalSuggestion> sugs = AritalSuggestion.getSuggestions((Node) m_pipeline);
-				if (!sugs.isEmpty())
+				Set<AritalSuggestion> new_sugs = new HashSet<AritalSuggestion>();
+				for (AritalSuggestion s : sugs)
 				{
-					//System.out.println("Found " + sugs.size());
+					AritalSuggestion out_sug = new AritalSuggestion(m_numOutputs + 1);
+					for (int j = 0; j < m_numOutputs; j++)
+					{
+						out_sug.set(j, s.get(j));
+					}
+					out_sug.set(m_numOutputs, out_sugs);
+					new_sugs.add(out_sug);
 				}
-				m_bucket.fill(sugs);
+				m_bucket.fill(new_sugs);
 			}
 		}
 		//System.out.println("End");

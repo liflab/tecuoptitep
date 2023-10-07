@@ -68,6 +68,11 @@ public class GeneratorExperiment extends StreamExperiment
 	protected final Set<AritalSuggestion> m_suggestions;
 	
 	/**
+	 * The set of outputs for which an input has been successfully found.
+	 */
+	protected final Set<AritalSuggestion> m_successfulOutputs;
+	
+	/**
 	 * Creates a new experiment instance and populates the description of some of
 	 * its parameters.
 	 */
@@ -75,6 +80,7 @@ public class GeneratorExperiment extends StreamExperiment
 	{
 		super();
 		m_suggestions = new HashSet<AritalSuggestion>();
+		m_successfulOutputs = new HashSet<AritalSuggestion>();
 		describe(TIME, "The time (in ms) since the start of the generation");
 		describe(ELEMENTS, "The number of distinct valid input streams generated so far");
 		describe(SIZE_LIMIT, "The number of streams to generate in each experiment");
@@ -155,6 +161,16 @@ public class GeneratorExperiment extends StreamExperiment
 			out.append("<p>Generated suggestions:</p>\n");
 			out.append("<ol>\n");
 			for (AritalSuggestion s : m_suggestions)
+			{
+				out.append("<li>").append(s).append("</li>\n");
+			}
+			out.append("</ol>\n");
+		}
+		if (!m_successfulOutputs.isEmpty())
+		{
+			out.append("<p>Successful outputs:</p>\n");
+			out.append("<ol>\n");
+			for (AritalSuggestion s : m_successfulOutputs)
 			{
 				out.append("<li>").append(s).append("</li>\n");
 			}

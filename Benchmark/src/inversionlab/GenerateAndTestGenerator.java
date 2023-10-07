@@ -83,29 +83,35 @@ public class GenerateAndTestGenerator extends GenerateAndTest implements Generat
 				candidate[i] = m_listPicker.pick();
 				//System.out.println("Candidate: " + candidate[i]);
 			}
-			if (!isValidSuggestion(candidate))
+			List<Object> out_list = isValidSuggestion(candidate);
+			if (out_list == null)
 			{
 				//System.out.println("Invalid");
 				continue;
 			}
-			sugg = new AritalSuggestion(candidate.length);
+			sugg = new AritalSuggestion(candidate.length + 1);
 			for (int i = 0; i < candidate.length; i++)
 			{
 				sugg.set(i, candidate[i]);
+				sugg.set(candidate.length, out_list);
 			}
 		} while (sugg == null || m_pastSuggestions.contains(sugg));
 		m_pastSuggestions.add(sugg);
 		m_nextElement = sugg;
 	}
 	
-	public boolean isValidSuggestion(MathList<Object>[] inputs)
+	public List<Object> isValidSuggestion(MathList<Object>[] inputs)
 	{
 		List<Object> sol = runThrough(inputs);
 		if (sol.size() < m_minLength || sol.size() > m_maxLength)
 		{
-			return false;
+			return null;
 		}
-		return m_condition.isValid(sol);
+		if (m_condition.isValid(sol))
+		{
+			return sol;
+		}
+		return null;
 	}
 
 }

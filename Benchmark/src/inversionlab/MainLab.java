@@ -72,11 +72,11 @@ public class MainLab extends Laboratory
     System.out.println("Trace limit:\t" + trace_limit);
 
     /* The maximum number of tries for the reversible solver on each output */
-    int max_tries = 10;
+    int max_tries = 1;
     
     /* The number of outputs given to the inversion method in the generator
      * experiments. */
-    int num_outputs = 20;
+    int num_outputs = 1;
 
     // Generator experiments
     {
