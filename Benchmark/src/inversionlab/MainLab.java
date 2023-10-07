@@ -22,7 +22,7 @@ import static ca.uqac.lif.labpal.region.ExtensionDomain.extension;
 import static ca.uqac.lif.labpal.region.ProductRegion.product;
 import static ca.uqac.lif.labpal.table.ExperimentTable.table;
 import static ca.uqac.lif.labpal.table.TransformedTable.transform;
-import static inversionlab.CircuitFactory.ALPHA;
+import static inversionlab.ReversibleFactory.ALPHA;
 import static inversionlab.ReversibleGeneratorFactory.NUM_OUTPUTS;
 import static inversionlab.PreconditionFactory.ALPHABET_SIZE;
 import static inversionlab.PreconditionFactory.CONDITION;
@@ -83,7 +83,7 @@ public class MainLab extends Laboratory
       ExperimentGroup g = new ExperimentGroup("Generator experiments", "Experiments where each input generation method is asked to produce a fixed number of inputs satisfying a given precondition.");
       add(g);
       GeneratorExperimentFactory factory = new GeneratorExperimentFactory(this).setSizeLimit(trace_limit);
-      factory.add(ReversibleGenerator.NAME, new ReversibleGeneratorFactory(new CircuitFactory(), min_len, max_len, 1).setSeed(getSeed()));
+      factory.add(ReversibleGenerator.NAME, new ReversibleGeneratorFactory(new ReversibleFactory().setLengthBounds(min_len, max_len), min_len, max_len, 1).setSeed(getSeed()));
       factory.add(GenerateAndTest.NAME, new GenerateAndTestGeneratorFactory(new PipelineFactory(), min_len, max_len).setSeed(getSeed()));
 
       Region big_r = product(
@@ -135,7 +135,7 @@ public class MainLab extends Laboratory
       ExperimentGroup g = new ExperimentGroup("Solver experiments", "Experiments where each input generation method is asked to produce an input producing a precise output.");
       add(g);
       SolverExperimentFactory factory = new SolverExperimentFactory(this);
-      factory.add(ReversibleSolver.NAME, new ReversibleSolverFactory(new CircuitFactory(), min_len, max_len, max_tries).setSeed(getSeed()));
+      factory.add(ReversibleSolver.NAME, new ReversibleSolverFactory(new ReversibleFactory().setLengthBounds(min_len, max_len), min_len, max_len, max_tries).setSeed(getSeed()));
       factory.add(GenerateAndTestSolver.NAME, new GenerateAndTestSolverFactory(new PipelineFactory(), min_len, max_len, max_tries).setSeed(getSeed()));
 
       Region big_r = product(

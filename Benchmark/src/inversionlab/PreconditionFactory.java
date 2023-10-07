@@ -34,7 +34,18 @@ public abstract class PreconditionFactory<T>
 
   public static final String TWO_EQUAL_TRIM = "Two equal trim";
   
-  protected int m_seed;
+  protected int m_seed = 0;
+  
+  protected int m_minLength = 0;
+  
+  protected int m_maxLength = 0;
+  
+  public PreconditionFactory<T> setLengthBounds(int min, int max)
+  {
+  	m_minLength = min;
+  	m_maxLength = max;
+  	return this;
+  }
   
   public T setCondition(Point pt, Experiment e)
   {

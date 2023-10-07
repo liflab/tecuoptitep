@@ -27,28 +27,40 @@ import ca.uqac.lif.reversi.CountDecimate;
 import ca.uqac.lif.reversi.Equals;
 import ca.uqac.lif.reversi.Fork;
 import ca.uqac.lif.reversi.Group;
-import ca.uqac.lif.reversi.Reversible;
 import ca.uqac.lif.reversi.Trim;
+import ca.uqac.lif.reversi.util.EndsInPicker;
+import ca.uqac.lif.reversi.util.MathList;
+import ca.uqac.lif.reversi.util.SomeTruePicker;
+import ca.uqac.lif.synthia.Picker;
 import ca.uqac.lif.synthia.random.RandomBoolean;
+import ca.uqac.lif.synthia.random.RandomInteger;
 
 /**
  * A {@link GeneratorExperimentFactory} that provides conditions expressed as
  * invertible function circuits from tecuoP titeP.
  */
-public class CircuitFactory extends PreconditionFactory<Reversible>
+@SuppressWarnings("unused")
+public class ReversibleFactory extends PreconditionFactory<ReversibleCondition>
 {
 	/**
 	 * Name of parameter "&alpha;".
 	 */
 	public static final String ALPHA = "\u03b1";
 
-	public CircuitFactory()
+	public ReversibleFactory()
 	{
 		super();
 	}
+	
+  @Override
+  public ReversibleFactory setLengthBounds(int min, int max)
+  {
+  	super.setLengthBounds(min, max);
+  	return this;
+  }
 
 	@Override
-	protected Group getTwoEqualDecimate(Point pt, int alphabet_size, Experiment e)
+	protected ReversibleCondition getTwoEqualDecimate(Point pt, int alphabet_size, Experiment e)
 	{
 		List<Object> alphabet = getStringAlphabet(alphabet_size);
 		float alpha = -1;
@@ -64,24 +76,33 @@ public class CircuitFactory extends PreconditionFactory<Reversible>
 		e.writeInput(ALPHA, alpha);
 		RandomBoolean coin = new RandomBoolean(alpha);
 		coin.setSeed(m_seed);
-		Group g = new Group(1, 1) {{
-			Fork f = new Fork();
-			associateInput(0, f.getInputPin(0));
-			CountDecimate t = new CountDecimate(2, alphabet, coin);
-			NodeConnector.connect(f, 0, t, 0);
-			Equals eq = new Equals(alphabet, coin);
-			NodeConnector.connect(t, 0, eq, 0);
-			NodeConnector.connect(f, 1, eq, 1);
-			Trim tr = new Trim(1, alphabet, coin);
-			NodeConnector.connect(eq, 0, tr, 0);
-			associateOutput(0, tr.getOutputPin(0));
-			addNodes(f, t, eq, tr);
-		}};
-		return g;
+		return new ReversibleCondition(
+				new Group(1, 1) {{
+					Fork f = new Fork();
+					associateInput(0, f.getInputPin(0));
+					CountDecimate t = new CountDecimate(2, alphabet, coin);
+					NodeConnector.connect(f, 0, t, 0);
+					Equals eq = new Equals(alphabet, coin);
+					NodeConnector.connect(t, 0, eq, 0);
+					NodeConnector.connect(f, 1, eq, 1);
+					Trim tr = new Trim(1, alphabet, coin);
+					NodeConnector.connect(eq, 0, tr, 0);
+					associateOutput(0, tr.getOutputPin(0));
+					addNodes(f, t, eq, tr);
+				}})
+		{
+			@Override
+			public Picker<MathList<Object>> getPicker()
+			{
+				RandomInteger rint = new RandomInteger(m_minLength, m_maxLength).setSeed(m_seed + 10);
+				Picker<Boolean> rboo = new RandomBoolean().setSeed(m_seed + 47);
+				return new SomeTruePicker(rint, rboo);
+			}
+		};
 	}
 
 	@Override
-	protected Group getTwoEqualTrim(Point pt, int alphabet_size, Experiment e)
+	protected ReversibleCondition getTwoEqualTrim(Point pt, int alphabet_size, Experiment e)
 	{
 		List<Object> alphabet = getStringAlphabet(alphabet_size);
 		float alpha = -1;
@@ -97,17 +118,26 @@ public class CircuitFactory extends PreconditionFactory<Reversible>
 		e.writeInput(ALPHA, alpha);
 		RandomBoolean coin = new RandomBoolean(alpha);
 		coin.setSeed(m_seed);
-		Group g = new Group(1, 1) {{
-			Fork f = new Fork();
-			associateInput(0, f.getInputPin(0));
-			Trim t = new Trim(1, alphabet, coin);
-			NodeConnector.connect(f, 0, t, 0);
-			Equals eq = new Equals(alphabet, coin);
-			NodeConnector.connect(t, 0, eq, 0);
-			NodeConnector.connect(f, 1, eq, 1);
-			associateOutput(0, eq.getOutputPin(0));
-			addNodes(f, t, eq);
-		}};
-		return g;
+		return new ReversibleCondition(
+				new Group(1, 1) {{
+					Fork f = new Fork();
+					associateInput(0, f.getInputPin(0));
+					Trim t = new Trim(1, alphabet, coin);
+					NodeConnector.connect(f, 0, t, 0);
+					Equals eq = new Equals(alphabet, coin);
+					NodeConnector.connect(t, 0, eq, 0);
+					NodeConnector.connect(f, 1, eq, 1);
+					associateOutput(0, eq.getOutputPin(0));
+					addNodes(f, t, eq);
+				}})
+		{
+			@Override
+			public Picker<MathList<Object>> getPicker()
+			{
+				RandomInteger rint = new RandomInteger(m_minLength, m_maxLength).setSeed(m_seed + 10);
+				Picker<Boolean> rboo = new RandomBoolean().setSeed(m_seed + 47);
+				return new SomeTruePicker(rint, rboo);
+			}
+		};
 	}
 }

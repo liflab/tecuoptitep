@@ -20,11 +20,8 @@ package inversionlab;
 
 import ca.uqac.lif.labpal.region.Point;
 import ca.uqac.lif.reversi.functions.DistinctStreamSolver;
-import ca.uqac.lif.reversi.Reversible;
-import ca.uqac.lif.reversi.util.AllTruePicker;
-import ca.uqac.lif.synthia.random.RandomInteger;
 
-public class ReversibleGeneratorFactory extends GeneratorFactory<Reversible>
+public class ReversibleGeneratorFactory extends GeneratorFactory<ReversibleCondition>
 {
   /**
    * Name of parameter "&alpha;".
@@ -38,14 +35,14 @@ public class ReversibleGeneratorFactory extends GeneratorFactory<Reversible>
   
   protected final int m_maxTries;
   
-  public ReversibleGeneratorFactory(PreconditionFactory<Reversible> factory, int min_length, int max_length, int max_tries)
+  public ReversibleGeneratorFactory(PreconditionFactory<ReversibleCondition> factory, int min_length, int max_length, int max_tries)
   {
     super(factory, min_length, max_length);
     m_maxTries = max_tries;
   }
 
   @Override
-  protected boolean instantiateGenerator(Point pt, Reversible precondition, GeneratorExperiment e)
+  protected boolean instantiateGenerator(Point pt, ReversibleCondition precondition, GeneratorExperiment e)
   {
     float alpha = -1;
     {
@@ -70,9 +67,8 @@ public class ReversibleGeneratorFactory extends GeneratorFactory<Reversible>
     e.describe(NUM_OUTPUTS, "The number of simultaneous outputs to invert");
     e.writeInput(NUM_OUTPUTS, num_outputs);
     e.writeInput(METHOD, ReversibleGenerator.NAME);
-    Reversible g = m_factory.setCondition(pt, e);
-    RandomInteger rint = new RandomInteger(m_minLength, m_maxLength).setSeed(getSeed() + 10);
-    DistinctStreamSolver solver = new DistinctStreamSolver(g, new AllTruePicker(rint), m_maxTries, num_outputs);
+    ReversibleCondition g = m_factory.setCondition(pt, e);
+    DistinctStreamSolver solver = new DistinctStreamSolver(g.getReversible(), g.getPicker(), m_maxTries, num_outputs);
     ReversibleGenerator gen = new ReversibleGenerator(solver);
     e.setGenerator(gen);
     return true;
