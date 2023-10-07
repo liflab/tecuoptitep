@@ -18,6 +18,8 @@
  */
 package inversionlab;
 
+import java.util.List;
+
 import ca.uqac.lif.cep.Connector;
 import ca.uqac.lif.cep.GroupProcessor;
 import ca.uqac.lif.cep.functions.ApplyFunction;
@@ -34,7 +36,7 @@ import ca.uqac.lif.labpal.region.Point;
  * A {@link GeneratorExperimentFactory} that provides conditions expressed as BeepBeep
  * processor pipelines.
  */
-public class PipelineFactory extends PreconditionFactory<GroupProcessor>
+public class PipelineFactory extends PreconditionFactory<PipelineCondition>
 {
 	public PipelineFactory()
 	{
@@ -42,38 +44,52 @@ public class PipelineFactory extends PreconditionFactory<GroupProcessor>
 	}
 
 	@Override
-	protected GroupProcessor getTwoEqualDecimate(Point pt, int alphabet_size, Experiment e)
+	protected PipelineCondition getTwoEqualDecimate(Point pt, int alphabet_size, Experiment e)
 	{
-		GroupProcessor g = new GroupProcessor(1, 1) {{
-      Fork f = new Fork();
-      associateInput(0, f, 0);
-      CountDecimate t = new CountDecimate(2);
-      Connector.connect(f, 0, t, 0);
-      ApplyFunction eq = new ApplyFunction(Equals.instance);
-      Connector.connect(t, 0, eq, 0);
-      Connector.connect(f, 1, eq, 1);
-      Cumulate tr = new Cumulate(Booleans.and);
-      Connector.connect(eq, tr);
-      associateOutput(0, tr, 0);
-      addProcessors(f, t, eq, tr);
-    }};
-    return g;
+		return new PipelineCondition(
+				new GroupProcessor(1, 1) {{
+					Fork f = new Fork();
+					associateInput(0, f, 0);
+					CountDecimate t = new CountDecimate(2);
+					Connector.connect(f, 0, t, 0);
+					ApplyFunction eq = new ApplyFunction(Equals.instance);
+					Connector.connect(t, 0, eq, 0);
+					Connector.connect(f, 1, eq, 1);
+					Cumulate tr = new Cumulate(Booleans.and);
+					Connector.connect(eq, tr);
+					associateOutput(0, tr, 0);
+					addProcessors(f, t, eq, tr);
+				}})
+		{
+			@Override
+			public boolean isValid(List<? extends Object> output)
+			{
+				return output.contains(Boolean.TRUE);
+			}
+		};
 	}
 
 	@Override
-	protected GroupProcessor getTwoEqualTrim(Point pt, int alphabet_size, Experiment e)
+	protected PipelineCondition getTwoEqualTrim(Point pt, int alphabet_size, Experiment e)
 	{
-		GroupProcessor g = new GroupProcessor(1, 1) {{
-      Fork f = new Fork();
-      associateInput(0, f, 0);
-      Trim t = new Trim(1);
-      Connector.connect(f, 0, t, 0);
-      ApplyFunction eq = new ApplyFunction(Equals.instance);
-      Connector.connect(t, 0, eq, 0);
-      Connector.connect(f, 1, eq, 1);
-      associateOutput(0, eq, 0);
-      addProcessors(f, t, eq);
-    }};
-    return g;
+		return new PipelineCondition(
+				new GroupProcessor(1, 1) {{
+					Fork f = new Fork();
+					associateInput(0, f, 0);
+					Trim t = new Trim(1);
+					Connector.connect(f, 0, t, 0);
+					ApplyFunction eq = new ApplyFunction(Equals.instance);
+					Connector.connect(t, 0, eq, 0);
+					Connector.connect(f, 1, eq, 1);
+					associateOutput(0, eq, 0);
+					addProcessors(f, t, eq);
+				}})
+		{
+			@Override
+			public boolean isValid(List<? extends Object> output)
+			{
+				return output.contains(Boolean.TRUE);
+			}
+		};
 	}
 }

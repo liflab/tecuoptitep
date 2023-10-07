@@ -20,22 +20,21 @@ package inversionlab;
 
 import static inversionlab.PreconditionFactory.ALPHABET_SIZE;
 
-import ca.uqac.lif.cep.GroupProcessor;
 import ca.uqac.lif.labpal.region.Point;
 import ca.uqac.lif.synthia.random.RandomFloat;
 import ca.uqac.lif.synthia.random.RandomInteger;
 import ca.uqac.lif.synthia.util.Choice;
 
-public class GenerateAndTestGeneratorFactory extends GeneratorFactory<GroupProcessor>
+public class GenerateAndTestGeneratorFactory extends GeneratorFactory<PipelineCondition>
 {
 
-  public GenerateAndTestGeneratorFactory(PreconditionFactory<GroupProcessor> factory, int min_length, int max_length)
+  public GenerateAndTestGeneratorFactory(PreconditionFactory<PipelineCondition> factory, int min_length, int max_length)
   {
     super(factory, min_length, max_length);
   }
 
   @Override
-  protected boolean instantiateGenerator(Point pt, GroupProcessor precondition, GeneratorExperiment e)
+  protected boolean instantiateGenerator(Point pt, PipelineCondition precondition, GeneratorExperiment e)
   {
     int alphabet_size = -1;
     {
@@ -46,8 +45,8 @@ public class GenerateAndTestGeneratorFactory extends GeneratorFactory<GroupProce
       }
       alphabet_size = ((Number) o).intValue();
     }
-    GroupProcessor g = m_factory.setCondition(pt, e);
-    GenerateAndTestGenerator gen = new GenerateAndTestGenerator(g, m_minLength, m_maxLength, getListPicker(alphabet_size));
+    PipelineCondition pc = m_factory.setCondition(pt, e);
+    GenerateAndTestGenerator gen = new GenerateAndTestGenerator(pc.getPipeline(), m_minLength, m_maxLength, getListPicker(alphabet_size), pc);
     e.setGenerator(gen);
     return true;
   }

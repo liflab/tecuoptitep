@@ -77,4 +77,9 @@ public abstract class GenerateAndTest
 		}
 		return out;
 	}
+	
+	public static interface OutputCondition
+	{
+		public boolean isValid(List<? extends Object> output);
+	}
 }

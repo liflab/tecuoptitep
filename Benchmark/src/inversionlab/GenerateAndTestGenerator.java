@@ -34,19 +34,14 @@ public class GenerateAndTestGenerator extends GenerateAndTest implements Generat
 
 	protected AritalSuggestion m_nextElement;
 	
-	protected boolean m_allTrue = true;
+	protected final OutputCondition m_condition;
 	
 	public GenerateAndTestGenerator(Processor p, int min_length, int max_length,
-			Picker<MathList<Object>> list_picker)
+			Picker<MathList<Object>> list_picker, OutputCondition condition)
 	{
 		super(p, min_length, max_length, list_picker);
 		m_pastSuggestions = new HashSet<AritalSuggestion>();
-	}
-	
-	public GenerateAndTest setAllTrue(boolean b)
-	{
-		m_allTrue = b;
-		return this;
+		m_condition = condition;
 	}
 	
 	@Override
@@ -110,11 +105,7 @@ public class GenerateAndTestGenerator extends GenerateAndTest implements Generat
 		{
 			return false;
 		}
-		if (m_allTrue)
-		{
-			return !sol.contains(Boolean.FALSE);
-		}
-		return sol.contains(Boolean.TRUE);
+		return m_condition.isValid(sol);
 	}
 
 }

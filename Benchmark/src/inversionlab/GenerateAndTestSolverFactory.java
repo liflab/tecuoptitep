@@ -20,24 +20,23 @@ package inversionlab;
 
 import static inversionlab.PreconditionFactory.ALPHABET_SIZE;
 
-import ca.uqac.lif.cep.GroupProcessor;
 import ca.uqac.lif.labpal.region.Point;
 import ca.uqac.lif.synthia.random.RandomFloat;
 import ca.uqac.lif.synthia.random.RandomInteger;
 import ca.uqac.lif.synthia.util.Choice;
 
-public class GenerateAndTestSolverFactory extends SolverFactory<GroupProcessor>
+public class GenerateAndTestSolverFactory extends SolverFactory<PipelineCondition>
 {
   protected final int m_maxTries;
   
-  public GenerateAndTestSolverFactory(PreconditionFactory<GroupProcessor> factory, int min_length, int max_length, int max_tries)
+  public GenerateAndTestSolverFactory(PreconditionFactory<PipelineCondition> factory, int min_length, int max_length, int max_tries)
   {
     super(factory, min_length, max_length);
     m_maxTries = max_tries;
   }
 
   @Override
-  protected boolean instantiateSolver(Point pt, GroupProcessor precondition, SolverExperiment e)
+  protected boolean instantiateSolver(Point pt, PipelineCondition precondition, SolverExperiment e)
   {
     int alphabet_size = -1;
     {
@@ -48,8 +47,8 @@ public class GenerateAndTestSolverFactory extends SolverFactory<GroupProcessor>
       }
       alphabet_size = ((Number) o).intValue();
     }
-    GroupProcessor g = m_factory.setCondition(pt, e);
-    GenerateAndTestSolver gen = new GenerateAndTestSolver(g, m_minLength, m_maxLength, getListPicker(alphabet_size), m_maxTries);
+    PipelineCondition g = m_factory.setCondition(pt, e);
+    GenerateAndTestSolver gen = new GenerateAndTestSolver(g.getPipeline(), m_minLength, m_maxLength, getListPicker(alphabet_size), m_maxTries);
     e.setSolver(gen);
     return true;
   }
