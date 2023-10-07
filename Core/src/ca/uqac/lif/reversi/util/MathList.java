@@ -1,6 +1,7 @@
 /*
-    Log trace triaging and etc.
-    Copyright (C) 2016 Sylvain Hallé
+    Inversion of function circuits
+    Copyright (C) 2023 Laboratoire d'informatique formelle
+    Université du Québec à Chicoutimi, Canada
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published
