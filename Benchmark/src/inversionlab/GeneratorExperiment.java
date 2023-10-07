@@ -93,6 +93,11 @@ public class GeneratorExperiment extends StreamExperiment
 	{
 		m_sizeLimit = limit;
 		writeInput(SIZE_LIMIT, limit);
+		JsonList elems = (JsonList) read(ELEMENTS);
+		for (int i = 0; i <= limit; i++)
+		{
+			elems.add(i);
+		}
 	}
 	
 	/**
@@ -111,9 +116,7 @@ public class GeneratorExperiment extends StreamExperiment
 	public void execute() throws ExperimentException
 	{
 		JsonList l_time = (JsonList) read(TIME);
-		JsonList l_elements = (JsonList) read(ELEMENTS);
 		l_time.add(0l);
-		l_elements.add(0);
 		JsonMap distribution = (JsonMap) read(LENGTH_DISTRIBUTION);
 		Stopwatch.start(this);
 		int elems = 0;
@@ -123,8 +126,6 @@ public class GeneratorExperiment extends StreamExperiment
 			m_suggestions.add(sug);
 			elems++;
 			l_time.add(Stopwatch.lap(this));
-			System.out.println(Stopwatch.lap(this));
-			l_elements.add(elems);
 			if (m_sizeLimit > 0)
 			{
 				setProgression((float) elems / (float) m_sizeLimit);
