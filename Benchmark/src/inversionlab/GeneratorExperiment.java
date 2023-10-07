@@ -120,7 +120,7 @@ public class GeneratorExperiment extends StreamExperiment
 		JsonMap distribution = (JsonMap) read(LENGTH_DISTRIBUTION);
 		Stopwatch.start(this);
 		int elems = 0;
-		while (m_generator.hasNext() && (m_sizeLimit < 0 || elems < m_sizeLimit))
+		while ((m_sizeLimit < 0 || elems < m_sizeLimit) && m_generator.hasNext())
 		{
 			AritalSuggestion sug = m_generator.next();
 			m_suggestions.add(sug);
