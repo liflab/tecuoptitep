@@ -36,6 +36,11 @@ import ca.uqac.lif.reversi.util.MathList;
  */
 public class GeneratorExperiment extends StreamExperiment
 {
+  /**
+   * The name of parameter "generation".
+   */
+  public static final String NAME = "Generation";
+  
 	/**
 	 * The name of parameter "time".
 	 */
@@ -147,6 +152,7 @@ public class GeneratorExperiment extends StreamExperiment
 			distribution.put(s_size, new JsonNumber(cnt));
 		}
 		writeOutput(DURATION, Stopwatch.stop(this));
+		m_generator.reset();
 	}
 	
 	@Override

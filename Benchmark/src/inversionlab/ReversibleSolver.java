@@ -68,6 +68,7 @@ public class ReversibleSolver implements Solver
 		  }
 		}
 		m_totalTries += m_maxTries;
+		m_condition.reset();
 		return solutions;
 	}
 

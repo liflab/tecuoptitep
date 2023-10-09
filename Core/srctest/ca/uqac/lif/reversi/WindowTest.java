@@ -16,41 +16,25 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package inversionlab;
+package ca.uqac.lif.reversi;
 
-import ca.uqac.lif.reversi.AritalSuggestion;
-import ca.uqac.lif.reversi.functions.DistinctStreamSolver;
+import static org.junit.Assert.*;
 
-public class ReversibleGenerator implements Generator
+import java.util.Arrays;
+import java.util.List;
+
+import org.junit.Test;
+
+import ca.uqac.lif.reversi.util.MathList;
+
+public class WindowTest
 {
-	/**
-	 * The name of this generation strategy.
-	 */
-	public static final String NAME = "Inversion";
-	
-	protected DistinctStreamSolver m_solver;
-	
-	public ReversibleGenerator(DistinctStreamSolver solver)
+	@Test
+	public void test1()
 	{
-		super();
-		m_solver = solver;
-	}
-
-	@Override
-	public boolean hasNext()
-	{
-		return !m_solver.isDone();
-	}
-
-	@Override
-	public AritalSuggestion next()
-	{
-		return m_solver.pick();
-	}
-	
-	@Override
-	public void reset()
-	{
-		m_solver.reset();
+		Window w = new Window(3, new Trim(2, Arrays.asList("a", "b", "c")));
+		w.setTargetOutputs(0, Arrays.asList(new Suggestion(MathList.toList("a", "b"))));
+		List<Suggestion> sugs = w.getSuggestions(0);
+		assertEquals(9, sugs.size());
 	}
 }

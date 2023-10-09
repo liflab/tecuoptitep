@@ -30,6 +30,7 @@ import ca.uqac.lif.reversi.Group;
 import ca.uqac.lif.reversi.Trim;
 import ca.uqac.lif.reversi.util.EndsInPicker;
 import ca.uqac.lif.reversi.util.MathList;
+import ca.uqac.lif.reversi.util.AllTruePicker;
 import ca.uqac.lif.reversi.util.SomeTruePicker;
 import ca.uqac.lif.synthia.Picker;
 import ca.uqac.lif.synthia.random.RandomBoolean;
@@ -60,7 +61,7 @@ public class ReversibleFactory extends PreconditionFactory<ReversibleCondition>
   }
 
 	@Override
-	protected ReversibleCondition getTwoEqualDecimate(Point pt, int alphabet_size, Experiment e)
+	protected ReversibleCondition getTwoEqualDecimate(Point pt, int alphabet_size, Experiment e, boolean always)
 	{
 		List<Object> alphabet = getStringAlphabet(alphabet_size);
 		float alpha = -1;
@@ -96,13 +97,17 @@ public class ReversibleFactory extends PreconditionFactory<ReversibleCondition>
 			{
 				RandomInteger rint = new RandomInteger(m_minLength, m_maxLength).setSeed(m_seed + 10);
 				Picker<Boolean> rboo = new RandomBoolean().setSeed(m_seed + 47);
+				if (always)
+				{
+					return new AllTruePicker(rint);
+				}
 				return new SomeTruePicker(rint, rboo);
 			}
 		};
 	}
 
 	@Override
-	protected ReversibleCondition getTwoEqualTrim(Point pt, int alphabet_size, Experiment e)
+	protected ReversibleCondition getTwoEqualTrimF(Point pt, int alphabet_size, Experiment e, boolean always)
 	{
 		List<Object> alphabet = getStringAlphabet(alphabet_size);
 		float alpha = -1;
@@ -136,6 +141,10 @@ public class ReversibleFactory extends PreconditionFactory<ReversibleCondition>
 			{
 				RandomInteger rint = new RandomInteger(m_minLength, m_maxLength).setSeed(m_seed + 10);
 				Picker<Boolean> rboo = new RandomBoolean().setSeed(m_seed + 47);
+				if (always)
+				{
+					return new AllTruePicker(rint);
+				}
 				return new SomeTruePicker(rint, rboo);
 			}
 		};

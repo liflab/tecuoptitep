@@ -27,6 +27,11 @@ package inversionlab;
  */
 public class InputOutputFactory<T>
 {
+	/**
+   * The name of parameter "problem".
+   */
+  public static final String PROBLEM = "Problem";
+  
   /**
    * The name of parameter "method".
    */

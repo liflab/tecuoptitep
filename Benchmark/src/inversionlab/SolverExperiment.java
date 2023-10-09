@@ -41,6 +41,11 @@ import ca.uqac.lif.synthia.Picker;
 public class SolverExperiment extends StreamExperiment
 {
 	/**
+   * The name of parameter "solution".
+   */
+  public static final String NAME = "Solution";
+  
+	/**
 	 * The name of parameter "found".
 	 */
 	public static final String FOUND = "Found";

@@ -42,7 +42,7 @@ public class PipelineFactory extends PreconditionFactory<PipelineCondition>
 	}
 
 	@Override
-	protected PipelineCondition getTwoEqualDecimate(Point pt, int alphabet_size, Experiment e)
+	protected PipelineCondition getTwoEqualDecimate(Point pt, int alphabet_size, Experiment e, boolean always)
 	{
 		return new PipelineCondition(
 				new GroupProcessor(1, 1) {{
@@ -62,13 +62,17 @@ public class PipelineFactory extends PreconditionFactory<PipelineCondition>
 			@Override
 			public boolean isValid(List<? extends Object> output)
 			{
+				if (always)
+				{
+					return !output.contains(Boolean.FALSE);
+				}
 				return output.contains(Boolean.TRUE);
 			}
 		};
 	}
 
 	@Override
-	protected PipelineCondition getTwoEqualTrim(Point pt, int alphabet_size, Experiment e)
+	protected PipelineCondition getTwoEqualTrimF(Point pt, int alphabet_size, Experiment e, boolean always)
 	{
 		return new PipelineCondition(
 				new GroupProcessor(1, 1) {{
@@ -86,6 +90,10 @@ public class PipelineFactory extends PreconditionFactory<PipelineCondition>
 			@Override
 			public boolean isValid(List<? extends Object> output)
 			{
+				if (always)
+				{
+					return !output.contains(Boolean.FALSE);
+				}
 				return output.contains(Boolean.TRUE);
 			}
 		};

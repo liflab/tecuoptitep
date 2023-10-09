@@ -44,17 +44,6 @@ public abstract class AlphabetFunction extends ReversibleFunction
   protected List<Object> getAlphabet()
   {
     return m_alphabet;
-    /*
-    List<Object> alph = new ArrayList<Object>();
-    for (Object o : m_alphabet)
-    {
-      if (m_coin.pick())
-      {
-        alph.add(o);
-      }
-    }
-    return alph;
-    */
   }
 
 }

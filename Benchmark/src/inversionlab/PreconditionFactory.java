@@ -24,15 +24,29 @@ import java.util.List;
 import ca.uqac.lif.labpal.experiment.Experiment;
 import ca.uqac.lif.labpal.region.Point;
 
+/**
+ * The conditions are:
+ * <ul>
+ * <li><i>Two equal decimate (F)</i>:</li>
+ * <li><i>Two equal decimate (G)</i>:</li>
+ * <li><i>Two equal trim (F)</i>:</li>
+ * <li><i>Two equal trim (G)</i>:</li>
+ * </ul>
+ * @param <T>
+ */
 public abstract class PreconditionFactory<T>
 {
   public static final String CONDITION = "Condition";
 
   public static final String ALPHABET_SIZE = "Alphabet size";
 
-  public static final String TWO_EQUAL_DECIMATE = "Two equal decimate";
+  public static final String TWO_EQUAL_DECIMATE_F = "Two equal decimate (F)";
 
-  public static final String TWO_EQUAL_TRIM = "Two equal trim";
+  public static final String TWO_EQUAL_TRIM_F = "Two equal trim (F)";
+  
+  public static final String TWO_EQUAL_DECIMATE_G = "Two equal decimate (G)";
+
+  public static final String TWO_EQUAL_TRIM_G = "Two equal trim (G)";
   
   protected int m_seed = 0;
   
@@ -63,17 +77,21 @@ public abstract class PreconditionFactory<T>
     e.writeInput(ALPHABET_SIZE, alphabet_size);
     switch (name)
     {
-    case TWO_EQUAL_DECIMATE:
-      return getTwoEqualDecimate(pt, alphabet_size, e);
-    case TWO_EQUAL_TRIM:
-      return getTwoEqualTrim(pt, alphabet_size, e);
+    case TWO_EQUAL_DECIMATE_F:
+      return getTwoEqualDecimate(pt, alphabet_size, e, false);
+    case TWO_EQUAL_TRIM_F:
+      return getTwoEqualTrimF(pt, alphabet_size, e, false);
+    case TWO_EQUAL_DECIMATE_G:
+      return getTwoEqualDecimate(pt, alphabet_size, e, true);
+    case TWO_EQUAL_TRIM_G:
+      return getTwoEqualTrimF(pt, alphabet_size, e, true);
     }
     return null;
   }
   
-  protected abstract T getTwoEqualDecimate(Point pt, int alphabet_size, Experiment e);
+  protected abstract T getTwoEqualDecimate(Point pt, int alphabet_size, Experiment e, boolean always);
 
-  protected abstract T getTwoEqualTrim(Point pt, int alphabet_size, Experiment e);
+  protected abstract T getTwoEqualTrimF(Point pt, int alphabet_size, Experiment e, boolean always);
   
   /**
    * Gets an instance of an alphabet of input events made of single characters.

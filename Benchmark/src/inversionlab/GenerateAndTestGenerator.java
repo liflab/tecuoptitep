@@ -70,6 +70,13 @@ public class GenerateAndTestGenerator extends GenerateAndTest implements Generat
 		return a;
 	}
 	
+	@Override
+	public void reset()
+	{
+		m_pastSuggestions.clear();
+		m_nextElement = null;
+	}
+	
 	@SuppressWarnings("unchecked")
 	protected void getNextSuggestion()
 	{

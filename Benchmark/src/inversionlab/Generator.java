@@ -28,5 +28,5 @@ import ca.uqac.lif.reversi.AritalSuggestion;
  */
 public interface Generator extends Iterator<AritalSuggestion>
 {
-	
+	public void reset();
 }
