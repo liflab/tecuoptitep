@@ -24,10 +24,15 @@ import ca.uqac.lif.dag.NodeConnector;
 import ca.uqac.lif.labpal.experiment.Experiment;
 import ca.uqac.lif.labpal.region.Point;
 import ca.uqac.lif.reversi.CountDecimate;
+import ca.uqac.lif.reversi.CumulateAddition;
 import ca.uqac.lif.reversi.Equals;
+import ca.uqac.lif.reversi.EqualsConstant;
 import ca.uqac.lif.reversi.Fork;
+import ca.uqac.lif.reversi.GreaterOrEqualConstant;
 import ca.uqac.lif.reversi.Group;
+import ca.uqac.lif.reversi.IfThenElseConstant;
 import ca.uqac.lif.reversi.Trim;
+import ca.uqac.lif.reversi.Window;
 import ca.uqac.lif.reversi.util.EndsInPicker;
 import ca.uqac.lif.reversi.util.MathList;
 import ca.uqac.lif.reversi.util.AllTruePicker;
@@ -107,7 +112,7 @@ public class ReversibleFactory extends PreconditionFactory<ReversibleCondition>
 	}
 
 	@Override
-	protected ReversibleCondition getTwoEqualTrimF(Point pt, int alphabet_size, Experiment e, boolean always)
+	protected ReversibleCondition getTwoEqualTrim(Point pt, int alphabet_size, Experiment e, boolean always)
 	{
 		List<Object> alphabet = getStringAlphabet(alphabet_size);
 		float alpha = -1;
@@ -134,6 +139,61 @@ public class ReversibleFactory extends PreconditionFactory<ReversibleCondition>
 					NodeConnector.connect(f, 1, eq, 1);
 					associateOutput(0, eq.getOutputPin(0));
 					addNodes(f, t, eq);
+				}})
+		{
+			@Override
+			public Picker<MathList<Object>> getPicker()
+			{
+				RandomInteger rint = new RandomInteger(m_minLength, m_maxLength).setSeed(m_seed + 10);
+				Picker<Boolean> rboo = new RandomBoolean().setSeed(m_seed + 47);
+				if (always)
+				{
+					return new AllTruePicker(rint);
+				}
+				return new SomeTruePicker(rint, rboo);
+			}
+		};
+	}
+	
+	@Override
+	protected ReversibleCondition getAtLeastNInWindow(Point pt, int alphabet_size, Experiment e, boolean always)
+	{
+		// Width of window and minimum number of a's inside
+		int n = 2, width = 4;
+		List<Object> range = getIntegerAlphabet(n + 1);
+		List<Object> alphabet = getStringAlphabet(alphabet_size);
+		float alpha = -1;
+		{
+			Object o = pt.get(ALPHA);
+			if (o == null)
+			{
+				return null;
+			}
+			alpha = ((Number) o).floatValue();
+		}
+		e.describe(ALPHA, "The probability given to the biased coin toss");
+		e.writeInput(ALPHA, alpha);
+		RandomBoolean coin = new RandomBoolean(alpha);
+		coin.setSeed(m_seed);
+		return new ReversibleCondition(
+				new Group(1, 1) {{
+					Window win = new Window(4, new Group(1, 1, coin) {{
+						EqualsConstant eq_a = new EqualsConstant("a", alphabet);
+						IfThenElseConstant itec = new IfThenElseConstant(1, 0);
+						NodeConnector.connect(eq_a, 0, itec, 0);
+						CumulateAddition sum = new CumulateAddition(range);
+						NodeConnector.connect(itec, 0, sum, 0);
+						Trim trim = new Trim(3, range);
+						NodeConnector.connect(sum, 0, trim, 0);
+						addNodes(eq_a, itec, sum, trim);
+						associateInput(0, eq_a.getInputPin(0));
+						associateOutput(0, trim.getOutputPin(0));
+					}});
+					GreaterOrEqualConstant geqc = new GreaterOrEqualConstant(n, range, coin);
+					NodeConnector.connect(win, 0, geqc, 0);
+					addNodes(win, geqc);
+					associateInput(0, win.getInputPin(0));
+					associateOutput(0, geqc.getOutputPin(0));
 				}})
 		{
 			@Override

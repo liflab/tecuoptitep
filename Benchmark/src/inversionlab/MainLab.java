@@ -87,9 +87,10 @@ public class MainLab extends Laboratory
 				extension(PROBLEM, GeneratorExperiment.NAME, SolverExperiment.NAME),
 				extension(CONDITION, 
 						PreconditionFactory.TWO_EQUAL_TRIM_F, PreconditionFactory.TWO_EQUAL_DECIMATE_F,
-						PreconditionFactory.TWO_EQUAL_TRIM_G, PreconditionFactory.TWO_EQUAL_DECIMATE_G),
+						PreconditionFactory.TWO_EQUAL_TRIM_G, PreconditionFactory.TWO_EQUAL_DECIMATE_G,
+						PreconditionFactory.AT_LEAST_N_IN_WINDOW),
 				extension(ALPHABET_SIZE, alphabet_size),
-				extension(ALPHA, 0.1f, 0.2f, 0.25, 0.5f, 0.75f),
+				extension(ALPHA, 0.1f, 0.2f, 0.25, 0.5f, 0.75f, 1f),
 				extension(NUM_OUTPUTS, num_outputs));
 
 		// Generator experiments
@@ -146,7 +147,7 @@ public class MainLab extends Laboratory
 			factory.add(GenerateAndTestSolver.NAME, new GenerateAndTestSolverFactory(new PipelineFactory(), min_len, max_len, max_tries_solve).setSeed(getSeed()));
 
 			{
-				Region in_r = big_r.set(PROBLEM, SolverExperiment.NAME).set(ALPHA, 0.5f);
+				Region in_r = big_r.set(PROBLEM, SolverExperiment.NAME).set(ALPHA, 1f);
 				for (Region r : in_r.all(ALPHA, ALPHABET_SIZE))
 				{
 					ExperimentTable et = table(METHOD, CONDITION, RATIO, HIT_RATE, DURATION);

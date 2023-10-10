@@ -23,10 +23,17 @@ import java.util.List;
 import ca.uqac.lif.cep.Connector;
 import ca.uqac.lif.cep.GroupProcessor;
 import ca.uqac.lif.cep.functions.ApplyFunction;
+import ca.uqac.lif.cep.functions.Constant;
+import ca.uqac.lif.cep.functions.Cumulate;
+import ca.uqac.lif.cep.functions.FunctionTree;
+import ca.uqac.lif.cep.functions.IfThenElse;
+import ca.uqac.lif.cep.functions.StreamVariable;
 import ca.uqac.lif.cep.tmf.CountDecimate;
 import ca.uqac.lif.cep.tmf.Fork;
 import ca.uqac.lif.cep.tmf.Trim;
+import ca.uqac.lif.cep.tmf.Window;
 import ca.uqac.lif.cep.util.Equals;
+import ca.uqac.lif.cep.util.Numbers;
 import ca.uqac.lif.labpal.experiment.Experiment;
 import ca.uqac.lif.labpal.region.Point;
 
@@ -72,7 +79,7 @@ public class PipelineFactory extends PreconditionFactory<PipelineCondition>
 	}
 
 	@Override
-	protected PipelineCondition getTwoEqualTrimF(Point pt, int alphabet_size, Experiment e, boolean always)
+	protected PipelineCondition getTwoEqualTrim(Point pt, int alphabet_size, Experiment e, boolean always)
 	{
 		return new PipelineCondition(
 				new GroupProcessor(1, 1) {{
@@ -85,6 +92,42 @@ public class PipelineFactory extends PreconditionFactory<PipelineCondition>
 					Connector.connect(f, 1, eq, 1);
 					associateOutput(0, eq, 0);
 					addProcessors(f, t, eq);
+				}})
+		{
+			@Override
+			public boolean isValid(List<? extends Object> output)
+			{
+				if (always)
+				{
+					return !output.contains(Boolean.FALSE);
+				}
+				return output.contains(Boolean.TRUE);
+			}
+		};
+	}
+
+	@Override
+	protected PipelineCondition getAtLeastNInWindow(Point pt, int alphabet_size, Experiment e, boolean always)
+	{
+		// Width of window and minimum number of a's inside
+		int n = 2, width = 4;
+		return new PipelineCondition(
+				new GroupProcessor(1, 1) {{
+					Window w = new Window(new GroupProcessor(1, 1) {{
+						ApplyFunction is_a = new ApplyFunction(new FunctionTree(Equals.instance, StreamVariable.X, new Constant("a")));
+						ApplyFunction ite = new ApplyFunction(new FunctionTree(IfThenElse.instance, new Constant(1), new Constant(0)));
+						Connector.connect(is_a, ite);
+						Cumulate sum = new Cumulate(Numbers.addition);
+						Connector.connect(ite, sum);
+						addProcessors(is_a, ite, sum);
+						associateInput(0, is_a, 0);
+						associateOutput(0, sum, 0);
+					}}, width);
+					ApplyFunction gt = new ApplyFunction(new FunctionTree(Numbers.isGreaterOrEqual, StreamVariable.X, new Constant(n)));
+					Connector.connect(w, gt);
+					addProcessors(w, gt);
+					associateInput(0, w, 0);
+					associateOutput(0, gt, 0);
 				}})
 		{
 			@Override

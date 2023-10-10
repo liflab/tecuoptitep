@@ -26,7 +26,7 @@ import ca.uqac.lif.dag.Node;
 import ca.uqac.lif.synthia.Picker;
 import ca.uqac.lif.synthia.util.Constant;
 
-public abstract class ReversibleFunction extends Node implements Reversible
+public abstract class ReversibleFunction extends Node implements MonteCarloReversible
 {
   protected List<Suggestion> m_targetOutput;
   
@@ -34,12 +34,15 @@ public abstract class ReversibleFunction extends Node implements Reversible
   
   protected Picker<Boolean> m_coin;
   
+  protected final Picker<Boolean> m_originalCoin;
+  
   public ReversibleFunction(int in_arity, Picker<Boolean> coin)
   {
     super(in_arity, 1);
     m_targetOutput = null;
     m_suggestedInputs = new HashMap<Integer,List<Suggestion>>();
     m_coin = coin;
+    m_originalCoin = coin.duplicate(false);
   }
   
   public ReversibleFunction(int in_arity)
@@ -48,10 +51,17 @@ public abstract class ReversibleFunction extends Node implements Reversible
   }
   
   @Override
+  public void setCoin(Picker<Boolean> coin)
+  {
+  	m_coin = coin;
+  }
+  
+  @Override
   public void reset()
   {
     m_targetOutput = null;
     m_suggestedInputs.clear();
+    m_coin = m_originalCoin.duplicate(false);
   }
   
   @Override

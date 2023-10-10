@@ -30,11 +30,13 @@ import ca.uqac.lif.dag.Pin;
 import ca.uqac.lif.synthia.Picker;
 import ca.uqac.lif.synthia.util.Constant;
 
-public class Group extends NestedNode implements Reversible
+public class Group extends NestedNode implements MonteCarloReversible
 {
 	protected final Map<Integer,List<Suggestion>> m_targetInputs;
 	
 	protected final Map<Integer,List<Suggestion>> m_targetOutputs;
+	
+	protected final Picker<Boolean> m_originalCoin;
 	
 	protected Picker<Boolean> m_coin;
 
@@ -43,6 +45,7 @@ public class Group extends NestedNode implements Reversible
 		super(in_arity, out_arity);
 		m_targetInputs = new HashMap<Integer,List<Suggestion>>(in_arity);
 		m_targetOutputs = new HashMap<Integer,List<Suggestion>>(out_arity);
+		m_originalCoin = coin.duplicate(false);
 		m_coin = coin;
 	}
 	
@@ -52,10 +55,24 @@ public class Group extends NestedNode implements Reversible
 	}
 	
 	@Override
+	public void setCoin(Picker<Boolean> coin)
+	{
+		m_coin = coin;
+		for (Node n : m_internalNodes)
+	  {
+			if (n instanceof MonteCarloReversible)
+			{
+				((MonteCarloReversible) n).setCoin(coin);
+			}
+	  }
+	}
+	
+	@Override
 	public void reset()
 	{
 	  m_targetInputs.clear();
 	  m_targetOutputs.clear();
+	  m_coin = m_originalCoin.duplicate(false);
 	  for (Node n : m_internalNodes)
 	  {
 	    if (n instanceof Reversible)
@@ -85,15 +102,6 @@ public class Group extends NestedNode implements Reversible
 			getSuggestions();	
 		}
 		return m_targetInputs.get(in_arity);
-		/*
-		Pin<? extends Node> pin = m_inputAssociations.get(in_arity);
-		Node n = pin.getNode();
-		if (n instanceof Reversible)
-		{
-			return ((Reversible) n).getSuggestions(pin.getIndex());
-		}
-		return new ArrayList<Suggestion>();
-		 */
 	}
 
 	protected void getSuggestions()

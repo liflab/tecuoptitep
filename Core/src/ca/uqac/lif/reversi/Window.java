@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import ca.uqac.lif.reversi.util.MathList;
+import ca.uqac.lif.synthia.sequence.Playback;
 
 /**
  * The inversion of the sliding window produces a correct result under the
@@ -59,6 +60,10 @@ public class Window extends ReversibleFunction
 				List<EventNode> new_current = new ArrayList<EventNode>();
 				m_phi.reset();
 				m_phi.setTargetOutputs(0, Arrays.asList(new Suggestion(MathList.toList(out_stream.get(j)))));
+				/*if (j > 0 && m_phi instanceof MonteCarloReversible)
+				{
+					((MonteCarloReversible) m_phi).setCoin(new Playback<Boolean>(true));
+				}*/
 				List<Suggestion> in_sugs = m_phi.getSuggestions(0);
 				for (Suggestion in_sug: in_sugs)
 				{
@@ -145,6 +150,13 @@ public class Window extends ReversibleFunction
 	protected static void appendToRoot(EventNode n, List<?> stream, int index, List<EventNode> to)
 	{
 		Object o = stream.get(index);
+		if (index == stream.size() - 1)
+		{
+			EventNode new_child = new EventNode(o, n);
+			n.m_children.add(new_child);
+			to.add(new_child);
+			return;
+		}
 		for (EventNode child : n.m_children)
 		{
 			if (child.m_symbol.equals(o))

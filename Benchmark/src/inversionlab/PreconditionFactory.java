@@ -39,6 +39,8 @@ public abstract class PreconditionFactory<T>
   public static final String CONDITION = "Condition";
 
   public static final String ALPHABET_SIZE = "Alphabet size";
+  
+  public static final String AT_LEAST_N_IN_WINDOW = "At least n in window";
 
   public static final String TWO_EQUAL_DECIMATE_F = "Two equal decimate (F)";
 
@@ -77,21 +79,25 @@ public abstract class PreconditionFactory<T>
     e.writeInput(ALPHABET_SIZE, alphabet_size);
     switch (name)
     {
+    case AT_LEAST_N_IN_WINDOW:
+      return getTwoEqualDecimate(pt, alphabet_size, e, true);
     case TWO_EQUAL_DECIMATE_F:
       return getTwoEqualDecimate(pt, alphabet_size, e, false);
     case TWO_EQUAL_TRIM_F:
-      return getTwoEqualTrimF(pt, alphabet_size, e, false);
+      return getTwoEqualTrim(pt, alphabet_size, e, false);
     case TWO_EQUAL_DECIMATE_G:
       return getTwoEqualDecimate(pt, alphabet_size, e, true);
     case TWO_EQUAL_TRIM_G:
-      return getTwoEqualTrimF(pt, alphabet_size, e, true);
+      return getTwoEqualTrim(pt, alphabet_size, e, true);
     }
     return null;
   }
   
   protected abstract T getTwoEqualDecimate(Point pt, int alphabet_size, Experiment e, boolean always);
 
-  protected abstract T getTwoEqualTrimF(Point pt, int alphabet_size, Experiment e, boolean always);
+  protected abstract T getTwoEqualTrim(Point pt, int alphabet_size, Experiment e, boolean always);
+  
+  protected abstract T getAtLeastNInWindow(Point pt, int alphabet_size, Experiment e, boolean always);
   
   /**
    * Gets an instance of an alphabet of input events made of single characters.
@@ -104,6 +110,22 @@ public abstract class PreconditionFactory<T>
     for (int i = 0; i < size; i++)
     {
       list.add(Character.toString((char) (i + 65)));
+    }
+    return list;
+  }
+  
+  /**
+   * Gets an instance of an alphabet of input events made of the range
+   * of integers from 0 to n (inclusive).
+   * @param size The size of the range
+   * @return The alphabet
+   */
+  protected static List<Object> getIntegerAlphabet(int size)
+  {
+    List<Object> list = new ArrayList<Object>(size);
+    for (int i = 0; i < size; i++)
+    {
+      list.add(i);
     }
     return list;
   }

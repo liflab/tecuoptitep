@@ -52,6 +52,7 @@ public abstract class CumulateFunction<T> extends AlphabetFunction
 				T next = getNextOutputValue(o, (T) x);
 				if (next == null) // No solution
 				{
+					//System.out.println("Impossible for " + out_stream);
 					in_stream = null;
 					break;
 				}
@@ -60,9 +61,11 @@ public abstract class CumulateFunction<T> extends AlphabetFunction
 			}
 			if (in_stream != null)
 			{
+				//System.out.println("Possible for " + out_stream);
 				Suggestion s = new Suggestion(in_stream);
 				s.addLineage(out_sugg.getLineage());
 				s.addLineage(new Association(this, sug_cnt));
+				inputs.add(s);
 				sug_cnt++;
 			}
 		}
