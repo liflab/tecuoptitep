@@ -18,32 +18,28 @@
  */
 package ca.uqac.lif.reversi;
 
+import static org.junit.Assert.assertEquals;
+
+import java.util.Arrays;
 import java.util.List;
 
-import ca.uqac.lif.synthia.Picker;
-import ca.uqac.lif.synthia.util.Constant;
+import org.junit.Test;
 
-/**
- * A reversible function that requires a fixed alphabet of input symbols.
- */
-public abstract class AlphabetFunction extends ReversibleFunction
+import ca.uqac.lif.reversi.util.MathList;
+
+public class CumulateAndTest
 {
-  protected final List<Object> m_alphabet;
-
-  public AlphabetFunction(int in_arity, List<Object> alphabet, Picker<Boolean> coin)
-  {
-    super(in_arity, coin);
-    m_alphabet = alphabet;
-  }
-  
-  public AlphabetFunction(int in_arity, List<Object> alphabet)
-  {
-    this(in_arity, alphabet, new Constant<Boolean>(true));
-  }
-  
-  protected List<Object> getAlphabet()
-  {
-    return m_alphabet;
-  }
-
+	@Test
+	public void test1()
+	{
+		CumulateAnd sum = new CumulateAnd(Arrays.asList(0, 1, 2, 3, 4));
+		sum.setTargetOutputs(0, Arrays.asList(new Suggestion(MathList.toList(3, 5, 6))));
+		List<Suggestion> in_sugs = sum.getSuggestions(0);
+		assertEquals(1, in_sugs.size());
+		List<?> in_stream = (List<?>) in_sugs.get(0).getValue();
+		assertEquals(3, in_stream.size());
+		assertEquals(3, in_stream.get(0));
+		assertEquals(2, in_stream.get(1));
+		assertEquals(1, in_stream.get(2));
+	}
 }

@@ -21,29 +21,42 @@ package ca.uqac.lif.reversi;
 import java.util.List;
 
 import ca.uqac.lif.synthia.Picker;
-import ca.uqac.lif.synthia.util.Constant;
 
-/**
- * A reversible function that requires a fixed alphabet of input symbols.
- */
-public abstract class AlphabetFunction extends ReversibleFunction
+public class CumulateAnd extends CumulateFunction<Boolean>
 {
-  protected final List<Object> m_alphabet;
+	public CumulateAnd(List<Object> alphabet, Picker<Boolean> coin)
+	{
+		super(alphabet, coin);
+	}
+	
+	public CumulateAnd(List<Object> alphabet)
+	{
+		super(alphabet);
+	}
 
-  public AlphabetFunction(int in_arity, List<Object> alphabet, Picker<Boolean> coin)
-  {
-    super(in_arity, coin);
-    m_alphabet = alphabet;
-  }
-  
-  public AlphabetFunction(int in_arity, List<Object> alphabet)
-  {
-    this(in_arity, alphabet, new Constant<Boolean>(true));
-  }
-  
-  protected List<Object> getAlphabet()
-  {
-    return m_alphabet;
-  }
+	@Override
+	protected Boolean getStartValue()
+	{
+		return Boolean.TRUE;
+	}
 
+	@Override
+	protected Boolean getNextOutputValue(Boolean previous, Boolean current)
+	{
+		if (Boolean.FALSE.equals(previous))
+		{
+			if (Boolean.TRUE.equals(current))
+			{
+				return null; // Impossible
+			}
+			return Boolean.FALSE;
+		}
+		return current;
+	}
+
+	@Override
+	protected Boolean getNextStoredValue(Boolean previous, Boolean next)
+	{
+		return Boolean.logicalAnd(previous, next);
+	}
 }

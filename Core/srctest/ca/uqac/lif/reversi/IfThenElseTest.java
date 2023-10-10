@@ -18,32 +18,23 @@
  */
 package ca.uqac.lif.reversi;
 
-import java.util.List;
+import static org.junit.Assert.assertEquals;
 
-import ca.uqac.lif.synthia.Picker;
-import ca.uqac.lif.synthia.util.Constant;
+import java.util.Arrays;
+import java.util.Set;
 
-/**
- * A reversible function that requires a fixed alphabet of input symbols.
- */
-public abstract class AlphabetFunction extends ReversibleFunction
+import org.junit.Test;
+
+import ca.uqac.lif.reversi.util.MathList;
+
+public class IfThenElseTest
 {
-  protected final List<Object> m_alphabet;
-
-  public AlphabetFunction(int in_arity, List<Object> alphabet, Picker<Boolean> coin)
-  {
-    super(in_arity, coin);
-    m_alphabet = alphabet;
-  }
-  
-  public AlphabetFunction(int in_arity, List<Object> alphabet)
-  {
-    this(in_arity, alphabet, new Constant<Boolean>(true));
-  }
-  
-  protected List<Object> getAlphabet()
-  {
-    return m_alphabet;
-  }
-
+	@Test
+	public void test1()
+	{
+		IfThenElse ite = new IfThenElse(Arrays.asList("a", "b", "c"));
+		ite.setTargetOutputs(0, Arrays.asList(new Suggestion(MathList.toList("a", "b"))));
+		Set<AritalSuggestion> a_sugs = AritalSuggestion.getSuggestions(ite);
+		assertEquals(36, a_sugs.size());
+	}
 }
