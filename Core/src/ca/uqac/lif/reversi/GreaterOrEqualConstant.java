@@ -23,6 +23,7 @@ import java.util.List;
 
 import ca.uqac.lif.synthia.Bounded;
 import ca.uqac.lif.synthia.Picker;
+import ca.uqac.lif.synthia.enumerative.AllElements;
 import ca.uqac.lif.synthia.sequence.Playback;
 
 /**
@@ -54,9 +55,9 @@ public class GreaterOrEqualConstant extends UnaryComparison<Integer>
 	{
 		if (b)
 		{
-			return new Playback<Integer>(0, m_trueRange).setLoop(false);
+			return new AllElements<Integer>(m_trueRange, true, false);
 		}
-		return new Playback<Integer>(0, m_falseRange).setLoop(false);
+		return new AllElements<Integer>(m_falseRange, true, false);
 	}
 	
 	protected List<Integer> getTrueRange()

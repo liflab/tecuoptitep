@@ -56,11 +56,11 @@ public abstract class ApplyFunction extends ReversibleFunction
 			for (int i = 0; i < pickers.length; i++)
 			{
 				List<MathList<Object>> values = getInputValuesFor(sequence.get(i));
-				Playback<MathList<Object>> pb = new AllElements<MathList<Object>>(values, true, false);
+				AllElements<MathList<Object>> pb = new AllElements<MathList<Object>>(values, true, false);
 				pickers[i] = pb;
 			}
 			AllPickers all = new AllPickers(pickers);
-			while (!all.isDone() & m_coin.pick())
+			while (m_coin.pick() && !all.isDone())
 			{
 				MathList<Object> list = new MathList<Object>();
 				Object[] elems = all.pick();
@@ -91,6 +91,7 @@ public abstract class ApplyFunction extends ReversibleFunction
 				sug_cnt++;
 			}
 		}
+		//System.out.println(m_suggestedInputs.get(0));
 	}
 
 	protected abstract List<MathList<Object>> getInputValuesFor(Object o);

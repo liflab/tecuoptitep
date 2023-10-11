@@ -114,11 +114,11 @@ public class StreamSolver implements Bounded<AritalSuggestion>
 				out_sugs.add(new Suggestion(output));
 				//System.out.print(output.size() + " ");
 			}
-			//for (int k = 0; (k < m_maxTries || m_maxTries < 0); k++)
+			for (int k = 0; (k < m_maxTries || m_maxTries < 0); k++)
 			{
 				m_pipeline.reset();
 				m_pipeline.setTargetOutputs(0, out_sugs);
-				//System.out.println(output + "?");
+				//System.out.println(out_sugs + "?");
 				Set<AritalSuggestion> sugs = AritalSuggestion.getSuggestions((Node) m_pipeline);
 				Set<AritalSuggestion> new_sugs = new HashSet<AritalSuggestion>();
 				for (AritalSuggestion s : sugs)

@@ -72,7 +72,7 @@ public class Group extends NestedNode implements MonteCarloReversible
 	{
 	  m_targetInputs.clear();
 	  m_targetOutputs.clear();
-	  m_coin = m_originalCoin.duplicate(false);
+	  //m_coin = m_originalCoin.duplicate(false);
 	  for (Node n : m_internalNodes)
 	  {
 	    if (n instanceof Reversible)
@@ -122,22 +122,23 @@ public class Group extends NestedNode implements MonteCarloReversible
 				m_targetInputs.put(i, ((Reversible) n).getSuggestions(pin.getIndex()));
 			}
 		}
+		// We can free this memory once the inputs have been calculated
+		m_targetOutputs.clear();
 	}
 
 	protected void getSuggestions(Node n, Set<Node> processed_nodes)
 	{
-		if (n == null) //|| processed_nodes.contains(n))
+		if (n == null || processed_nodes.contains(n))
 		{
 			return;
 		}
-		processed_nodes.add(n);
 		if (!(n instanceof Reversible))
 		{
 			return;
 		}
 		for (int i = 0; i < n.getOutputArity(); i++)
 		{
-			if (((Reversible) n).getTargetOutputs(i) == null)
+			if (!processed_nodes.contains(n))
 			{
 				Pin<? extends Node> pin = getDownstream(n, i);
 				if (pin != null)
@@ -165,6 +166,7 @@ public class Group extends NestedNode implements MonteCarloReversible
 				//m_targetInputs.put(in_index, sug);
 			}
 		}
+		processed_nodes.add(n);
 		for (int i = 0; i < n.getInputArity(); i++)
 		{
 			// ...then recurse on each upstream node
@@ -177,7 +179,7 @@ public class Group extends NestedNode implements MonteCarloReversible
 		}
 	}
 
-	@Override
+	//@Override
 	public List<Suggestion> getTargetOutputs(int out_index)
 	{
 		return m_targetOutputs.get(out_index);

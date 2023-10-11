@@ -18,6 +18,7 @@
  */
 package ca.uqac.lif.reversi;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,7 +62,7 @@ public abstract class ReversibleFunction extends Node implements MonteCarloRever
   {
     m_targetOutput = null;
     m_suggestedInputs.clear();
-    m_coin = m_originalCoin.duplicate(false);
+    //m_coin = m_originalCoin.duplicate(false);
   }
   
   @Override
@@ -71,16 +72,18 @@ public abstract class ReversibleFunction extends Node implements MonteCarloRever
   	{
   		getSuggestions();
   	}
+  	m_targetOutput.clear(); // To free memory once inputs are calculated
   	return m_suggestedInputs.get(in_index);
 	}
   
   @Override
   public void setTargetOutputs(int out_index, List<Suggestion> suggestions)
   {
-    m_targetOutput = suggestions;
+    m_targetOutput = new ArrayList<Suggestion>(suggestions.size());
+    m_targetOutput.addAll(suggestions);
   }
   
-  @Override
+  //@Override
   public List<Suggestion> getTargetOutputs(int out_index)
   {
     return m_targetOutput;

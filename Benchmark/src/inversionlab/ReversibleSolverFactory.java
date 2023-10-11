@@ -53,6 +53,7 @@ public class ReversibleSolverFactory extends SolverFactory<ReversibleCondition>
     ReversibleCondition g = m_factory.setCondition(pt, e);
     ReversibleSolver solver = new ReversibleSolver(g.getReversible(), m_maxTries);
     e.setSolver(solver);
+    e.setOutputPicker(new OutputPicker(1, g.getPicker()));
     return true;
   }
 

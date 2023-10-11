@@ -18,40 +18,26 @@
  */
 package inversionlab;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import ca.uqac.lif.cep.Processor;
-import ca.uqac.lif.reversi.util.MathList;
-import ca.uqac.lif.synthia.Picker;
-import inversionlab.GenerateAndTest.OutputCondition;
+import ca.uqac.lif.synthia.sequence.Playback;
 
-/**
- * An object containing a BeepBeep processor pipeline, along with a condition
- * to evaluate on the output of this pipeline.
- */
-public class PipelineCondition implements OutputCondition
+public class RotateInteger extends Playback<Integer>
 {
-	protected final Processor m_pipeline;
-	
-	public PipelineCondition(Processor p)
+	public RotateInteger(int min, int max)
 	{
-		super();
-		m_pipeline = p;
+		super(getRange(min, max));
+		setLoop(true);
 	}
 	
-	public Processor getPipeline()
+	protected static List<Integer> getRange(int min, int max)
 	{
-		return m_pipeline;
-	}
-	
-	@Override
-	public boolean isValid(List<? extends Object> output)
-	{
-		return false;
-	}
-	
-	public Picker<MathList<Object>> getPicker()
-	{
-		return null;
+		List<Integer> range = new ArrayList<Integer>(max - min + 1);
+		for (int x = min; x <= max; x++)
+		{
+			range.add(x);
+		}
+		return range;
 	}
 }

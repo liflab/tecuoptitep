@@ -73,10 +73,13 @@ public class MainLab extends Laboratory
 		System.out.println("Trace limit:\t" + trace_limit);
 		
 		/* The maximum number of tries for the reversible generator on each output */
-		int max_tries_generate = 1;
+		int max_tries_generate = 10000;
 
 		/* The maximum number of tries for the reversible solver on each output */
-		int max_tries_solve = 100000;
+		int max_tries_solve_inv = 10;
+		
+		/* The maximum number of tries for the generate-and-test solver on each output */
+		int max_tries_solve_gnt = max_tries_solve_inv * 1000;
 
 		/* The number of outputs given to the inversion method in the generator
 		 * experiments. */
@@ -90,7 +93,7 @@ public class MainLab extends Laboratory
 						PreconditionFactory.TWO_EQUAL_TRIM_G, PreconditionFactory.TWO_EQUAL_DECIMATE_G,
 						PreconditionFactory.AT_LEAST_N_IN_WINDOW),
 				extension(ALPHABET_SIZE, alphabet_size),
-				extension(ALPHA, 0.1f, 0.2f, 0.25, 0.5f, 0.75f, 1f),
+				extension(ALPHA, 0.05f, 0.1f, 0.25f, 0.5f, 0.75f, 1f),
 				extension(NUM_OUTPUTS, num_outputs));
 
 		// Generator experiments
@@ -99,7 +102,7 @@ public class MainLab extends Laboratory
 			add(g);
 			GeneratorExperimentFactory factory = new GeneratorExperimentFactory(this).setSizeLimit(trace_limit);
 			factory.add(ReversibleGenerator.NAME, new ReversibleGeneratorFactory(new ReversibleFactory().setLengthBounds(min_len, max_len), min_len, max_len, max_tries_generate).setSeed(getSeed()));
-			factory.add(GenerateAndTest.NAME, new GenerateAndTestGeneratorFactory(new PipelineFactory(), min_len, max_len).setSeed(getSeed()));
+			factory.add(GenerateAndTest.NAME, new GenerateAndTestGeneratorFactory(new PipelineFactory().setLengthBounds(min_len, max_len), min_len, max_len).setSeed(getSeed()));
 
 			for (Region r : big_r.set(PROBLEM, GeneratorExperiment.NAME).set(ALPHA, 0.1f).all(CONDITION, ALPHA, ALPHABET_SIZE))
 			{
@@ -142,12 +145,12 @@ public class MainLab extends Laboratory
 		{
 			ExperimentGroup g = new ExperimentGroup("Solver experiments", "Experiments where each input generation method is asked to produce an input producing a precise output.");
 			add(g);
-			SolverExperimentFactory factory = new SolverExperimentFactory(this);
-			factory.add(ReversibleSolver.NAME, new ReversibleSolverFactory(new ReversibleFactory().setLengthBounds(min_len, max_len), min_len, max_len, max_tries_solve).setSeed(getSeed()));
-			factory.add(GenerateAndTestSolver.NAME, new GenerateAndTestSolverFactory(new PipelineFactory(), min_len, max_len, max_tries_solve).setSeed(getSeed()));
+			SolverExperimentFactory factory = new SolverExperimentFactory(this).setTraceLimit(trace_limit);
+			factory.add(ReversibleSolver.NAME, new ReversibleSolverFactory(new ReversibleFactory().setLengthBounds(min_len, max_len), min_len, max_len, max_tries_solve_inv).setSeed(getSeed()));
+			factory.add(GenerateAndTestSolver.NAME, new GenerateAndTestSolverFactory(new PipelineFactory().setLengthBounds(min_len, max_len), min_len, max_len, max_tries_solve_gnt).setSeed(getSeed()));
 
 			{
-				Region in_r = big_r.set(PROBLEM, SolverExperiment.NAME).set(ALPHA, 1f);
+				Region in_r = big_r.set(PROBLEM, SolverExperiment.NAME).set(ALPHA, 0.5f);
 				for (Region r : in_r.all(ALPHA, ALPHABET_SIZE))
 				{
 					ExperimentTable et = table(METHOD, CONDITION, RATIO, HIT_RATE, DURATION);
@@ -160,7 +163,7 @@ public class MainLab extends Laboratory
 
 			// Impact of alpha on hit rate
 			{
-				for (Region r : big_r.set(METHOD, ReversibleSolver.NAME).all(ALPHABET_SIZE, METHOD))
+				for (Region r : big_r.set(PROBLEM, SolverExperiment.NAME).set(METHOD, ReversibleSolver.NAME).all(ALPHABET_SIZE, METHOD))
 				{
 					ExperimentTable et = table(CONDITION, ALPHA, HIT_RATE);
 					et.setTitle("Impact of \u03b1 on hit rate, |\u03a3|=" + getInt(r, ALPHABET_SIZE));

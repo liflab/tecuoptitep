@@ -38,9 +38,9 @@ public class TwoEqualDecimate
 {
 	public static void main(String[] args)
 	{
-		//RandomBoolean coin = new RandomBoolean(0.95);
-		Constant<Boolean> coin = new Constant<Boolean>(true);
-		List<Object> alphabet = Arrays.asList("a", "b");
+		RandomBoolean coin = new RandomBoolean(0.8);
+		//Constant<Boolean> coin = new Constant<Boolean>(true);
+		List<Object> alphabet = Arrays.asList("a", "b", "c", "d");
 		Group g = new Group(1, 1); //{{
 			Fork f = new Fork();
 			g.associateInput(0, f.getInputPin(0));
@@ -54,7 +54,7 @@ public class TwoEqualDecimate
 			g.associateOutput(0, trim.getOutputPin(0));
 			g.addNodes(f, t, eq, trim);
 		//}};
-		g.setTargetOutputs(0, Arrays.asList(new Suggestion(MathList.toList(false, true))));
+		g.setTargetOutputs(0, Arrays.asList(new Suggestion(MathList.toList(true, true, true, true))));
 		
 		Set<AritalSuggestion> sols = AritalSuggestion.getSuggestions(g);
 		//System.out.println(f.getTargetOutputs(0));

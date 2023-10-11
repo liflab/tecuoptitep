@@ -36,6 +36,12 @@ import ca.uqac.lif.cep.util.Equals;
 import ca.uqac.lif.cep.util.Numbers;
 import ca.uqac.lif.labpal.experiment.Experiment;
 import ca.uqac.lif.labpal.region.Point;
+import ca.uqac.lif.reversi.util.AllTruePicker;
+import ca.uqac.lif.reversi.util.MathList;
+import ca.uqac.lif.reversi.util.SomeTruePicker;
+import ca.uqac.lif.synthia.Picker;
+import ca.uqac.lif.synthia.random.RandomBoolean;
+import ca.uqac.lif.synthia.random.RandomInteger;
 
 /**
  * A {@link GeneratorExperimentFactory} that provides conditions expressed as BeepBeep
@@ -47,6 +53,13 @@ public class PipelineFactory extends PreconditionFactory<PipelineCondition>
 	{
 		super();
 	}
+	
+	@Override
+  public PipelineFactory setLengthBounds(int min, int max)
+  {
+  	super.setLengthBounds(min, max);
+  	return this;
+  }
 
 	@Override
 	protected PipelineCondition getTwoEqualDecimate(Point pt, int alphabet_size, Experiment e, boolean always)
@@ -74,6 +87,19 @@ public class PipelineFactory extends PreconditionFactory<PipelineCondition>
 					return !output.contains(Boolean.FALSE);
 				}
 				return output.contains(Boolean.TRUE);
+			}
+			
+			@Override
+			public Picker<MathList<Object>> getPicker()
+			{
+				//RandomInteger rint = new RandomInteger(m_minLength, m_maxLength).setSeed(m_seed + 10);
+				RotateInteger rint = new RotateInteger(m_minLength, m_maxLength);
+				Picker<Boolean> rboo = new RandomBoolean().setSeed(m_seed + 47);
+				if (always)
+				{
+					return new AllTruePicker(rint);
+				}
+				return new SomeTruePicker(rint, rboo);
 			}
 		};
 	}
@@ -103,6 +129,19 @@ public class PipelineFactory extends PreconditionFactory<PipelineCondition>
 				}
 				return output.contains(Boolean.TRUE);
 			}
+			
+			@Override
+			public Picker<MathList<Object>> getPicker()
+			{
+				//RandomInteger rint = new RandomInteger(m_minLength, m_maxLength).setSeed(m_seed + 10);
+				RotateInteger rint = new RotateInteger(m_minLength, m_maxLength);
+				Picker<Boolean> rboo = new RandomBoolean().setSeed(m_seed + 47);
+				if (always)
+				{
+					return new AllTruePicker(rint);
+				}
+				return new SomeTruePicker(rint, rboo);
+			}
 		};
 	}
 
@@ -115,7 +154,7 @@ public class PipelineFactory extends PreconditionFactory<PipelineCondition>
 				new GroupProcessor(1, 1) {{
 					Window w = new Window(new GroupProcessor(1, 1) {{
 						ApplyFunction is_a = new ApplyFunction(new FunctionTree(Equals.instance, StreamVariable.X, new Constant("a")));
-						ApplyFunction ite = new ApplyFunction(new FunctionTree(IfThenElse.instance, new Constant(1), new Constant(0)));
+						ApplyFunction ite = new ApplyFunction(new FunctionTree(IfThenElse.instance, StreamVariable.X, new Constant(1), new Constant(0)));
 						Connector.connect(is_a, ite);
 						Cumulate sum = new Cumulate(Numbers.addition);
 						Connector.connect(ite, sum);
@@ -138,6 +177,19 @@ public class PipelineFactory extends PreconditionFactory<PipelineCondition>
 					return !output.contains(Boolean.FALSE);
 				}
 				return output.contains(Boolean.TRUE);
+			}
+			
+			@Override
+			public Picker<MathList<Object>> getPicker()
+			{
+				//RandomInteger rint = new RandomInteger(m_minLength, m_maxLength).setSeed(m_seed + 10);
+				RotateInteger rint = new RotateInteger(m_minLength, m_maxLength);
+				Picker<Boolean> rboo = new RandomBoolean().setSeed(m_seed + 47);
+				if (always)
+				{
+					return new AllTruePicker(rint);
+				}
+				return new SomeTruePicker(rint, rboo);
 			}
 		};
 	}

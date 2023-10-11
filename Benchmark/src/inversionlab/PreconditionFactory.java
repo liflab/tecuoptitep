@@ -80,7 +80,7 @@ public abstract class PreconditionFactory<T>
     switch (name)
     {
     case AT_LEAST_N_IN_WINDOW:
-      return getTwoEqualDecimate(pt, alphabet_size, e, true);
+      return getAtLeastNInWindow(pt, alphabet_size, e, true);
     case TWO_EQUAL_DECIMATE_F:
       return getTwoEqualDecimate(pt, alphabet_size, e, false);
     case TWO_EQUAL_TRIM_F:

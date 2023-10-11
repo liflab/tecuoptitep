@@ -52,7 +52,7 @@ public class Trim extends AlphabetFunction
     Bounded<?>[] pickers = new Bounded<?>[m_numTrim];
     for (int i = 0; i < pickers.length; i++)
     {
-      pickers[i] = new AllElements<Object>(getAlphabet(), false, false);
+      pickers[i] = new AllElements<Object>(getAlphabet(), true, false);
     }
     AllPickers all = new AllPickers(pickers);
     for (int i = 0; i < m_targetOutput.size(); i++)

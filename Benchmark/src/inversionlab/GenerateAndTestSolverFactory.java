@@ -50,6 +50,7 @@ public class GenerateAndTestSolverFactory extends SolverFactory<PipelineConditio
     PipelineCondition g = m_factory.setCondition(pt, e);
     GenerateAndTestSolver gen = new GenerateAndTestSolver(g.getPipeline(), m_minLength, m_maxLength, getListPicker(alphabet_size), m_maxTries);
     e.setSolver(gen);
+    e.setOutputPicker(new OutputPicker(1, g.getPicker()));
     return true;
   }
   

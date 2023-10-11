@@ -57,6 +57,7 @@ public class Window extends ReversibleFunction
 			current.add(root);
 			for (int j = 0; j < out_len; j++)
 			{
+				//System.out.println("Turn " + j);
 				List<EventNode> new_current = new ArrayList<EventNode>();
 				m_phi.reset();
 				m_phi.setTargetOutputs(0, Arrays.asList(new Suggestion(MathList.toList(out_stream.get(j)))));
@@ -65,6 +66,8 @@ public class Window extends ReversibleFunction
 					((MonteCarloReversible) m_phi).setCoin(new Playback<Boolean>(true));
 				}*/
 				List<Suggestion> in_sugs = m_phi.getSuggestions(0);
+				int valid = 0;
+				//System.out.println("  " + in_sugs.size() + " suggestions");
 				for (Suggestion in_sug: in_sugs)
 				{
 					List<?> in_stream = (List<?>) in_sug.getValue();
@@ -88,10 +91,12 @@ public class Window extends ReversibleFunction
 								EventNode child = new EventNode(last, n);
 								n.m_children.add(child);
 								new_current.add(child);
+								valid++;
 							}
 						}
 					}
 				}
+				//System.out.println("  " + valid + " are valid extensions");
 				if (new_current.isEmpty())
 				{
 					root = null;
@@ -103,6 +108,7 @@ public class Window extends ReversibleFunction
 			{
 				List<MathList<Object>> in_sols = new ArrayList<MathList<Object>>();
 				expandTree(root, in_sols, new MathList<Object>());
+				//System.out.println(in_sols.size() + " total solutions");
 				for (MathList<Object> in_sol : in_sols)
 				{
 					Suggestion in_sug = new Suggestion(in_sol);

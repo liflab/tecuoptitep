@@ -33,7 +33,6 @@ import ca.uqac.lif.reversi.Group;
 import ca.uqac.lif.reversi.IfThenElseConstant;
 import ca.uqac.lif.reversi.Trim;
 import ca.uqac.lif.reversi.Window;
-import ca.uqac.lif.reversi.util.EndsInPicker;
 import ca.uqac.lif.reversi.util.MathList;
 import ca.uqac.lif.reversi.util.AllTruePicker;
 import ca.uqac.lif.reversi.util.SomeTruePicker;
@@ -100,7 +99,8 @@ public class ReversibleFactory extends PreconditionFactory<ReversibleCondition>
 			@Override
 			public Picker<MathList<Object>> getPicker()
 			{
-				RandomInteger rint = new RandomInteger(m_minLength, m_maxLength).setSeed(m_seed + 10);
+				//RandomInteger rint = new RandomInteger(m_minLength, m_maxLength).setSeed(m_seed + 10);
+				RotateInteger rint = new RotateInteger(m_minLength, m_maxLength);
 				Picker<Boolean> rboo = new RandomBoolean().setSeed(m_seed + 47);
 				if (always)
 				{
@@ -144,7 +144,8 @@ public class ReversibleFactory extends PreconditionFactory<ReversibleCondition>
 			@Override
 			public Picker<MathList<Object>> getPicker()
 			{
-				RandomInteger rint = new RandomInteger(m_minLength, m_maxLength).setSeed(m_seed + 10);
+				//RandomInteger rint = new RandomInteger(m_minLength, m_maxLength).setSeed(m_seed + 10);
+				RotateInteger rint = new RotateInteger(m_minLength, m_maxLength);
 				Picker<Boolean> rboo = new RandomBoolean().setSeed(m_seed + 47);
 				if (always)
 				{
@@ -178,7 +179,7 @@ public class ReversibleFactory extends PreconditionFactory<ReversibleCondition>
 		return new ReversibleCondition(
 				new Group(1, 1) {{
 					Window win = new Window(4, new Group(1, 1, coin) {{
-						EqualsConstant eq_a = new EqualsConstant("a", alphabet);
+						EqualsConstant eq_a = new EqualsConstant("A", alphabet);
 						IfThenElseConstant itec = new IfThenElseConstant(1, 0);
 						NodeConnector.connect(eq_a, 0, itec, 0);
 						CumulateAddition sum = new CumulateAddition(range);
@@ -199,7 +200,8 @@ public class ReversibleFactory extends PreconditionFactory<ReversibleCondition>
 			@Override
 			public Picker<MathList<Object>> getPicker()
 			{
-				RandomInteger rint = new RandomInteger(m_minLength, m_maxLength).setSeed(m_seed + 10);
+				//RandomInteger rint = new RandomInteger(m_minLength, m_maxLength).setSeed(m_seed + 10);
+				RotateInteger rint = new RotateInteger(m_minLength, m_maxLength);
 				Picker<Boolean> rboo = new RandomBoolean().setSeed(m_seed + 47);
 				if (always)
 				{

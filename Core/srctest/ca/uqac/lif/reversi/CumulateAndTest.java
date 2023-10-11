@@ -32,14 +32,23 @@ public class CumulateAndTest
 	@Test
 	public void test1()
 	{
-		CumulateAnd sum = new CumulateAnd(Arrays.asList(0, 1, 2, 3, 4));
-		sum.setTargetOutputs(0, Arrays.asList(new Suggestion(MathList.toList(3, 5, 6))));
+		CumulateAnd sum = new CumulateAnd();
+		sum.setTargetOutputs(0, Arrays.asList(new Suggestion(MathList.toList(true, true, false))));
 		List<Suggestion> in_sugs = sum.getSuggestions(0);
 		assertEquals(1, in_sugs.size());
 		List<?> in_stream = (List<?>) in_sugs.get(0).getValue();
 		assertEquals(3, in_stream.size());
-		assertEquals(3, in_stream.get(0));
-		assertEquals(2, in_stream.get(1));
-		assertEquals(1, in_stream.get(2));
+		assertEquals(true, in_stream.get(0));
+		assertEquals(true, in_stream.get(1));
+		assertEquals(false, in_stream.get(2));
+	}
+	
+	@Test
+	public void test2()
+	{
+		CumulateAnd sum = new CumulateAnd();
+		sum.setTargetOutputs(0, Arrays.asList(new Suggestion(MathList.toList(true, true, false, false))));
+		List<Suggestion> in_sugs = sum.getSuggestions(0);
+		assertEquals(2, in_sugs.size()); // ttff and ttft
 	}
 }

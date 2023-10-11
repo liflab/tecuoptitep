@@ -39,7 +39,7 @@ public class TwoEqualTrim
 	{
 		RandomBoolean coin = new RandomBoolean(0.95);
 		//Constant<Boolean> coin = new Constant<Boolean>(true);
-		List<Object> alphabet = Arrays.asList("a", "b", "c", "d", "e", "f");
+		List<Object> alphabet = Arrays.asList("a", "b", "c", "d");
 		Group g = new Group(1, 1) {{
 			Fork f = new Fork();
 			associateInput(0, f.getInputPin(0));
@@ -51,7 +51,7 @@ public class TwoEqualTrim
 			associateOutput(0, eq.getOutputPin(0));
 			addNodes(f, t, eq);
 		}};
-		g.setTargetOutputs(0, Arrays.asList(new Suggestion(MathList.toList(false, true))));
+		g.setTargetOutputs(0, Arrays.asList(new Suggestion(MathList.toList(false, false, false, true))));
 		Set<AritalSuggestion> sols = AritalSuggestion.getSuggestions(g);
 		System.out.println(sols);
 	}

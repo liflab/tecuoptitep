@@ -18,8 +18,10 @@
  */
 package inversionlab;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import ca.uqac.lif.dag.Node;
@@ -59,7 +61,9 @@ public class ReversibleSolver implements Solver
 		for (int i = 0; i < m_maxTries; i++)
 		{
 		  m_condition.reset();
-		  m_condition.setTargetOutputs(0, Arrays.asList(new Suggestion(outputs.get(0))));
+		  List<Suggestion> sugs = new ArrayList<Suggestion>(1);
+		  sugs.add(new Suggestion(outputs.get(0)));
+		  m_condition.setTargetOutputs(0, sugs);
 		  Set<AritalSuggestion> sols = AritalSuggestion.getSuggestions((Node) m_condition);
 		  solutions.addAll(sols);
 		  if (!sols.isEmpty())

@@ -37,8 +37,8 @@ public class TwoEqualTrim
   public static void main(String[] args)
   {
     List<Object> alphabet = Arrays.asList("a", "b", "c", "d");
-    RandomBoolean coin = new RandomBoolean(0.5);
-    coin.setSeed(10);
+    RandomBoolean coin = new RandomBoolean(0.1);
+    coin.setSeed(0);
     DistinctStreamSolver solver = new DistinctStreamSolver(new Group(1, 1) {{
       Fork f = new Fork();
       associateInput(0, f.getInputPin(0));
@@ -49,11 +49,26 @@ public class TwoEqualTrim
       NodeConnector.connect(f, 1, eq, 1);
       associateOutput(0, eq.getOutputPin(0));
       addNodes(f, t, eq);
-    }}, new EndsInPicker(new RandomInteger(4, 20)));
+    }}, new EndsInPicker(new RandomInteger(4, 20)), 100, 20);
     while (!solver.isDone())
     {
       System.out.println(solver.pick());
     }
+  }
+  
+  protected static class Coin extends RandomBoolean
+  {
+  	public Coin(double p)
+  	{
+  		super(p);
+  	}
+  	
+  	public Boolean pick()
+  	{
+  		boolean b = super.pick();
+  		System.out.print(b);
+  		return b;
+  	}
   }
 
 }

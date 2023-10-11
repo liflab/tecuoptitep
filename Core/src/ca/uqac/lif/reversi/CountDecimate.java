@@ -58,7 +58,7 @@ public class CountDecimate extends AlphabetFunction
 				Bounded<?>[] pickers = new Bounded<?>[trace_len];
 				for (int i = 0; i < pickers.length; i++)
 				{
-					pickers[i] = i % m_numDecimate == 0 ? new Playback<Object>(sequence.get(i / m_numDecimate)).setLoop(false) : new AllElements<Object>(getAlphabet(), false, false);
+					pickers[i] = i % m_numDecimate == 0 ? new Playback<Object>(sequence.get(i / m_numDecimate)).setLoop(false) : new AllElements<Object>(getAlphabet(), true, false);
 				}
 				AllPickers all = new AllPickers(pickers);
 				while (m_coin.pick() && !all.isDone())

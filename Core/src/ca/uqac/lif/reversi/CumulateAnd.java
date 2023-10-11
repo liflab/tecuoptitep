@@ -24,14 +24,14 @@ import ca.uqac.lif.synthia.Picker;
 
 public class CumulateAnd extends CumulateFunction<Boolean>
 {
-	public CumulateAnd(List<Object> alphabet, Picker<Boolean> coin)
+	public CumulateAnd(Picker<Boolean> coin)
 	{
-		super(alphabet, coin);
+		super(null, coin);
 	}
 	
-	public CumulateAnd(List<Object> alphabet)
+	public CumulateAnd()
 	{
-		super(alphabet);
+		super(null);
 	}
 
 	@Override
@@ -43,6 +43,7 @@ public class CumulateAnd extends CumulateFunction<Boolean>
 	@Override
 	protected Boolean getNextOutputValue(Boolean previous, Boolean current)
 	{
+		// Incorrect implementation; if previous is false, current can be either true or false
 		if (Boolean.FALSE.equals(previous))
 		{
 			if (Boolean.TRUE.equals(current))

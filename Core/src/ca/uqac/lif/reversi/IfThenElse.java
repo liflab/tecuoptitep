@@ -24,6 +24,7 @@ import java.util.List;
 import ca.uqac.lif.reversi.util.MathList;
 import ca.uqac.lif.synthia.Bounded;
 import ca.uqac.lif.synthia.Picker;
+import ca.uqac.lif.synthia.enumerative.AllElements;
 import ca.uqac.lif.synthia.enumerative.AllPickers;
 import ca.uqac.lif.synthia.enumerative.Merge;
 import ca.uqac.lif.synthia.sequence.Playback;
@@ -56,11 +57,11 @@ public class IfThenElse extends ApplyFunction
 				new AllPickers(new Bounded[] {
 						new Playback<Boolean>(true).setLoop(false),
 						new Playback<Object>(o).setLoop(false),
-						new Playback<Object>(0, m_alphabet).setLoop(false)}), // 0 is important, otherwise wrong constructor is called
+						new AllElements<Object>(m_alphabet, true, false)}),
 				// Second case: 1st input is false, 2nd input is anything, and 3rd input is o
 				new AllPickers(new Bounded[] {
 						new Playback<Boolean>(false).setLoop(false),
-						new Playback<Object>(0, m_alphabet).setLoop(false), // 0 is important, otherwise wrong constructor is called
+						new AllElements<Object>(m_alphabet, true, false), // 0 is important, otherwise wrong constructor is called
 						new Playback<Object>(o).setLoop(false)})
 		);
 		List<MathList<Object>> ins = new ArrayList<MathList<Object>>();

@@ -23,6 +23,7 @@ import java.util.List;
 
 import ca.uqac.lif.synthia.Bounded;
 import ca.uqac.lif.synthia.Picker;
+import ca.uqac.lif.synthia.enumerative.AllElements;
 import ca.uqac.lif.synthia.sequence.Playback;
 
 /**
@@ -47,7 +48,7 @@ public class EqualsConstant extends UnaryComparison<Object>
 		{
 			return new Playback<Object>(m_constant).setLoop(false);
 		}
-		return new Playback<Object>(0, getAlphabetWithout(m_constant)).setLoop(false);
+		return new AllElements<Object>(getAlphabetWithout(m_constant), true, false);
 	}
 	
 	protected List<Object> getAlphabetWithout(Object o)
