@@ -52,12 +52,13 @@ public class Trim extends AlphabetFunction
     Bounded<?>[] pickers = new Bounded<?>[m_numTrim];
     for (int i = 0; i < pickers.length; i++)
     {
-      pickers[i] = new AllElements<Object>(getAlphabet(), true, false);
+      pickers[i] = new AllElements<Object>(getAlphabet(), false, false);
     }
+    AllPickers all = new AllPickers(pickers);
     for (int i = 0; i < m_targetOutput.size(); i++)
     {
+    	all.reset();
       Suggestion out_sug = m_targetOutput.get(i);
-      AllPickers all = new AllPickers(pickers);
       while (m_coin.pick() && !all.isDone())
       {
       	Object[] to_append = all.pick();
