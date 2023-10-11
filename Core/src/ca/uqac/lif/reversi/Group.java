@@ -126,7 +126,7 @@ public class Group extends NestedNode implements MonteCarloReversible
 
 	protected void getSuggestions(Node n, Set<Node> processed_nodes)
 	{
-		if (n == null || processed_nodes.contains(n))
+		if (n == null) //|| processed_nodes.contains(n))
 		{
 			return;
 		}
@@ -158,6 +158,11 @@ public class Group extends NestedNode implements MonteCarloReversible
 				{
 					((Reversible) upstream).setTargetOutputs(pin.getIndex(), sug);
 				}
+			}
+			else
+			{
+				//int in_index = getGroupInputPin(n);
+				//m_targetInputs.put(in_index, sug);
 			}
 		}
 		for (int i = 0; i < n.getInputArity(); i++)
