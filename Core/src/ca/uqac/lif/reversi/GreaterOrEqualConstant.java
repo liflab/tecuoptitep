@@ -30,15 +30,23 @@ import ca.uqac.lif.synthia.sequence.Playback;
  * constant.
  */
 public class GreaterOrEqualConstant extends UnaryComparison<Integer>
-{	
+{
+	protected final List<Integer> m_falseRange;
+	
+	protected final List<Integer> m_trueRange;
+	
 	public GreaterOrEqualConstant(Integer constant, List<Object> alphabet, Picker<Boolean> coin)
 	{
 		super(constant, alphabet, coin);
+		m_falseRange = getFalseRange();
+		m_trueRange = getTrueRange();
 	}
 	
 	public GreaterOrEqualConstant(Integer constant, List<Object> alphabet)
 	{
 		super(constant, alphabet);
+		m_falseRange = getFalseRange();
+		m_trueRange = getTrueRange();
 	}
 	
 	@Override
@@ -46,9 +54,9 @@ public class GreaterOrEqualConstant extends UnaryComparison<Integer>
 	{
 		if (b)
 		{
-			return new Playback<Integer>(0, getTrueRange()).setLoop(false);
+			return new Playback<Integer>(0, m_trueRange).setLoop(false);
 		}
-		return new Playback<Integer>(0, getFalseRange()).setLoop(false);
+		return new Playback<Integer>(0, m_falseRange).setLoop(false);
 	}
 	
 	protected List<Integer> getTrueRange()
