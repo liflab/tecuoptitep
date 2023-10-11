@@ -18,7 +18,10 @@
  */
 package ca.uqac.lif.reversi;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.Arrays;
+import java.util.Set;
 
 import org.junit.Test;
 
@@ -49,5 +52,14 @@ public class EqualsTest
 		}};
 		g.setTargetOutputs(0, Arrays.asList(new Suggestion(MathList.toList(true, true, true))));
 		System.out.println(AritalSuggestion.getSuggestions(g));
+	}
+	
+	@Test
+	public void test3()
+	{
+		Equals eq = new Equals(MathList.toList("a", "b", "c", "d"));
+		eq.setTargetOutputs(0, Arrays.asList(new Suggestion(MathList.toList(false, true, false, true))));
+		Set<AritalSuggestion> sugs = AritalSuggestion.getSuggestions(eq);
+		assertEquals(2304, sugs.size());
 	}
 }
