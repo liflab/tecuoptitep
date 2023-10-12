@@ -33,7 +33,7 @@ public class CountDecimateTest
 	public void test1()
 	{
 		List<Object> alphabet = Arrays.asList("a", "b", "c", "d");
-		CountDecimate cd = new CountDecimate(2, alphabet);
+		CountDecimate cd = new CountDecimate(2, alphabet, false);
 		cd.setTargetOutputs(0, Arrays.asList(new Suggestion(MathList.toList("a"))));
 		List<Suggestion> sugs = cd.getSuggestions(0);
 		assertEquals(5, sugs.size());
@@ -43,7 +43,7 @@ public class CountDecimateTest
 	public void test2()
 	{
 		List<Object> alphabet = Arrays.asList("a", "b", "c", "d");
-		CountDecimate cd = new CountDecimate(2, alphabet);
+		CountDecimate cd = new CountDecimate(2, alphabet, false);
 		cd.setTargetOutputs(0, Arrays.asList(new Suggestion(MathList.toList("a")), new Suggestion(MathList.toList("b"))));
 		List<Suggestion> sugs = cd.getSuggestions(0);
 		assertEquals(10, sugs.size());

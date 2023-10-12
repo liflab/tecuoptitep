@@ -18,6 +18,8 @@
  */
 package inversionlab;
 
+import static inversionlab.MainLab.YES;
+
 import java.util.List;
 
 import ca.uqac.lif.dag.NodeConnector;
@@ -51,6 +53,11 @@ public class ReversibleFactory extends PreconditionFactory<ReversibleCondition>
 	 * Name of parameter "&alpha;".
 	 */
 	public static final String ALPHA = "\u03b1";
+	
+	/**
+   * Name of parameter "wildcards".
+   */
+  public static final String WILDCARDS = "Wildcards";
 
 	public ReversibleFactory()
 	{
@@ -68,29 +75,20 @@ public class ReversibleFactory extends PreconditionFactory<ReversibleCondition>
 	protected ReversibleCondition getTwoEqualDecimate(Point pt, int alphabet_size, Experiment e, boolean always)
 	{
 		List<Object> alphabet = getStringAlphabet(alphabet_size);
-		float alpha = -1;
-		{
-			Object o = pt.get(ALPHA);
-			if (o == null)
-			{
-				return null;
-			}
-			alpha = ((Number) o).floatValue();
-		}
-		e.describe(ALPHA, "The probability given to the biased coin toss");
-		e.writeInput(ALPHA, alpha);
+		float alpha = getAlpha(pt, e);
+		boolean wildcards = getWildcards(pt, e);
 		RandomBoolean coin = new RandomBoolean(alpha);
 		coin.setSeed(m_seed);
 		return new ReversibleCondition(
 				new Group(1, 1) {{
 					Fork f = new Fork();
 					associateInput(0, f.getInputPin(0));
-					CountDecimate t = new CountDecimate(2, alphabet, coin);
+					CountDecimate t = new CountDecimate(2, alphabet, coin, wildcards);
 					NodeConnector.connect(f, 0, t, 0);
-					Equals eq = new Equals(alphabet, coin);
+					Equals eq = new Equals(alphabet, coin, wildcards);
 					NodeConnector.connect(t, 0, eq, 0);
 					NodeConnector.connect(f, 1, eq, 1);
-					Trim tr = new Trim(1, alphabet, coin);
+					Trim tr = new Trim(1, alphabet, coin, wildcards);
 					NodeConnector.connect(eq, 0, tr, 0);
 					associateOutput(0, tr.getOutputPin(0));
 					addNodes(f, t, eq, tr);
@@ -115,26 +113,17 @@ public class ReversibleFactory extends PreconditionFactory<ReversibleCondition>
 	protected ReversibleCondition getTwoEqualTrim(Point pt, int alphabet_size, Experiment e, boolean always)
 	{
 		List<Object> alphabet = getStringAlphabet(alphabet_size);
-		float alpha = -1;
-		{
-			Object o = pt.get(ALPHA);
-			if (o == null)
-			{
-				return null;
-			}
-			alpha = ((Number) o).floatValue();
-		}
-		e.describe(ALPHA, "The probability given to the biased coin toss");
-		e.writeInput(ALPHA, alpha);
+		float alpha = getAlpha(pt, e);
+		boolean wildcards = getWildcards(pt, e);
 		RandomBoolean coin = new RandomBoolean(alpha);
 		coin.setSeed(m_seed);
 		return new ReversibleCondition(
 				new Group(1, 1) {{
 					Fork f = new Fork();
 					associateInput(0, f.getInputPin(0));
-					Trim t = new Trim(1, alphabet, coin);
+					Trim t = new Trim(1, alphabet, coin, wildcards);
 					NodeConnector.connect(f, 0, t, 0);
-					Equals eq = new Equals(alphabet, coin);
+					Equals eq = new Equals(alphabet, coin, wildcards);
 					NodeConnector.connect(t, 0, eq, 0);
 					NodeConnector.connect(f, 1, eq, 1);
 					associateOutput(0, eq.getOutputPin(0));
@@ -163,34 +152,25 @@ public class ReversibleFactory extends PreconditionFactory<ReversibleCondition>
 		int n = 2, width = 4;
 		List<Object> range = getIntegerAlphabet(n + 1);
 		List<Object> alphabet = getStringAlphabet(alphabet_size);
-		float alpha = -1;
-		{
-			Object o = pt.get(ALPHA);
-			if (o == null)
-			{
-				return null;
-			}
-			alpha = ((Number) o).floatValue();
-		}
-		e.describe(ALPHA, "The probability given to the biased coin toss");
-		e.writeInput(ALPHA, alpha);
+		float alpha = getAlpha(pt, e);
 		RandomBoolean coin = new RandomBoolean(alpha);
 		coin.setSeed(m_seed);
+		boolean wildcards = getWildcards(pt, e);
 		return new ReversibleCondition(
 				new Group(1, 1) {{
 					Window win = new Window(4, new Group(1, 1, coin) {{
-						EqualsConstant eq_a = new EqualsConstant("A", alphabet);
+						EqualsConstant eq_a = new EqualsConstant("A", alphabet, wildcards);
 						IfThenElseConstant itec = new IfThenElseConstant(1, 0);
 						NodeConnector.connect(eq_a, 0, itec, 0);
-						CumulateAddition sum = new CumulateAddition(range);
+						CumulateAddition sum = new CumulateAddition(range, wildcards);
 						NodeConnector.connect(itec, 0, sum, 0);
-						Trim trim = new Trim(3, range);
+						Trim trim = new Trim(3, range, wildcards);
 						NodeConnector.connect(sum, 0, trim, 0);
 						addNodes(eq_a, itec, sum, trim);
 						associateInput(0, eq_a.getInputPin(0));
 						associateOutput(0, trim.getOutputPin(0));
 					}});
-					GreaterOrEqualConstant geqc = new GreaterOrEqualConstant(n, range, coin);
+					GreaterOrEqualConstant geqc = new GreaterOrEqualConstant(n, range, coin, wildcards);
 					NodeConnector.connect(win, 0, geqc, 0);
 					addNodes(win, geqc);
 					associateInput(0, win.getInputPin(0));
@@ -210,5 +190,34 @@ public class ReversibleFactory extends PreconditionFactory<ReversibleCondition>
 				return new SomeTruePicker(rint, rboo);
 			}
 		};
+	}
+	
+	protected Float getAlpha(Point pt, Experiment e)
+	{
+	  float alpha = -1;
+    {
+      Object o = pt.get(ALPHA);
+      if (o == null)
+      {
+        return null;
+      }
+      alpha = ((Number) o).floatValue();
+    }
+    e.describe(ALPHA, "The probability given to the biased coin toss");
+    e.writeInput(ALPHA, alpha);
+    return alpha;
+	}
+	
+	protected boolean getWildcards(Point pt, Experiment e)
+	{
+	  boolean b = false;
+	  e.describe(WILDCARDS, "Whether wilcard events are allowed in the inversion method");
+	  Object o = pt.get(WILDCARDS);
+    if (o != null && o.toString().compareTo(YES) == 0)
+    {
+      b = true;
+    }
+    e.writeInput(WILDCARDS, b ? MainLab.YES : MainLab.NO);
+    return b;
 	}
 }

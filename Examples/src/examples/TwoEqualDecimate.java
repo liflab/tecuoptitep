@@ -44,12 +44,12 @@ public class TwoEqualDecimate
 		Group g = new Group(1, 1); //{{
 			Fork f = new Fork();
 			g.associateInput(0, f.getInputPin(0));
-			CountDecimate t = new CountDecimate(2, alphabet, coin);
+			CountDecimate t = new CountDecimate(2, alphabet, coin, false);
 			NodeConnector.connect(f, 0, t, 0);
-			Equals eq = new Equals(alphabet, coin);
+			Equals eq = new Equals(alphabet, coin, false);
 			NodeConnector.connect(t, 0, eq, 0);
 			NodeConnector.connect(f, 1, eq, 1);
-			Trim trim = new Trim(1, Arrays.asList(false, true), coin);
+			Trim trim = new Trim(1, Arrays.asList(false, true), coin, false);
 			NodeConnector.connect(eq, 0, trim, 0);
 			g.associateOutput(0, trim.getOutputPin(0));
 			g.addNodes(f, t, eq, trim);

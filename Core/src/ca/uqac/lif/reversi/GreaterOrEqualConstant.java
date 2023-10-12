@@ -36,16 +36,16 @@ public class GreaterOrEqualConstant extends UnaryComparison<Integer>
 	
 	protected final List<Integer> m_trueRange;
 	
-	public GreaterOrEqualConstant(Integer constant, List<Object> alphabet, Picker<Boolean> coin)
+	public GreaterOrEqualConstant(Integer constant, List<Object> alphabet, Picker<Boolean> coin, boolean wildcards)
 	{
-		super(constant, alphabet, coin);
+		super(constant, alphabet, coin, wildcards);
 		m_falseRange = getFalseRange();
 		m_trueRange = getTrueRange();
 	}
 	
-	public GreaterOrEqualConstant(Integer constant, List<Object> alphabet)
+	public GreaterOrEqualConstant(Integer constant, List<Object> alphabet, boolean wildcards)
 	{
-		super(constant, alphabet);
+		super(constant, alphabet, wildcards);
 		m_falseRange = getFalseRange();
 		m_trueRange = getTrueRange();
 	}

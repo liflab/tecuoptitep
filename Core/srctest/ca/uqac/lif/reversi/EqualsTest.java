@@ -33,7 +33,7 @@ public class EqualsTest
 	@Test
 	public void test1()
 	{
-		Equals eq = new Equals(MathList.toList("a", "b", "c"));
+		Equals eq = new Equals(MathList.toList("a", "b", "c"), false);
 		eq.setTargetOutputs(0, Arrays.asList(new Suggestion(MathList.toList(false, true, false))));
 		System.out.println(AritalSuggestion.getSuggestions(eq));
 	}
@@ -44,7 +44,7 @@ public class EqualsTest
 		Group g = new Group(1, 1) {{
 			Fork f = new Fork();
 			associateInput(0, f.getInputPin(0));
-			Equals eq = new Equals(MathList.toList("a", "b", "c"));
+			Equals eq = new Equals(MathList.toList("a", "b", "c"), false);
 			NodeConnector.connect(f, 0, eq, 0);
 			NodeConnector.connect(f, 1, eq, 1);
 			associateOutput(0, eq.getOutputPin(0));
@@ -57,7 +57,7 @@ public class EqualsTest
 	@Test
 	public void test3()
 	{
-		Equals eq = new Equals(MathList.toList("a", "b", "c", "d"));
+		Equals eq = new Equals(MathList.toList("a", "b", "c", "d"), false);
 		eq.setTargetOutputs(0, Arrays.asList(new Suggestion(MathList.toList(false, true, false, true))));
 		Set<AritalSuggestion> sugs = AritalSuggestion.getSuggestions(eq);
 		assertEquals(2304, sugs.size());

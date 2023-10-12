@@ -24,6 +24,7 @@ import static ca.uqac.lif.labpal.table.ExperimentTable.table;
 import static ca.uqac.lif.labpal.table.TransformedTable.transform;
 import static inversionlab.InputOutputFactory.PROBLEM;
 import static inversionlab.ReversibleFactory.ALPHA;
+import static inversionlab.ReversibleFactory.WILDCARDS;
 import static inversionlab.ReversibleGeneratorFactory.NUM_OUTPUTS;
 import static inversionlab.PreconditionFactory.ALPHABET_SIZE;
 import static inversionlab.PreconditionFactory.CONDITION;
@@ -53,6 +54,16 @@ import ca.uqac.lif.spreadsheet.functions.Sort;
 @SuppressWarnings("unused")
 public class MainLab extends Laboratory
 {
+  /**
+   * The name of the constant "yes".
+   */
+  public static final String YES = "Yes";
+  
+  /**
+   * The name of the constant "no".
+   */
+  public static final String NO = "No";
+  
 	@Override
 	public void setup()
 	{
@@ -88,6 +99,7 @@ public class MainLab extends Laboratory
 		Region big_r = product(
 				extension(METHOD, ReversibleGenerator.NAME, GenerateAndTestGenerator.NAME),
 				extension(PROBLEM, GeneratorExperiment.NAME, SolverExperiment.NAME),
+				//extension(WILDCARDS, YES, NO),
 				extension(CONDITION, 
 						PreconditionFactory.TWO_EQUAL_TRIM_F, PreconditionFactory.TWO_EQUAL_DECIMATE_F,
 						PreconditionFactory.TWO_EQUAL_TRIM_G, PreconditionFactory.TWO_EQUAL_DECIMATE_G,
@@ -104,7 +116,7 @@ public class MainLab extends Laboratory
 			factory.add(ReversibleGenerator.NAME, new ReversibleGeneratorFactory(new ReversibleFactory().setLengthBounds(min_len, max_len), min_len, max_len, max_tries_generate).setSeed(getSeed()));
 			factory.add(GenerateAndTest.NAME, new GenerateAndTestGeneratorFactory(new PipelineFactory().setLengthBounds(min_len, max_len), min_len, max_len).setSeed(getSeed()));
 
-			for (Region r : big_r.set(PROBLEM, GeneratorExperiment.NAME).set(ALPHA, 0.1f).all(CONDITION, ALPHA, ALPHABET_SIZE))
+			for (Region r : big_r.set(PROBLEM, GeneratorExperiment.NAME)/*.set(WILDCARDS, NO)*/.set(ALPHA, 0.1f).all(CONDITION, ALPHA, ALPHABET_SIZE))
 			{
 				{
 					// Comparison of running time and number of generated streams
@@ -126,7 +138,7 @@ public class MainLab extends Laboratory
 				}
 			}
 
-			for (Region r : big_r.set(PROBLEM, GeneratorExperiment.NAME).set(METHOD, ReversibleGenerator.NAME).set(NUM_OUTPUTS, num_outputs).all(ALPHABET_SIZE))
+			for (Region r : big_r.set(PROBLEM, GeneratorExperiment.NAME)/*.set(WILDCARDS, NO)*/.set(METHOD, ReversibleGenerator.NAME).set(NUM_OUTPUTS, num_outputs).all(ALPHABET_SIZE))
 			{
 				{
 					// Impact of alpha on found solutions
@@ -150,7 +162,7 @@ public class MainLab extends Laboratory
 			factory.add(GenerateAndTestSolver.NAME, new GenerateAndTestSolverFactory(new PipelineFactory().setLengthBounds(min_len, max_len), min_len, max_len, max_tries_solve_gnt).setSeed(getSeed()));
 
 			{
-				Region in_r = big_r.set(PROBLEM, SolverExperiment.NAME).set(ALPHA, 0.5f);
+				Region in_r = big_r.set(PROBLEM, SolverExperiment.NAME)/*.set(WILDCARDS, NO)*/.set(ALPHA, 0.5f);
 				for (Region r : in_r.all(ALPHA, ALPHABET_SIZE))
 				{
 					ExperimentTable et = table(METHOD, CONDITION, RATIO, HIT_RATE, DURATION);
@@ -163,7 +175,7 @@ public class MainLab extends Laboratory
 
 			// Impact of alpha on hit rate
 			{
-				for (Region r : big_r.set(PROBLEM, SolverExperiment.NAME).set(METHOD, ReversibleSolver.NAME).all(ALPHABET_SIZE, METHOD))
+				for (Region r : big_r.set(PROBLEM, SolverExperiment.NAME)/*.set(WILDCARDS, NO)*/.set(METHOD, ReversibleSolver.NAME).all(ALPHABET_SIZE, METHOD))
 				{
 					ExperimentTable et = table(CONDITION, ALPHA, HIT_RATE);
 					et.setTitle("Impact of \u03b1 on hit rate, |\u03a3|=" + getInt(r, ALPHABET_SIZE));

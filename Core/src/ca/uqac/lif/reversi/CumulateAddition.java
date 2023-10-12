@@ -24,14 +24,14 @@ import ca.uqac.lif.synthia.Picker;
 
 public class CumulateAddition extends CumulateFunction<Number>
 {
-	public CumulateAddition(List<Object> alphabet, Picker<Boolean> coin)
+	public CumulateAddition(List<Object> alphabet, Picker<Boolean> coin, boolean wildcards)
 	{
-		super(alphabet, coin);
+		super(alphabet, coin, wildcards);
 	}
 	
-	public CumulateAddition(List<Object> alphabet)
+	public CumulateAddition(List<Object> alphabet, boolean wildcards)
 	{
-		super(alphabet);
+		super(alphabet, wildcards);
 	}
 
 	@Override

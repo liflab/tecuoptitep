@@ -31,14 +31,14 @@ import ca.uqac.lif.synthia.sequence.Playback;
  */
 public class EqualsConstant extends UnaryComparison<Object>
 {
-	public EqualsConstant(Object constant, List<Object> alphabet, Picker<Boolean> coin)
+	public EqualsConstant(Object constant, List<Object> alphabet, Picker<Boolean> coin, boolean wildcards)
 	{
-		super(constant, alphabet, coin);
+		super(constant, alphabet, coin, wildcards);
 	}
 	
-	public EqualsConstant(Object constant, List<Object> alphabet)
+	public EqualsConstant(Object constant, List<Object> alphabet, boolean wildcards)
 	{
-		super(constant, alphabet);
+		super(constant, alphabet, wildcards);
 	}
 
 	@Override

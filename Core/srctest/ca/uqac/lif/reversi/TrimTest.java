@@ -33,7 +33,7 @@ public class TrimTest
   @Test
   public void test1()
   {
-    Trim t = new Trim(1, Arrays.asList("a", "b", "c"));
+    Trim t = new Trim(1, Arrays.asList("a", "b", "c"), false);
     List<Suggestion> sug_list = new ArrayList<Suggestion>();
     sug_list.add(new Suggestion(MathList.toList("a", "b")));
     t.setTargetOutputs(0, sug_list);
@@ -48,7 +48,7 @@ public class TrimTest
   @Test
   public void test2()
   {
-    Trim t = new Trim(1, Arrays.asList("a", "b", "c"));
+    Trim t = new Trim(1, Arrays.asList("a", "b", "c"), false);
     List<Suggestion> sug_list = new ArrayList<Suggestion>();
     sug_list.add(new Suggestion(MathList.toList("a", "b")));
     sug_list.add(new Suggestion(MathList.toList("b", "c")));

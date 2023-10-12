@@ -31,9 +31,12 @@ public class Equals extends ApplyFunction
 	
 	protected final List<MathList<Object>> m_unequalPairs;
 	
-  public Equals(List<Object> alphabet, Picker<Boolean> coin)
+	protected final boolean m_wildcardsAllowed;
+	
+  public Equals(List<Object> alphabet, Picker<Boolean> coin, boolean wildcards)
   {
     super(2, coin);
+    m_wildcardsAllowed = wildcards;
     m_equalPairs = new ArrayList<>();
     m_unequalPairs = new ArrayList<>();
     for (int i = 0; i < alphabet.size(); i++)
@@ -52,9 +55,9 @@ public class Equals extends ApplyFunction
     }
   }
   
-  public Equals(List<Object> alphabet)
+  public Equals(List<Object> alphabet, boolean wildcards)
   {
-  	this(alphabet, new Constant<Boolean>(true));
+  	this(alphabet, new Constant<Boolean>(true), wildcards);
   }
   
 	@Override

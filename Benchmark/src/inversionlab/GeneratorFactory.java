@@ -34,6 +34,7 @@ public abstract class GeneratorFactory<T> extends InputOutputFactory<T>
   
   public boolean setGenerator(Point pt, GeneratorExperiment e)
   {
+    e.writeInput(PROBLEM, GeneratorExperiment.NAME);
     T precondition = m_factory.setCondition(pt, e);
     if (precondition == null)
     {

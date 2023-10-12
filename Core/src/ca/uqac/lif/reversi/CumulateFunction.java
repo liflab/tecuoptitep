@@ -26,14 +26,14 @@ import ca.uqac.lif.synthia.Picker;
 
 public abstract class CumulateFunction<T> extends AlphabetFunction
 {
-	public CumulateFunction(List<Object> alphabet, Picker<Boolean> coin)
+	public CumulateFunction(List<Object> alphabet, Picker<Boolean> coin, boolean wildcards)
 	{
-		super(1, alphabet, coin);
+		super(1, alphabet, coin, wildcards);
 	}
 	
-	public CumulateFunction(List<Object> alphabet)
+	public CumulateFunction(List<Object> alphabet, boolean wildcards)
 	{
-		super(1, alphabet);
+		super(1, alphabet, wildcards);
 	}
 
 	@SuppressWarnings("unchecked")

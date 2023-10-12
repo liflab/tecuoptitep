@@ -32,9 +32,9 @@ public class EqualsConstantTest
 	@Test
 	public void test1()
 	{
-		EqualsConstant eq = new EqualsConstant("a", Arrays.asList("a", "b", "c"));
+		EqualsConstant eq = new EqualsConstant("a", Arrays.asList("a", "b", "c"), false);
 		eq.setTargetOutputs(0, Arrays.asList(new Suggestion(MathList.toList(true, false, true, false))));
 		List<Suggestion> in_sugs = eq.getSuggestions(0);
-		assertEquals(9, in_sugs.size());
+		assertEquals(4, in_sugs.size());
 	}
 }

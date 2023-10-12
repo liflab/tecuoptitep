@@ -29,6 +29,7 @@ public abstract class SolverFactory<T> extends InputOutputFactory<T>
 	
 	public boolean setSolver(Point pt, SolverExperiment e)
   {
+	  e.writeInput(PROBLEM, SolverExperiment.NAME);
     T precondition = m_factory.setCondition(pt, e);
     if (precondition == null)
     {

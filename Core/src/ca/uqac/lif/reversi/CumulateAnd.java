@@ -18,20 +18,18 @@
  */
 package ca.uqac.lif.reversi;
 
-import java.util.List;
-
 import ca.uqac.lif.synthia.Picker;
 
 public class CumulateAnd extends CumulateFunction<Boolean>
 {
-	public CumulateAnd(Picker<Boolean> coin)
+	public CumulateAnd(Picker<Boolean> coin, boolean wildcards)
 	{
-		super(null, coin);
+		super(null, coin, wildcards);
 	}
 	
-	public CumulateAnd()
+	public CumulateAnd(boolean wildcards)
 	{
-		super(null);
+		super(null, wildcards);
 	}
 
 	@Override

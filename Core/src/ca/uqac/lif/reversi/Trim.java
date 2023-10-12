@@ -32,15 +32,15 @@ public class Trim extends AlphabetFunction
 {
   protected final int m_numTrim;
   
-  public Trim(int num_trim, List<Object> alphabet, Picker<Boolean> coin)
+  public Trim(int num_trim, List<Object> alphabet, Picker<Boolean> coin, boolean wildcards)
   {
-    super(1, alphabet, coin);
+    super(1, alphabet, coin, wildcards);
     m_numTrim = num_trim;
   }
   
-  public Trim(int num_trim, List<Object> alphabet)
+  public Trim(int num_trim, List<Object> alphabet, boolean wildcards)
   {
-  	this(num_trim, alphabet, new Constant<Boolean>(true));
+  	this(num_trim, alphabet, new Constant<Boolean>(true), wildcards);
   }
 
   @SuppressWarnings("unchecked")
@@ -52,7 +52,7 @@ public class Trim extends AlphabetFunction
     Bounded<?>[] pickers = new Bounded<?>[m_numTrim];
     for (int i = 0; i < pickers.length; i++)
     {
-      pickers[i] = new AllElements<Object>(getAlphabet(), true, false);
+      pickers[i] = new AllElements<Object>(m_alphabet, true, false);
     }
     AllPickers all = new AllPickers(pickers);
     for (int i = 0; i < m_targetOutput.size(); i++)

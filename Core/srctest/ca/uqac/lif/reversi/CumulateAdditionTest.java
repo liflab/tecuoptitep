@@ -32,7 +32,7 @@ public class CumulateAdditionTest
 	@Test
 	public void test1()
 	{
-		CumulateAddition sum = new CumulateAddition(Arrays.asList(0, 1, 2, 3, 4));
+		CumulateAddition sum = new CumulateAddition(Arrays.asList(0, 1, 2, 3, 4), false);
 		sum.setTargetOutputs(0, Arrays.asList(new Suggestion(MathList.toList(3, 5, 6))));
 		List<Suggestion> in_sugs = sum.getSuggestions(0);
 		assertEquals(1, in_sugs.size());

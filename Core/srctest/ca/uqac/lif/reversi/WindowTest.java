@@ -32,7 +32,7 @@ public class WindowTest
 	@Test
 	public void test1()
 	{
-		Window w = new Window(3, new Trim(2, Arrays.asList("a", "b", "c")));
+		Window w = new Window(3, new Trim(2, Arrays.asList("a", "b", "c"), false));
 		w.setTargetOutputs(0, Arrays.asList(new Suggestion(MathList.toList("a", "b"))));
 		List<Suggestion> sugs = w.getSuggestions(0);
 		assertEquals(9, sugs.size());

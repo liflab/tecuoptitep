@@ -36,7 +36,7 @@ public class GroupTest
     Group g = new Group(2, 1);
     {
       And a = new And();
-      Trim t = new Trim(1, bool_alph);
+      Trim t = new Trim(1, bool_alph, false);
       NodeConnector.connect(t, 0, a, 1);
       g.addNodes(a, t);
       g.associateInput(0, a.getInputPin(0));
@@ -57,7 +57,7 @@ public class GroupTest
     Group g = new Group(2, 1);
     {
       And a = new And();
-      Trim t = new Trim(1, bool_alph);
+      Trim t = new Trim(1, bool_alph, false);
       NodeConnector.connect(t, 0, a, 1);
       g.addNodes(a, t);
       g.associateInput(0, a.getInputPin(0));

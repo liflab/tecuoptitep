@@ -28,22 +28,45 @@ import ca.uqac.lif.synthia.util.Constant;
  */
 public abstract class AlphabetFunction extends ReversibleFunction
 {
+  /**
+   * A single visible instance of the "wildcard" event.
+   */
+  public static final Wildcard WILDCARD = new Wildcard();
+  
+  /**
+   * The collection of symbols that can be possible input events.
+   */
   protected final List<Object> m_alphabet;
+  
+  /**
+   * A flag indicating whether wildcards are allowed in the input streams
+   * given as suggestions.
+   */
+  protected final boolean m_wildcardsAllowed;
 
-  public AlphabetFunction(int in_arity, List<Object> alphabet, Picker<Boolean> coin)
+  public AlphabetFunction(int in_arity, List<Object> alphabet, Picker<Boolean> coin, boolean wildcards)
   {
     super(in_arity, coin);
     m_alphabet = alphabet;
+    m_wildcardsAllowed = wildcards;
   }
   
-  public AlphabetFunction(int in_arity, List<Object> alphabet)
+  public AlphabetFunction(int in_arity, List<Object> alphabet, boolean wildcards)
   {
-    this(in_arity, alphabet, new Constant<Boolean>(true));
+    this(in_arity, alphabet, new Constant<Boolean>(true), wildcards);
   }
   
-  protected List<Object> getAlphabet()
+  public static class Wildcard
   {
-    return m_alphabet;
+    private Wildcard()
+    {
+      super();
+    }
+    
+    @Override
+    public String toString()
+    {
+      return "*";
+    }
   }
-
 }

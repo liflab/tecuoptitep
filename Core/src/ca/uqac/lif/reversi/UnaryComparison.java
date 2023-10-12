@@ -12,15 +12,15 @@ public abstract class UnaryComparison<T> extends AlphabetFunction
 {
 	protected final T m_constant;
 
-	public UnaryComparison(T constant, List<Object> alphabet, Picker<Boolean> coin)
+	public UnaryComparison(T constant, List<Object> alphabet, Picker<Boolean> coin, boolean wildcards)
 	{
-		super(1, alphabet, coin);
+		super(1, alphabet, coin, wildcards);
 		m_constant = constant;
 	}
 
-	public UnaryComparison(T constant, List<Object> alphabet)
+	public UnaryComparison(T constant, List<Object> alphabet, boolean wildcards)
 	{
-		super(1, alphabet);
+		super(1, alphabet, wildcards);
 		m_constant = constant;
 	}
 

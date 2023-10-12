@@ -42,9 +42,9 @@ public class TwoEqualTrim
     DistinctStreamSolver solver = new DistinctStreamSolver(new Group(1, 1) {{
       Fork f = new Fork();
       associateInput(0, f.getInputPin(0));
-      Trim t = new Trim(1, alphabet, coin);
+      Trim t = new Trim(1, alphabet, coin, false);
       NodeConnector.connect(f, 0, t, 0);
-      Equals eq = new Equals(alphabet, coin);
+      Equals eq = new Equals(alphabet, coin, false);
       NodeConnector.connect(t, 0, eq, 0);
       NodeConnector.connect(f, 1, eq, 1);
       associateOutput(0, eq.getOutputPin(0));
