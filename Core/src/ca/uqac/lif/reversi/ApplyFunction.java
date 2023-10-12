@@ -26,7 +26,6 @@ import ca.uqac.lif.synthia.Bounded;
 import ca.uqac.lif.synthia.Picker;
 import ca.uqac.lif.synthia.enumerative.AllElements;
 import ca.uqac.lif.synthia.enumerative.AllPickers;
-import ca.uqac.lif.synthia.sequence.Playback;
 
 public abstract class ApplyFunction extends ReversibleFunction
 {

@@ -24,7 +24,6 @@ import java.util.List;
 import ca.uqac.lif.synthia.Bounded;
 import ca.uqac.lif.synthia.Picker;
 import ca.uqac.lif.synthia.enumerative.AllElements;
-import ca.uqac.lif.synthia.sequence.Playback;
 
 /**
  * An unary function that checks if a value is greater than or equal to a

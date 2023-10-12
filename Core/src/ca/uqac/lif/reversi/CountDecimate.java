@@ -24,7 +24,6 @@ import java.util.List;
 import ca.uqac.lif.reversi.util.MathList;
 import ca.uqac.lif.synthia.Bounded;
 import ca.uqac.lif.synthia.Picker;
-import ca.uqac.lif.synthia.enumerative.AllElements;
 import ca.uqac.lif.synthia.enumerative.AllPickers;
 import ca.uqac.lif.synthia.sequence.Playback;
 import ca.uqac.lif.synthia.util.Constant;
@@ -58,7 +57,7 @@ public class CountDecimate extends AlphabetFunction
 				Bounded<?>[] pickers = new Bounded<?>[trace_len];
 				for (int i = 0; i < pickers.length; i++)
 				{
-					pickers[i] = i % m_numDecimate == 0 ? new Playback<Object>(sequence.get(i / m_numDecimate)).setLoop(false) : new AllElements<Object>(m_alphabet, true, false);
+					pickers[i] = i % m_numDecimate == 0 ? new Playback<Object>(sequence.get(i / m_numDecimate)).setLoop(false) : getAnyPicker();
 				}
 				AllPickers all = new AllPickers(pickers);
 				while (m_coin.pick() && !all.isDone())

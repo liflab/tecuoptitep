@@ -60,4 +60,19 @@ public class TrimTest
       System.out.println(s);
     }
   }
+  
+  @Test
+  public void test3()
+  {
+    Trim t = new Trim(1, Arrays.asList("a", "b", "c"), true);
+    List<Suggestion> sug_list = new ArrayList<Suggestion>();
+    sug_list.add(new Suggestion(MathList.toList("a", "b")));
+    t.setTargetOutputs(0, sug_list);
+    List<Suggestion> in_sugs = t.getSuggestions(0);
+    assertEquals(1, in_sugs.size());
+    for (Suggestion s : in_sugs)
+    {
+      System.out.println(s);
+    }
+  }
 }

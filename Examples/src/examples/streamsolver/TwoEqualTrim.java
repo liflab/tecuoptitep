@@ -49,7 +49,7 @@ public class TwoEqualTrim
       NodeConnector.connect(f, 1, eq, 1);
       associateOutput(0, eq.getOutputPin(0));
       addNodes(f, t, eq);
-    }}, new EndsInPicker(new RandomInteger(4, 20)), 100, 20);
+    }}, new EndsInPicker(new RandomInteger(4, 20), false), 100, 20);
     while (!solver.isDone())
     {
       System.out.println(solver.pick());

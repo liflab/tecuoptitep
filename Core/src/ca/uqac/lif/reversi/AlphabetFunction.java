@@ -18,9 +18,13 @@
  */
 package ca.uqac.lif.reversi;
 
+import java.util.Arrays;
 import java.util.List;
 
+import ca.uqac.lif.synthia.Bounded;
 import ca.uqac.lif.synthia.Picker;
+import ca.uqac.lif.synthia.enumerative.AllElements;
+import ca.uqac.lif.synthia.sequence.Playback;
 import ca.uqac.lif.synthia.util.Constant;
 
 /**
@@ -68,5 +72,21 @@ public abstract class AlphabetFunction extends ReversibleFunction
     {
       return "*";
     }
+  }
+  
+  /**
+   * Gets the picker providing the events for an unknown event that can be any
+   * element of the alphabet. The actual picker instance that is returned
+   * depends on whether the {@link AlphabetFunction#m_wildcardsAllowed} flag
+   * is set to true or false.
+   * @return The picker instance
+   */
+  protected Bounded<Object> getAnyPicker()
+  {
+    if (m_wildcardsAllowed)
+    {
+      return new Playback<Object>(Arrays.asList(WILDCARD)).setLoop(false);
+    }
+    return new AllElements<Object>(m_alphabet, true, false);
   }
 }

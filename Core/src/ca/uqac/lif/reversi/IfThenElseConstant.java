@@ -55,7 +55,11 @@ public class IfThenElseConstant extends ReversibleFunction
 			MathList<Object> in_stream = new MathList<Object>();
 			for (Object e : out_stream)
 			{
-				if (m_oIf.equals(e))
+			  if (e == AlphabetFunction.WILDCARD)
+			  {
+			    in_stream.add(AlphabetFunction.WILDCARD);
+			  }
+			  else if (m_oIf.equals(e))
 				{
 					in_stream.add(true);
 				}

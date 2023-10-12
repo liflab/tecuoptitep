@@ -23,7 +23,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import ca.uqac.lif.reversi.util.MathList;
-import ca.uqac.lif.synthia.sequence.Playback;
 
 /**
  * The inversion of the sliding window produces a correct result under the
@@ -130,7 +129,7 @@ public class Window extends ReversibleFunction
 		}
 		Object o1 = stream.get(depth - 1);
 		Object o2 = n.m_symbol;
-		if (!o1.equals(o2))
+		if (o1 != AlphabetFunction.WILDCARD && o2 != AlphabetFunction.WILDCARD && !o1.equals(o2))
 		{
 			return false;
 		}

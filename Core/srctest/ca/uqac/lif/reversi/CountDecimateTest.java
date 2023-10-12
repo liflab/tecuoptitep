@@ -48,4 +48,14 @@ public class CountDecimateTest
 		List<Suggestion> sugs = cd.getSuggestions(0);
 		assertEquals(10, sugs.size());
 	}
+	
+	@Test
+  public void test3()
+  {
+    List<Object> alphabet = Arrays.asList("a", "b", "c", "d");
+    CountDecimate cd = new CountDecimate(2, alphabet, true);
+    cd.setTargetOutputs(0, Arrays.asList(new Suggestion(MathList.toList("a"))));
+    List<Suggestion> sugs = cd.getSuggestions(0);
+    assertEquals(2, sugs.size()); // a*b*c*d and a*b*c*d*
+  }
 }

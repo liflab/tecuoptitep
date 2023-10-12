@@ -24,7 +24,6 @@ import java.util.List;
 import ca.uqac.lif.reversi.util.MathList;
 import ca.uqac.lif.synthia.Bounded;
 import ca.uqac.lif.synthia.Picker;
-import ca.uqac.lif.synthia.enumerative.AllElements;
 import ca.uqac.lif.synthia.enumerative.AllPickers;
 import ca.uqac.lif.synthia.util.Constant;
 
@@ -52,7 +51,7 @@ public class Trim extends AlphabetFunction
     Bounded<?>[] pickers = new Bounded<?>[m_numTrim];
     for (int i = 0; i < pickers.length; i++)
     {
-      pickers[i] = new AllElements<Object>(m_alphabet, true, false);
+      pickers[i] = getAnyPicker();
     }
     AllPickers all = new AllPickers(pickers);
     for (int i = 0; i < m_targetOutput.size(); i++)
@@ -75,5 +74,6 @@ public class Trim extends AlphabetFunction
         sugg_index++;
       }
     }
+    //System.out.println(m_suggestedInputs.get(0));
   }
 }

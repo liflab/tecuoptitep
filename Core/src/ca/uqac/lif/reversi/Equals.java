@@ -19,6 +19,7 @@
 package ca.uqac.lif.reversi;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import ca.uqac.lif.reversi.util.MathList;
@@ -63,6 +64,10 @@ public class Equals extends ApplyFunction
 	@Override
 	protected List<MathList<Object>> getInputValuesFor(Object o)
 	{
+	  if (o instanceof AlphabetFunction.Wildcard)
+	  {
+	    return Arrays.asList(MathList.toList(o, o));
+	  }
 		if (Boolean.TRUE.equals(o))
 		{
 			return m_equalPairs;

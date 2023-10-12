@@ -18,22 +18,26 @@
  */
 package ca.uqac.lif.reversi.util;
 
+import ca.uqac.lif.reversi.AlphabetFunction;
 import ca.uqac.lif.synthia.Picker;
 import ca.uqac.lif.synthia.util.Constant;
 
 public class EndsInPicker implements Picker<MathList<Object>>
 {
+  protected final boolean m_wildcardsAllowed;
+  
   protected final Picker<Integer> m_length;
   
-  public EndsInPicker(Picker<Integer> len)
+  public EndsInPicker(Picker<Integer> len, boolean wildcards)
   {
     super();
     m_length = len;
+    m_wildcardsAllowed = wildcards;
   }
   
-  public EndsInPicker(int len)
+  public EndsInPicker(int len, boolean wildcards)
   {
-    this(new Constant<Integer>(len));
+    this(new Constant<Integer>(len), wildcards);
   }
 
   @Override
@@ -53,7 +57,7 @@ public class EndsInPicker implements Picker<MathList<Object>>
     }
     for (int i = 0; i < len - 1; i++)
     {
-      list.add(false);
+      list.add(m_wildcardsAllowed ? AlphabetFunction.WILDCARD : false);
     }
     list.add(true);
     return list;
@@ -62,6 +66,6 @@ public class EndsInPicker implements Picker<MathList<Object>>
   @Override
   public EndsInPicker duplicate(boolean with_state)
   {
-    return new EndsInPicker(m_length.duplicate(with_state));
+    return new EndsInPicker(m_length.duplicate(with_state), m_wildcardsAllowed);
   }
 }

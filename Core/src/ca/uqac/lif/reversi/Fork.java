@@ -99,24 +99,54 @@ public class Fork extends Node implements Reversible
 	
 	protected static MathList<Object> common(MathList<Object> l1, MathList<Object> l2)
 	{
+	  MathList<Object> out_list = new MathList<Object>();
 		if (l1.size() < l2.size())
 		{
 			for (int i = 0; i < l1.size(); i++)
 			{
-				if (!l1.get(i).equals(l2.get(i)))
+			  Object o = compatibleEvents(l1.get(i), l2.get(i));
+				if (o == null)
 				{
 					return null;
 				}
+				out_list.add(o);
 			}
-			return l2;
+			for (int i = l1.size(); i < l2.size(); i++)
+			{
+			  out_list.add(l2.get(i));
+			}
+			return out_list;
 		}
 		for (int i = 0; i < l2.size(); i++)
 		{
-			if (!l1.get(i).equals(l2.get(i)))
-			{
-				return null;
-			}
+		  Object o = compatibleEvents(l1.get(i), l2.get(i));
+		  if (o == null)
+      {
+        return null;
+      }
+      out_list.add(o);
 		}
-		return l1;
+		for (int i = l2.size(); i < l1.size(); i++)
+    {
+      out_list.add(l1.get(i));
+    }
+		return out_list;
+	}
+	
+	protected static Object compatibleEvents(Object o1, Object o2)
+	{
+	  if (o1 == AlphabetFunction.WILDCARD)
+	  {
+	    return o2;
+	  }
+	  if (o2 == AlphabetFunction.WILDCARD)
+	  {
+	    return o1;
+	  }
+	  if (o1.equals(o2))
+	  {
+	    return o1;
+	  }
+	  return null;
 	}
 }
