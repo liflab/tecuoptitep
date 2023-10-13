@@ -27,6 +27,8 @@ import static inversionlab.GeneratorFactory.METHOD;
 import ca.uqac.lif.labpal.Laboratory;
 import ca.uqac.lif.labpal.experiment.ExperimentFactory;
 import ca.uqac.lif.labpal.region.Point;
+import ca.uqac.lif.units.Time;
+import ca.uqac.lif.units.si.Second;
 
 /**
  * An object that provides instances of a precondition based on a name
@@ -37,6 +39,8 @@ public class GeneratorExperimentFactory extends ExperimentFactory<GeneratorExper
   protected Map<String,GeneratorFactory<?>> m_factories;
   
   protected int m_sizeLimit = 10;
+  
+  protected Time m_timeout = new Second(0);
 
   public GeneratorExperimentFactory(Laboratory lab)
   {
@@ -47,6 +51,12 @@ public class GeneratorExperimentFactory extends ExperimentFactory<GeneratorExper
   public GeneratorExperimentFactory add(String name, GeneratorFactory<?> f)
   {
     m_factories.put(name, f);
+    return this;
+  }
+  
+  public GeneratorExperimentFactory setTimeout(Time timeout)
+  {
+    m_timeout = timeout;
     return this;
   }
   
@@ -70,6 +80,7 @@ public class GeneratorExperimentFactory extends ExperimentFactory<GeneratorExper
   public boolean set(Point pt, GeneratorExperiment e)
   {
     String name = pt.getString(METHOD);
+    e.setTimeout(m_timeout);
     e.describe(METHOD, "The method used to generate input streams");
     e.writeInput(METHOD, name);
     GeneratorFactory<?> factory = m_factories.get(name);

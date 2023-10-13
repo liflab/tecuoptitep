@@ -28,12 +28,16 @@ import java.util.Map;
 import ca.uqac.lif.labpal.Laboratory;
 import ca.uqac.lif.labpal.experiment.ExperimentFactory;
 import ca.uqac.lif.labpal.region.Point;
+import ca.uqac.lif.units.Time;
+import ca.uqac.lif.units.si.Second;
 
 public class SolverExperimentFactory extends ExperimentFactory<SolverExperiment>
 {
 	protected Map<String,SolverFactory<?>> m_factories;
 	
 	protected int m_traceLimit = 10;
+	
+	protected Time m_timeout = new Second(0);
 	
 	public SolverExperimentFactory(Laboratory lab)
 	{
@@ -44,6 +48,12 @@ public class SolverExperimentFactory extends ExperimentFactory<SolverExperiment>
 	public SolverExperimentFactory add(String name, SolverFactory<?> f)
   {
     m_factories.put(name, f);
+    return this;
+  }
+	
+  public SolverExperimentFactory setTimeout(Time timeout)
+  {
+    m_timeout = timeout;
     return this;
   }
 	

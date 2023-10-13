@@ -50,6 +50,8 @@ import ca.uqac.lif.spreadsheet.chart.gnuplot.GnuplotHistogram;
 import ca.uqac.lif.spreadsheet.chart.gnuplot.GnuplotScatterplot;
 import ca.uqac.lif.spreadsheet.functions.ExpandAsColumns;
 import ca.uqac.lif.spreadsheet.functions.Sort;
+import ca.uqac.lif.units.Time;
+import ca.uqac.lif.units.si.Second;
 
 @SuppressWarnings("unused")
 public class MainLab extends Laboratory
@@ -95,6 +97,9 @@ public class MainLab extends Laboratory
 		/* The number of outputs given to the inversion method in the generator
 		 * experiments. */
 		int num_outputs = 1;
+		
+		/* The experiment timeout. */
+		Time timeout = new Second(120);
 
 		Region big_r = product(
 				extension(METHOD, ReversibleGenerator.NAME, GenerateAndTestGenerator.NAME),
@@ -112,7 +117,7 @@ public class MainLab extends Laboratory
 		{
 			ExperimentGroup g = new ExperimentGroup("Generator experiments", "Experiments where each input generation method is asked to produce a fixed number of inputs satisfying a given precondition.");
 			add(g);
-			GeneratorExperimentFactory factory = new GeneratorExperimentFactory(this).setSizeLimit(trace_limit);
+			GeneratorExperimentFactory factory = new GeneratorExperimentFactory(this).setSizeLimit(trace_limit).setTimeout(timeout);
 			factory.add(ReversibleGenerator.NAME, new ReversibleGeneratorFactory(new ReversibleFactory().setLengthBounds(min_len, max_len), min_len, max_len, max_tries_generate).setSeed(getSeed()));
 			factory.add(GenerateAndTest.NAME, new GenerateAndTestGeneratorFactory(new PipelineFactory().setLengthBounds(min_len, max_len), min_len, max_len).setSeed(getSeed()));
 
@@ -136,8 +141,17 @@ public class MainLab extends Laboratory
 					add(lh);
 					add(new Plot(lh, new GnuplotHistogram()));
 				}
-			}
-
+			}			
+		}
+		
+		// Hit rate experiments
+		{
+			ExperimentGroup g = new ExperimentGroup("Hit rate experiments", "Experiments where the impact of parameter \u031b on is measured.");
+			add(g);
+			GeneratorExperimentFactory factory = new GeneratorExperimentFactory(this).setSizeLimit(trace_limit).setTimeout(timeout);
+			factory.add(ReversibleGenerator.NAME, new ReversibleGeneratorFactory(new ReversibleFactory().setLengthBounds(min_len, max_len), min_len, max_len, max_tries_generate).setSeed(getSeed()));
+			factory.add(GenerateAndTest.NAME, new GenerateAndTestGeneratorFactory(new PipelineFactory().setLengthBounds(min_len, max_len), min_len, max_len).setSeed(getSeed()));
+			
 			for (Region r : big_r.set(PROBLEM, GeneratorExperiment.NAME).set(METHOD, ReversibleGenerator.NAME).set(NUM_OUTPUTS, num_outputs).all(ALPHABET_SIZE, WILDCARDS))
 			{
 				{
@@ -157,7 +171,7 @@ public class MainLab extends Laboratory
 		{
 			ExperimentGroup g = new ExperimentGroup("Solver experiments", "Experiments where each input generation method is asked to produce an input producing a precise output.");
 			add(g);
-			SolverExperimentFactory factory = new SolverExperimentFactory(this).setTraceLimit(trace_limit);
+			SolverExperimentFactory factory = new SolverExperimentFactory(this).setTraceLimit(trace_limit).setTimeout(timeout);
 			factory.add(ReversibleSolver.NAME, new ReversibleSolverFactory(new ReversibleFactory().setLengthBounds(min_len, max_len), min_len, max_len, max_tries_solve_inv).setSeed(getSeed()));
 			factory.add(GenerateAndTestSolver.NAME, new GenerateAndTestSolverFactory(new PipelineFactory().setLengthBounds(min_len, max_len), min_len, max_len, max_tries_solve_gnt).setSeed(getSeed()));
 
