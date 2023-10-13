@@ -18,7 +18,8 @@
  */
 package ca.uqac.lif.reversi;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
+import static ca.uqac.lif.reversi.AlphabetFunction.WILDCARD; 
 
 import java.util.Arrays;
 import java.util.List;
@@ -26,6 +27,7 @@ import java.util.List;
 import org.junit.Test;
 
 import ca.uqac.lif.reversi.util.MathList;
+import ca.uqac.lif.synthia.Bounded;
 
 public class CumulateAdditionTest
 {
@@ -42,4 +44,55 @@ public class CumulateAdditionTest
 		assertEquals(2, in_stream.get(1));
 		assertEquals(1, in_stream.get(2));
 	}
+	
+	@Test
+  public void test2()
+  {
+    CumulateAddition sum = new CumulateAddition(Arrays.asList(0, 1, 2, 3, 4), false);
+    sum.setTargetOutputs(0, Arrays.asList(new Suggestion(MathList.toList(WILDCARD, 5, 6))));
+    List<Suggestion> in_sugs = sum.getSuggestions(0);
+    assertEquals(4, in_sugs.size()); // 141, 231, 321, 411
+  }
+	
+	@Test
+  public void test3()
+  {
+    CumulateAddition sum = new CumulateAddition(Arrays.asList(0, 1, 2, 3, 4), false);
+    sum.setTargetOutputs(0, Arrays.asList(new Suggestion(MathList.toList(WILDCARD, WILDCARD, 6))));
+    List<Suggestion> in_sugs = sum.getSuggestions(0);
+    for (Suggestion s : in_sugs)
+    {
+      List<?> list = (List<?>) s.getValue();
+      int total = 0;
+      for (Object o : list)
+      {
+        total += ((Number) o).intValue();
+      }
+      assertEquals(6, total);
+    }
+  }
+	
+	@Test
+	public void testInternal1()
+	{
+	  CumulateAddition sum = new CumulateAddition(Arrays.asList(0, 1, 2, 3, 4), false);
+	  Bounded<?> picker = sum.getSumPicker(1, 3);
+	  assertFalse(picker.isDone());
+	  assertEquals(3, ((Object[]) picker.pick())[0]);
+	  assertTrue(picker.isDone());
+	}
+	
+	@Test
+  public void testInternal2()
+  {
+    CumulateAddition sum = new CumulateAddition(Arrays.asList(0, 1, 2, 3, 4), false);
+    Bounded<?> picker = sum.getSumPicker(2, 3);
+    int pick_cnt = 0;
+    while (!picker.isDone())
+    {
+      picker.pick();
+      pick_cnt++;
+    }
+    assertEquals(4, pick_cnt);
+  }
 }

@@ -19,14 +19,14 @@
 package ca.uqac.lif.reversi;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import ca.uqac.lif.reversi.util.MathList;
 import ca.uqac.lif.synthia.Bounded;
 import ca.uqac.lif.synthia.Picker;
+import ca.uqac.lif.synthia.enumerative.AllElements;
 import ca.uqac.lif.synthia.enumerative.AllPickers;
-import ca.uqac.lif.synthia.sequence.Playback;
+import ca.uqac.lif.synthia.relative.BoundedPickIf;
 
 public class CumulateAddition extends AlphabetFunction
 {
@@ -49,13 +49,14 @@ public class CumulateAddition extends AlphabetFunction
 		{
 			List<?> out_list = (List<?>) out_sug.getValue();
 			List<Bounded<?>> pickers = new ArrayList<Bounded<?>>();
-			// TODO: partition input
-			int num_wild = 0;
+			int num_wild = 0, cur_total = 0;
 			for (Object o : out_list)
 			{
 				if (o != AlphabetFunction.WILDCARD)
 				{
-					pickers.add(getSumPicker(num_wild, ((Number) o).intValue()));
+				  int goal = ((Number) o).intValue();
+					pickers.add(getSumPicker(num_wild + 1, goal - cur_total));
+					cur_total = goal;
 					num_wild = 0;
 				}
 				else
@@ -63,14 +64,22 @@ public class CumulateAddition extends AlphabetFunction
 					num_wild++;
 				}
 			}
-			AllPickers all = new AllPickers((Bounded<?>[]) pickers.toArray());
+			Bounded<?>[] bounded = new Bounded[pickers.size()];
+			for (int i = 0; i < bounded.length; i++)
+			{
+			  bounded[i] = pickers.get(i);
+			}
+			AllPickers all = new AllPickers(bounded);
 			while (m_coin.pick() && !all.isDone())
 			{
 				MathList<Object> in_stream = new MathList<Object>();
 				Object[] elems = all.pick();
 				for (Object e : elems)
 				{
-					in_stream.addAll((List<?>) e);
+				  for (Object in_e : (Object[]) e)
+				  {
+				    in_stream.add(in_e);
+				  }
 				}
 				Suggestion in_sug = new Suggestion(in_stream);
 				in_sug.addLineage(out_sug.getLineage());
@@ -82,14 +91,43 @@ public class CumulateAddition extends AlphabetFunction
 		m_suggestedInputs.put(0, in_sugs);
 	}
 	
-	protected Bounded<?> getSumPicker(int num_wild, int total)
+	/**
+	 * Produces a picker enumerating all sequences of <i>k</i> elements of
+	 * the function's alphabet whose sum equals a given total.
+	 * @param k The length of the sequences
+	 * @param total The total to obtain
+	 * @return A picker instance that enumerates exactly those sequences
+	 * producing the desired sum
+	 */
+	protected Bounded<?> getSumPicker(int k, int total)
 	{
-		Bounded<?>[] pickers = new Bounded<?>[num_wild + 1];
-		for (int i = 0; i < num_wild; i++)
+		Bounded<?>[] pickers = new Bounded<?>[k];
+		for (int i = 0; i < k; i++)
 		{
-			pickers[i] = getAnyPicker();
+			pickers[i] = new AllElements<Object>(m_alphabet, false, false);
 		}
-		pickers[num_wild] = new Playback<Object>(0, Arrays.asList(total)).setLoop(false);
-		AllPickers all = new AllPickers(pickers);
+		return new SumPicker(new AllPickers(pickers), total);
+	}
+	
+	protected class SumPicker extends BoundedPickIf<Object[]>
+	{
+	  protected final int m_total;
+	  
+	  public SumPicker(Bounded<Object[]> picker, int sum)
+	  {
+	    super(picker);
+	    m_total = sum;
+	  }
+	  
+	  @Override
+    protected boolean select(Object[] o) 
+    {
+      int sum = 0;
+      for (Object x : o)
+      {
+        sum += ((Number) x).intValue();
+      }
+      return sum == m_total; 
+    }
 	}
 }

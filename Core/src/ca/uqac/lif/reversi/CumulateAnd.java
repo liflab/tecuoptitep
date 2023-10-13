@@ -56,6 +56,7 @@ public class CumulateAnd extends CumulateFunction
 	@Override
 	protected Object getNextStoredValue(Object previous, Object next)
 	{
-		return Boolean.logicalAnd(previous, next);
+		//return Boolean.logicalAnd(previous, next);
+	  return null; // TODO
 	}
 }
