@@ -24,19 +24,18 @@ import java.util.List;
 import ca.uqac.lif.reversi.util.MathList;
 import ca.uqac.lif.synthia.Picker;
 
-public abstract class CumulateFunction<T> extends AlphabetFunction
+public abstract class CumulateFunction extends AlphabetFunction
 {
 	public CumulateFunction(List<Object> alphabet, Picker<Boolean> coin, boolean wildcards)
 	{
 		super(1, alphabet, coin, wildcards);
 	}
-	
+
 	public CumulateFunction(List<Object> alphabet, boolean wildcards)
 	{
 		super(1, alphabet, wildcards);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	protected void getSuggestions()
 	{
@@ -46,10 +45,10 @@ public abstract class CumulateFunction<T> extends AlphabetFunction
 		{
 			List<?> out_stream = (List<?>) out_sugg.getValue();
 			List<Object> in_stream = new MathList<Object>();
-			T o = getStartValue();
+			Object o = getStartValue();
 			for (Object x : out_stream)
 			{
-				T next = getNextOutputValue(o, (T) x);
+				Object next = getNextOutputValue(o, x);
 				if (next == null) // No solution
 				{
 					//System.out.println("Impossible for " + out_stream);
@@ -70,13 +69,13 @@ public abstract class CumulateFunction<T> extends AlphabetFunction
 			}
 		}
 		m_suggestedInputs.put(0, inputs);
-		
+
 	}
-	
-	protected abstract T getStartValue();
-					
-	protected abstract T getNextOutputValue(T previous, T current);
-	
-	protected abstract T getNextStoredValue(T previous, T next);
+
+	protected abstract Object getStartValue();
+
+	protected abstract Object getNextOutputValue(Object previous, Object current);
+
+	protected abstract Object getNextStoredValue(Object previous, Object next);
 
 }

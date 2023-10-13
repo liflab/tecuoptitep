@@ -20,7 +20,7 @@ package ca.uqac.lif.reversi;
 
 import ca.uqac.lif.synthia.Picker;
 
-public class CumulateAnd extends CumulateFunction<Boolean>
+public class CumulateAnd extends CumulateFunction
 {
 	public CumulateAnd(Picker<Boolean> coin, boolean wildcards)
 	{
@@ -39,7 +39,7 @@ public class CumulateAnd extends CumulateFunction<Boolean>
 	}
 
 	@Override
-	protected Boolean getNextOutputValue(Boolean previous, Boolean current)
+	protected Object getNextOutputValue(Object previous, Object current)
 	{
 		// Incorrect implementation; if previous is false, current can be either true or false
 		if (Boolean.FALSE.equals(previous))
@@ -54,7 +54,7 @@ public class CumulateAnd extends CumulateFunction<Boolean>
 	}
 
 	@Override
-	protected Boolean getNextStoredValue(Boolean previous, Boolean next)
+	protected Object getNextStoredValue(Object previous, Object next)
 	{
 		return Boolean.logicalAnd(previous, next);
 	}

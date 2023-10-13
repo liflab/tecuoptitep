@@ -60,7 +60,7 @@ public class CountDecimate extends AlphabetFunction
 					pickers[i] = i % m_numDecimate == 0 ? new Playback<Object>(sequence.get(i / m_numDecimate)).setLoop(false) : getAnyPicker();
 				}
 				AllPickers all = new AllPickers(pickers);
-				while (m_coin.pick() && !all.isDone())
+				while ((m_wildcardsAllowed || m_coin.pick()) && !all.isDone())
 				{
 					Object[] to_append = all.pick();
 					MathList<Object> out_list = new MathList<Object>();

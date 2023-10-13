@@ -73,7 +73,7 @@ public class MainLab extends Laboratory
 		/* The range of trace lengths to generate */
 		int min_len = intArgOrDefault(args, "minlen", 4);
 		int max_len = intArgOrDefault(args, "maxlen", 20);
-		System.out.println("Trace length:\t[" + min_len + "," + max_len + "]");
+		System.out.println("Trace length:\t[" + min_len + "," + max_len + ")");
 
 		/* The size of the alphabet */
 		int alphabet_size = intArgOrDefault(args, "alphabet", 4);

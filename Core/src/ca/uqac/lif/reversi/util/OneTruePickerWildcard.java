@@ -18,23 +18,24 @@
  */
 package ca.uqac.lif.reversi.util;
 
+import ca.uqac.lif.reversi.AlphabetFunction;
 import ca.uqac.lif.synthia.Picker;
 import ca.uqac.lif.synthia.util.Constant;
 
-public class SomeTruePicker implements Picker<MathList<Object>>
+public class OneTruePickerWildcard implements Picker<MathList<Object>>
 {
 	protected final Picker<Integer> m_length;
-	
+
 	protected final Picker<Boolean> m_coin;
 
-	public SomeTruePicker(Picker<Integer> len, Picker<Boolean> coin)
+	public OneTruePickerWildcard(Picker<Integer> len, Picker<Boolean> coin)
 	{
 		super();
 		m_length = len;
 		m_coin = coin;
 	}
 
-	public SomeTruePicker(int len, Picker<Boolean> coin)
+	public OneTruePickerWildcard(int len, Picker<Boolean> coin)
 	{
 		this(new Constant<Integer>(len), coin);
 	}
@@ -53,9 +54,16 @@ public class SomeTruePicker implements Picker<MathList<Object>>
 		boolean has_true = false;
 		for (int i = 0; i < len; i++)
 		{
-			boolean b = m_coin.pick();
-			list.add(b);
-			has_true = has_true || b;
+			/*if (has_true)
+			{
+				list.add(AlphabetFunction.WILDCARD);
+			}
+			else*/
+			{
+				boolean b = m_coin.pick();
+				list.add(b ? true : AlphabetFunction.WILDCARD);
+				has_true = has_true || b;
+			}
 		}
 		if (!has_true)
 		{
@@ -65,8 +73,8 @@ public class SomeTruePicker implements Picker<MathList<Object>>
 	}
 
 	@Override
-	public SomeTruePicker duplicate(boolean with_state)
+	public OneTruePickerWildcard duplicate(boolean with_state)
 	{
-		return new SomeTruePicker(m_length.duplicate(with_state), m_coin.duplicate(with_state));
+		return new OneTruePickerWildcard(m_length.duplicate(with_state), m_coin.duplicate(with_state));
 	}
 }

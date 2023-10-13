@@ -37,6 +37,8 @@ import ca.uqac.lif.reversi.Trim;
 import ca.uqac.lif.reversi.Window;
 import ca.uqac.lif.reversi.util.MathList;
 import ca.uqac.lif.reversi.util.AllTruePicker;
+import ca.uqac.lif.reversi.util.EndsInPicker;
+import ca.uqac.lif.reversi.util.OneTruePickerWildcard;
 import ca.uqac.lif.reversi.util.SomeTruePicker;
 import ca.uqac.lif.synthia.Picker;
 import ca.uqac.lif.synthia.random.RandomBoolean;
@@ -104,7 +106,7 @@ public class ReversibleFactory extends PreconditionFactory<ReversibleCondition>
 				{
 					return new AllTruePicker(rint);
 				}
-				return new SomeTruePicker(rint, rboo);
+				return getWildcards(pt, e) ? new OneTruePickerWildcard(rint, rboo) : new SomeTruePicker(rint, rboo);
 			}
 		};
 	}
@@ -140,7 +142,7 @@ public class ReversibleFactory extends PreconditionFactory<ReversibleCondition>
 				{
 					return new AllTruePicker(rint);
 				}
-				return new SomeTruePicker(rint, rboo);
+				return getWildcards(pt, e) ? new OneTruePickerWildcard(rint, rboo) : new SomeTruePicker(rint, rboo);
 			}
 		};
 	}
@@ -187,7 +189,7 @@ public class ReversibleFactory extends PreconditionFactory<ReversibleCondition>
 				{
 					return new AllTruePicker(rint);
 				}
-				return new SomeTruePicker(rint, rboo);
+				return getWildcards(pt, e) ? new OneTruePickerWildcard(rint, rboo) : new SomeTruePicker(rint, rboo);
 			}
 		};
 	}

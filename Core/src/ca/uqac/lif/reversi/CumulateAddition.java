@@ -18,42 +18,78 @@
  */
 package ca.uqac.lif.reversi;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import ca.uqac.lif.reversi.util.MathList;
+import ca.uqac.lif.synthia.Bounded;
 import ca.uqac.lif.synthia.Picker;
+import ca.uqac.lif.synthia.enumerative.AllPickers;
+import ca.uqac.lif.synthia.sequence.Playback;
 
-public class CumulateAddition extends CumulateFunction<Number>
+public class CumulateAddition extends AlphabetFunction
 {
 	public CumulateAddition(List<Object> alphabet, Picker<Boolean> coin, boolean wildcards)
 	{
-		super(alphabet, coin, wildcards);
+		super(1, alphabet, coin, wildcards);
 	}
 	
 	public CumulateAddition(List<Object> alphabet, boolean wildcards)
 	{
-		super(alphabet, wildcards);
+		super(1, alphabet, wildcards);
 	}
 
 	@Override
-	protected Number getStartValue()
+	protected void getSuggestions()
 	{
-		return 0;
-	}
-
-	@Override
-	protected Number getNextOutputValue(Number previous, Number current)
-	{
-		int new_value = current.intValue() - previous.intValue();
-		if (!m_alphabet.contains(new_value))
+		List<Suggestion> in_sugs = new ArrayList<Suggestion>();
+		int sug_cnt = 0;
+		for (Suggestion out_sug : m_targetOutput)
 		{
-			return null;
+			List<?> out_list = (List<?>) out_sug.getValue();
+			List<Bounded<?>> pickers = new ArrayList<Bounded<?>>();
+			// TODO: partition input
+			int num_wild = 0;
+			for (Object o : out_list)
+			{
+				if (o != AlphabetFunction.WILDCARD)
+				{
+					pickers.add(getSumPicker(num_wild, ((Number) o).intValue()));
+					num_wild = 0;
+				}
+				else
+				{
+					num_wild++;
+				}
+			}
+			AllPickers all = new AllPickers((Bounded<?>[]) pickers.toArray());
+			while (m_coin.pick() && !all.isDone())
+			{
+				MathList<Object> in_stream = new MathList<Object>();
+				Object[] elems = all.pick();
+				for (Object e : elems)
+				{
+					in_stream.addAll((List<?>) e);
+				}
+				Suggestion in_sug = new Suggestion(in_stream);
+				in_sug.addLineage(out_sug.getLineage());
+				in_sug.addLineage(new Association(this, sug_cnt));
+				sug_cnt++;
+				in_sugs.add(in_sug);
+			}
 		}
-		return new_value;
+		m_suggestedInputs.put(0, in_sugs);
 	}
-
-	@Override
-	protected Number getNextStoredValue(Number previous, Number next)
+	
+	protected Bounded<?> getSumPicker(int num_wild, int total)
 	{
-		return previous.intValue() + next.intValue();
+		Bounded<?>[] pickers = new Bounded<?>[num_wild + 1];
+		for (int i = 0; i < num_wild; i++)
+		{
+			pickers[i] = getAnyPicker();
+		}
+		pickers[num_wild] = new Playback<Object>(0, Arrays.asList(total)).setLoop(false);
+		AllPickers all = new AllPickers(pickers);
 	}
 }

@@ -58,7 +58,7 @@ public class Trim extends AlphabetFunction
     {
     	all.reset();
       Suggestion out_sug = m_targetOutput.get(i);
-      while (m_coin.pick() && !all.isDone())
+      while ((m_wildcardsAllowed || m_coin.pick()) && !all.isDone())
       {
       	Object[] to_append = all.pick();
         MathList<Object> out_list = new MathList<Object>();
