@@ -31,181 +31,184 @@ import ca.uqac.lif.reversi.util.MathList;
  */
 public class Window extends ReversibleFunction
 {
-	protected final int m_width;
+  protected final int m_width;
 
-	protected final Reversible m_phi;
+  protected final Reversible m_phi;
 
-	public Window(int width, Reversible phi)
-	{
-		super(1);
-		m_width = width;
-		m_phi = phi;
-	}
+  public Window(int width, Reversible phi)
+  {
+    super(1);
+    m_width = width;
+    m_phi = phi;
+  }
 
-	@Override
-	protected void getSuggestions()
-	{
-		List<Suggestion> input_suggestions = new ArrayList<Suggestion>();
-		int sug_cnt = 0;
-		for (Suggestion sug : m_targetOutput)
-		{
-			List<?> out_stream = (List<?>) sug.getValue();
-			int out_len = out_stream.size();
-			List<EventNode> current = new ArrayList<EventNode>();
-			EventNode root = new EventNode(null, null);
-			current.add(root);
-			for (int j = 0; j < out_len; j++)
-			{
-				//System.out.println("Turn " + j);
-				List<EventNode> new_current = new ArrayList<EventNode>();
-				m_phi.reset();
-				m_phi.setTargetOutputs(0, Arrays.asList(new Suggestion(MathList.toList(out_stream.get(j)))));
-				/*if (j > 0 && m_phi instanceof MonteCarloReversible)
+  @Override
+  protected void getSuggestions()
+  {
+    List<Suggestion> input_suggestions = new ArrayList<Suggestion>();
+    int sug_cnt = 0;
+    for (Suggestion sug : m_targetOutput)
+    {
+      List<?> out_stream = (List<?>) sug.getValue();
+      int out_len = out_stream.size();
+      List<EventNode> current = new ArrayList<EventNode>();
+      EventNode root = new EventNode(null, null);
+      current.add(root);
+      for (int j = 0; j < out_len; j++)
+      {
+        //System.out.println("Turn " + j);
+        List<EventNode> new_current = new ArrayList<EventNode>();
+        m_phi.reset();
+        m_phi.setTargetOutputs(0, Arrays.asList(new Suggestion(MathList.toList(out_stream.get(j)))));
+        /*if (j > 0 && m_phi instanceof MonteCarloReversible)
 				{
 					((MonteCarloReversible) m_phi).setCoin(new Playback<Boolean>(true));
 				}*/
-				List<Suggestion> in_sugs = m_phi.getSuggestions(0);
-				int valid = 0;
-				//System.out.println("  " + in_sugs.size() + " suggestions");
-				for (Suggestion in_sug: in_sugs)
-				{
-					List<?> in_stream = (List<?>) in_sug.getValue();
-					if (in_stream.size() != m_width)
-					{
-						// We push exactly k events; an input solution with a different size is impossible
-						continue;
-					}
-					if (j == 0)
-					{
-						// First event, just append sequence to root
-						appendToRoot(root, in_stream, 0, new_current);
-					}
-					else
-					{
-						Object last = in_stream.get(m_width - 1);
-						for (EventNode n : current)
-						{
-							if (isValidExtension(n, in_stream, m_width - 1))
-							{
-								EventNode child = new EventNode(last, n);
-								n.m_children.add(child);
-								new_current.add(child);
-								valid++;
-							}
-						}
-					}
-				}
-				//System.out.println("  " + valid + " are valid extensions");
-				if (new_current.isEmpty())
-				{
-					root = null;
-					break;
-				}
-				current = new_current;
-			}
-			if (root != null)
-			{
-				List<MathList<Object>> in_sols = new ArrayList<MathList<Object>>();
-				expandTree(root, in_sols, new MathList<Object>());
-				//System.out.println(in_sols.size() + " total solutions");
-				for (MathList<Object> in_sol : in_sols)
-				{
-					Suggestion in_sug = new Suggestion(in_sol);
-					in_sug.addLineage(sug.getLineage());
-					in_sug.addLineage(new Association(this, sug_cnt));
-					input_suggestions.add(in_sug);
-					sug_cnt++;
-				}
-			}
-		}
-		m_suggestedInputs.put(0, input_suggestions);
-	}
+        List<Suggestion> in_sugs = m_phi.getSuggestions(0);
+        int valid = 0;
+        //System.out.println("  " + in_sugs.size() + " suggestions");
+        for (Suggestion in_sug: in_sugs)
+        {
+          List<?> in_stream = (List<?>) in_sug.getValue();
+          if (in_stream.size() != m_width)
+          {
+            // We push exactly k events; an input solution with a different size is impossible
+            continue;
+          }
+          if (j == 0)
+          {
+            // First event, just append sequence to root
+            appendToRoot(root, in_stream, 0, new_current);
+          }
+          else
+          {
+            Object last = in_stream.get(m_width - 1);
+            for (EventNode n : current)
+            {
+              if (isValidExtension(n, in_stream, m_width - 1))
+              {
+                EventNode child = new EventNode(last, n);
+                n.m_children.add(child);
+                new_current.add(child);
+                valid++;
+              }
+            }
+          }
+        }
+        //System.out.println("  " + valid + " are valid extensions");
+        if (new_current.isEmpty())
+        {
+          root = null;
+          break;
+        }
+        current = new_current;
+      }
+      if (root != null)
+      {
+        List<MathList<Object>> in_sols = new ArrayList<MathList<Object>>();
+        expandTree(root, in_sols, new MathList<Object>());
+        //System.out.println(in_sols.size() + " total solutions");
+        for (MathList<Object> in_sol : in_sols)
+        {
+          if (in_sol.size() == m_width + out_len - 1)
+          {
+            Suggestion in_sug = new Suggestion(in_sol);
+            in_sug.addLineage(sug.getLineage());
+            in_sug.addLineage(new Association(this, sug_cnt));
+            input_suggestions.add(in_sug);
+            sug_cnt++;
+          }
+        }
+      }
+    }
+    m_suggestedInputs.put(0, input_suggestions);
+  }
 
-	protected static boolean isValidExtension(EventNode n, List<?> stream, int depth)
-	{
-		if (depth == 0)
-		{
-			return true;
-		}
-		Object o1 = stream.get(depth - 1);
-		Object o2 = n.m_symbol;
-		if (o1 != AlphabetFunction.WILDCARD && o2 != AlphabetFunction.WILDCARD && !o1.equals(o2))
-		{
-			return false;
-		}
-		return isValidExtension(n.m_parent, stream, depth - 1);
-	}
+  protected static boolean isValidExtension(EventNode n, List<?> stream, int depth)
+  {
+    if (depth == 0)
+    {
+      return true;
+    }
+    Object o1 = stream.get(depth - 1);
+    Object o2 = n.m_symbol;
+    if (o1 != AlphabetFunction.WILDCARD && o2 != AlphabetFunction.WILDCARD && !o1.equals(o2))
+    {
+      return false;
+    }
+    return isValidExtension(n.m_parent, stream, depth - 1);
+  }
 
-	protected static void expandTree(EventNode n, List<MathList<Object>> to, MathList<Object> current)
-	{
-		if (n.m_children.isEmpty())
-		{
-			to.add(current);
-			return;
-		}
-		for (EventNode child : n.m_children)
-		{
-			MathList<Object> new_list = new MathList<Object>();
-			new_list.addAll(current);
-			new_list.add(child.m_symbol);
-			expandTree(child, to, new_list);
-		}
-	}
+  protected static void expandTree(EventNode n, List<MathList<Object>> to, MathList<Object> current)
+  {
+    if (n.m_children.isEmpty())
+    {
+      to.add(current);
+      return;
+    }
+    for (EventNode child : n.m_children)
+    {
+      MathList<Object> new_list = new MathList<Object>();
+      new_list.addAll(current);
+      new_list.add(child.m_symbol);
+      expandTree(child, to, new_list);
+    }
+  }
 
-	protected static void appendToRoot(EventNode n, List<?> stream, int index, List<EventNode> to)
-	{
-		Object o = stream.get(index);
-		if (index == stream.size() - 1)
-		{
-			EventNode new_child = new EventNode(o, n);
-			n.m_children.add(new_child);
-			to.add(new_child);
-			return;
-		}
-		for (EventNode child : n.m_children)
-		{
-			if (child.m_symbol.equals(o))
-			{
-				appendToRoot(child, stream, index + 1, to);
-				return;
-			}
-		}
-		EventNode new_child = new EventNode(o, n);
-		n.m_children.add(new_child);
-		if (index == stream.size() - 1)
-		{
-			to.add(new_child);
-		}
-		else
-		{
-			appendToRoot(new_child, stream, index + 1, to);
-		}
-	}
+  protected static void appendToRoot(EventNode n, List<?> stream, int index, List<EventNode> to)
+  {
+    Object o = stream.get(index);
+    if (index == stream.size() - 1)
+    {
+      EventNode new_child = new EventNode(o, n);
+      n.m_children.add(new_child);
+      to.add(new_child);
+      return;
+    }
+    for (EventNode child : n.m_children)
+    {
+      if (child.m_symbol.equals(o))
+      {
+        appendToRoot(child, stream, index + 1, to);
+        return;
+      }
+    }
+    EventNode new_child = new EventNode(o, n);
+    n.m_children.add(new_child);
+    if (index == stream.size() - 1)
+    {
+      to.add(new_child);
+    }
+    else
+    {
+      appendToRoot(new_child, stream, index + 1, to);
+    }
+  }
 
-	protected static class EventNode
-	{
-		protected final Object m_symbol;
+  protected static class EventNode
+  {
+    protected final Object m_symbol;
 
-		protected final EventNode m_parent;
+    protected final EventNode m_parent;
 
-		protected final List<EventNode> m_children;
+    protected final List<EventNode> m_children;
 
-		public EventNode(Object symbol, EventNode parent)
-		{
-			super();
-			m_symbol = symbol;
-			m_parent = parent;
-			m_children = new ArrayList<EventNode>();
-		}
+    public EventNode(Object symbol, EventNode parent)
+    {
+      super();
+      m_symbol = symbol;
+      m_parent = parent;
+      m_children = new ArrayList<EventNode>();
+    }
 
-		@Override
-		public String toString()
-		{
-			if (m_symbol == null)
-			{
-				return "";
-			}
-			return m_parent.toString() + "<-" + m_symbol.toString();
-		}
-	}
+    @Override
+    public String toString()
+    {
+      if (m_symbol == null)
+      {
+        return "";
+      }
+      return m_parent.toString() + "<-" + m_symbol.toString();
+    }
+  }
 }
