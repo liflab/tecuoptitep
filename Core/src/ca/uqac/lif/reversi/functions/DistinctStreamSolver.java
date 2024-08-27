@@ -1,6 +1,6 @@
 /*
-    Inversion of function circuits
-    Copyright (C) 2023 Laboratoire d'informatique formelle
+    Inversion of BeepBeep processor chains
+    Copyright (C) 2023-2024 Laboratoire d'informatique formelle
     Université du Québec à Chicoutimi, Canada
 
     This program is free software: you can redistribute it and/or modify
